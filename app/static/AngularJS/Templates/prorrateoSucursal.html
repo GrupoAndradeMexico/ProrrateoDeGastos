@@ -1,0 +1,125 @@
+
+<div style="background-color:white; padding:15px; overflow: hidden;">
+    <div  class="col-sm-12" style="text-align: center">
+        <h2>Prorrateo de Gasto por Sucursal</h2>
+        <br>
+    </div> 
+    <div class="row">
+        <div class="col-md-3">
+            <label class="form-label">Empresa:</label>
+            <select class="form-control" ng-model="empresa" 
+                ng-options="empresa.id_pagadora as empresa.nombre_pagadora for empresa in lstEmpresasPagadoras"
+                ng-change="getTipoComprobanteXPagadora()">
+                <option value="">Seleccione Empresa</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Tipo Comprobante:</label>
+            <select class="form-control" ng-model="tipoComprobante" 
+                ng-options="tipoComprobante.PAR_IDENPARA as tipoComprobante.PAR_DESCRIP1 for tipoComprobante in lstTipoComprobantes"
+               >
+                <option value="">Seleccione Comprobante</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Fecha Gasto:</label>
+            <input class="form-control"  type="month" style="width: 100% !important; height: 34px;"
+            placeholder="dd-MM-yyyy" ng-model="fechaGasto"  max="{{maxFecha | date:'yyyy-MM-dd'}}" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label"></label>
+            <div   style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');getGastos()">Buscar</button>
+            </div>
+        </div>
+    </div>
+    <div ng-show="verDetalle" class="row">
+        <div  class="form-group col-sm-12">
+        <div class="col-md-3">
+            <label class="form-label">Plantilla:</label>
+            <select class="form-control" ng-model="plantilla" 
+                ng-options="plantilla.id_plantilla as plantilla.descripcion for plantilla in lstPlantillas">
+                <option value="">Seleccione Plantilla</option>
+            </select>
+        </div>
+   
+        <div class="col-md-3">
+            <label class="form-label"></label>
+            <div   style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');GenerarProrrateo()">Generar Prorrateo</button>
+            </div>
+        </div>
+    </div>
+<div  class="form-group col-sm-12">
+    <div  class="col-sm-12" style="text-align: center">
+        <h2>Gastos</h2>
+        <br>
+    </div> 
+    <div class="panel panel-primary" ng-repeat="dep in lstDep">
+        <div class="panel-heading">
+           Departamento: {{dep.DESCRIPCION}}
+        </div>
+        <div class="panel-body">
+            <div  ng-show= 'dep.gastos.length > 0' class="form-group col-sm-12" style="height:300px; overflow:auto;">
+                <table class="table table-bordered" cellspacing="0"
+                width="100%">
+                  <thead>
+                    <tr>
+                        <th>Cuenta</th>
+                        <th>Descripcion</th>
+                        <th>Gasto</th>
+                        <th>Cargo</th>
+                        <th>Abono</th>
+                        
+                     <!-- <th>Saldo Inicial</th>
+                        <th>Naturaleza</th>
+                        <th>G1</th>
+                        <th>G2</th>
+                        <th>G3</th>
+                        <th>G4</th>
+                        <th>G5</th>
+                        <th>Nivel Cuenta</th>
+                        <th>Saldo Final</th>-->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="item in dep.gastos">
+                        <td>{{item.CUENTA}}</td>
+                        <td>{{item.DESCRIPCION}}</td>
+                        <td>{{item.CARGO - item.ABONO | currency}}</td>
+                        <td>{{item.CARGO | currency}}</td>
+                        <td>{{item.ABONO | currency}}</td>
+
+                      <!-- <td>{{item.SALDO_INICIAL}}</td> 
+                        <td>{{item.NATURALEZA}}</td>  
+                        <td>{{item.G1}}</td>  
+                        <td>{{item.G2}}</td>  
+                        <td>{{item.G3}}</td>  
+                        <td>{{item.G4}}</td>  
+                        <td>{{item.G5}}</td>    
+                        <td>{{item.CUENTA_NIVEL1}}</td>
+                        <td>{{item.SALDOFINAL}}</td>   -->
+                    </tr>      
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    
+    </div>
+
+</div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</div>
+
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+</div>

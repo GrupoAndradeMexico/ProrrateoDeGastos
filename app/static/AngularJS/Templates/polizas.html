@@ -1,0 +1,199 @@
+
+<div style="background-color:white; padding:15px; overflow: hidden;">
+    <div  class="col-sm-12" style="text-align: center">
+        <h2>Pólizas Pagadora</h2>
+        <br>
+    </div> 
+    <div class="row">
+        <div class="col-md-3">
+            <label class="form-label">Empresa:</label>
+            <select class="form-control" ng-model="empresa" 
+                ng-options="empresa.id_pagadora as empresa.nombre_pagadora for empresa in lstEmpresasPagadoras"
+                ng-change="getLugaresdeTrabajo()">
+                <option value="">Seleccione Empresa</option>
+            </select>
+        </div>
+        <!--
+        <div class="col-md-3">
+            <label class="form-label">Unidad Organizativa:</label>
+            <select class="form-control" ng-model="unidadOrganizativa" 
+                ng-options="unidadOrganizativa.id_uo as unidadOrganizativa.nombre for unidadOrganizativa in lstUnidadesOrganizativas">
+                <option value="">Seleccione Unidad Organizativa</option>
+            </select>
+        </div>
+          -->
+          <div class="col-md-3">
+            <label class="form-label">Lugar de Trabajo:</label>
+            <select class="form-control" ng-model="lugarTrabajo" 
+                ng-options="lugarTrabajo.idlugartrabajo as lugarTrabajo.lugar for lugarTrabajo in lstLugarestrabajo">
+                <option value="">Seleccione Lugar de Trabajo</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Tipo Póliza:</label>
+            <select class="form-control" ng-model="tipopoliza" 
+                ng-options="tipopoliza.id_poliza as tipopoliza.nombre_poliza for tipopoliza in lstTipoPolizas">
+                <option value="">Seleccione Tipo Póliza</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Año:</label>
+            <select class="form-control" ng-model="selectedAnio"
+                ng-options="anio.anio for anio in lstAnios">
+                <option value="">Seleccione Año</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Mes:</label>
+            <select class="form-control" ng-model="selectedMes"
+                ng-options="mes.id as mes.text for mes in lstMeses" 
+                ng-change="getPagas()">
+                <option value="">Seleccione Mes</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Pagas:</label>
+            <select class="form-control" ng-model="paga"
+                ng-options="paga as paga.paga for paga in lstPagas" 
+                >
+                <option value="">Seleccione Paga</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label"></label>
+            <div   style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');getInfoNominas()">Buscar</button>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label"></label>
+            <div   style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');getInfoNominasXPagadora()">Buscar polizas</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <div ng-show="verDetalle"  class="form-group col-sm-12">
+        <br>
+        <div  class="form-group col-sm-6">
+        <table id="tableEvidencias" class="table table-bordered" cellspacing="0"
+        width="100%">
+          <thead>
+            <tr>
+                <th>Concepto</th>
+                <th>DEBE</th>
+                <th>HABER</th>
+                <th>DOCUMENTO</th>
+                <th>PERSONA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in lstInfoNominas">
+                <td>{{item.concepto}}</td>
+                <td>{{item.debe | currency}}</td>
+                <td>{{item.haber | currency}}</td>    
+                <td>{{item.docto_afecta}}</td>
+                <td>{{item.id_persona_empresa}}</td>           
+            </tr>      
+          </tbody>
+        </table>
+    </div>
+    <div  class="form-group col-sm-6">
+        <div  class="col-sm-12" style="text-align: center">
+            <h4>TOTALES</h4>
+            <br>
+        </div> 
+        <label class="col-md-2">DEBE:</label>
+        <div  class="col-md-2"> 
+            <input disabled  class="form-control" type="text" ng-model= "totales.debe">
+        </div>
+        <label class="col-md-2">HABER:</label>
+        <div  class="col-md-2"> 
+            <input disabled  class="form-control" type="text" ng-model="totales.haber">
+        </div>
+        <div  class="col-md-2"> 
+            <button class="btn btn-primary" ng-click=" $('#loading').modal('show');creaPoliza()">Generar Póliza</button>
+        </div>
+    
+      
+      <!--  <br>
+        <label class="col-md-3">Fecha Paga:</label>
+        <div  class="col-md-3"> 
+            <input disabled  class="form-control" type="text" ng-model="fechapaga">
+        </div>
+    -->
+    </div>
+      
+    </div>
+</div>
+<div class="row">
+    <div ng-show="verDetalles"  class="form-group col-sm-12">
+        <br>
+        
+        <div class="panel panel-primary" ng-repeat="nominaItem in lstInfoNominasXPagadora">
+            <div class="panel-heading">
+               Nombre Póliza: {{nominaItem.nombre_poliza}}
+            </div>
+            <div class="panel-body">
+                <div  ng-show= 'nominaItem.detalle.length > 0' class="form-group col-sm-6" style="height:300px; overflow:auto;">
+                    <table class="table table-bordered" cellspacing="0"
+                    width="100%">
+                      <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>DEBE</th>
+                            <th>HABER</th>
+                            <th>DOCUMENTO</th>
+                            <th>PERSONA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="item in nominaItem.detalle">
+                            <td>{{item.concepto}}</td>
+                            <td>{{item.debe | currency}}</td>
+                            <td>{{item.haber | currency}}</td>    
+                            <td>{{item.docto_afecta}}</td>
+                            <td>{{item.id_persona_empresa}}</td>           
+                        </tr>      
+                      </tbody>
+                    </table>
+                </div>
+                <div ng-show= 'nominaItem.detalle.length > 0'  class="form-group col-sm-6">
+                    <div  class="col-sm-12" style="text-align: center">
+                        <h4>TOTALES</h4>
+                        <br>
+                    </div> 
+                    <label class="col-md-2">DEBE:</label>
+                    <div  class="col-md-2"> 
+                        ${{nominaItem.totalDebe}}
+                    </div>
+                    <label class="col-md-2">HABER:</label>
+                    <div  class="col-md-2"> 
+                        ${{nominaItem.totalhaber}}
+                    </div>
+                    <div  class="col-md-2"> 
+                        <button class="btn btn-primary" ng-click=" $('#loading').modal('show');creaPoliza()">Generar Póliza</button>
+                    </div>
+                </div>
+
+            </div>
+        
+        </div>
+    </div>
+</div>
+    </div>
+      
+    </div>
+</div>
+
+</div>
+
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+</div>

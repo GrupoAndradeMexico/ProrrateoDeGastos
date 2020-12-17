@@ -1,0 +1,103 @@
+
+<div style="background-color:white; padding:15px; overflow: hidden;">
+    <div  class="col-sm-12" style="text-align: center">
+        <h2>Prorrateo Orden Compra</h2>
+        <br>
+    </div> 
+    <div class="row">
+        <div class="col-md-3">
+            <label class="form-label">Empresa:</label>
+            <select class="form-control" ng-model="empresa" 
+                ng-options="empresa as empresa.emp_nombre for empresa in lstEmpresas"
+                ng-change="getSucursales()">
+                <option value="">Seleccione Empresa</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Sucursal:</label>
+            <select class="form-control" ng-model="sucursal" 
+                ng-options="sucursal as sucursal.suc_nombre for sucursal in lstSucursales"
+               >
+                <option value="">Seleccione Sucursal</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Fecha Inicio:</label>
+            <input class="form-control"  type="date" style="width: 100% !important; height: 34px;"
+            placeholder="dd-MM-yyyy" ng-model="fechaInicio"  max="{{maxFecha | date:'yyyy-MM-dd'}}" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Fecha Fin:</label>
+            <input class="form-control"  type="date" style="width: 100% !important; height: 34px;"
+            placeholder="dd-MM-yyyy" ng-model="fechaFin"  max="{{maxFecha | date:'yyyy-MM-dd'}}" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label"></label>
+            <div   style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');getOrdenes()">Buscar</button>
+            </div>
+        </div>
+    </div>
+    <div ng-show="verDetalle" class="row">
+        <div  class="form-group col-sm-12">
+        <div class="col-md-3">
+            <label class="form-label">Esquema:</label>
+            <select class="form-control" ng-model="esquema" 
+                ng-options="esquema.id as esquema.nombre for esquema in lstEsquemas">
+                <option value="">Seleccione Esquema</option>
+            </select>
+        </div>
+   
+        <div class="col-md-3">
+            <label class="form-label"></label>
+            <div   style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');GenerarProrrateo()">Generar Prorrateo</button>
+            </div>
+        </div>
+    </div>
+<div  class="form-group col-sm-12">
+    <div  class="col-sm-12" style="text-align: center">
+        <h4>Ordenes Compra {{nombreEmpresa}} - {{nombreSucursal}} </h4>
+        <br>
+    </div> 
+        <div class="panel-body">
+            <div  class="form-group col-sm-12" style="height:500px; overflow:auto;">
+                <table class="table table-bordered" cellspacing="0"
+                width="100%">
+                  <thead>
+                    <tr>
+                        <th>Orden</th>
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
+                        <th>Prorratear</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="item in lstordenes">
+                        <td>{{item.orden}}</td>
+                        <td>{{item.concepto}}</td>
+                        <td>{{item.monto | currency}}</td>
+                        <td>{{item.fecha}}</td>
+                        <td><input type="checkbox" ng-model="item.prorrateable"/></td>
+                    </tr>      
+                  </tbody>
+                </table>
+            </div>
+        </div>
+</div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</div>
+
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,178 @@
+
+<div style="background-color:white; padding:15px; overflow: hidden;">
+    <div class="row">
+        <div class="col-md-2">
+            <label class="form-label">Año:</label>
+            <select class="form-control" ng-model="selectedValueAnioID"
+                ng-options="anio.anio for anio in lstAnios" name="txtAnios"
+                ng-change="getOrganizaciones()">
+                <option value="">Seleccione Año</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Organización:</label>
+            <select class="form-control" ng-model="selectedValueOrganizacionID"
+                ng-options="organizacion.organizacion for organizacion in lstOrganizacionUsuario" name="txtEmpresa"
+                ng-change="getEmpresas()">
+                <option value="">Seleccione organización</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Empresa:</label>
+            <select class="form-control" ng-model="selectedValueEmpresaID"
+                ng-options="empresa.empresa for empresa in lstEmpresaUsuario" name="txtEmpresa"
+                ng-change="getFechas()">
+                <option value="">Seleccione Empresa</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Fechas:</label>
+            <select class="form-control" ng-model="selectedValueFechaID"
+                ng-options="fecha.fecha for fecha in lstFechas" name="txtFechas"
+                ng-change="getNomina()">
+                <option value="">Seleccione una fecha</option>
+            </select>
+        </div>
+        <div class="col-md-1">
+            <label class="form-label"></label>
+            <div  ng-disable="verOpciones" style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-show="EmpresaSeleccionada" ng-click="verTabsRef()">Opciones</button>
+            </div>
+        </div>
+    </div>
+   <div class="row" ng-show="EmpresaSeleccionada" style="background-color:white; padding:5px; overflow: hidden;">
+        <button class="btn btn-primary" ng-click="crearPolizas()">Crear Pólizas</button>
+        <button class="btn btn-primary" ng-click=" $('#loading').modal('show');VerPolizas()">Ver Pólizas</button>
+    </div>
+    <div class="panel col-md-12">
+        <br />
+        <div ui-grid="gridDocumentos" class="grid"></div>
+        <br />
+    </div>
+
+<!--Modal para colocar el numero del punteo-->
+<!--===================================================-->
+<div class="modal fade" id="tabsOpciones" style="min-height:150px;" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header label-mint">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="pci-cross pci-circle text-white"></i>
+                </button>
+                <h4 class="modal-title text-white">Opciones</h4>
+            </div>
+            <div class="modal-body" >
+                <uib-tabset>               
+                         <uib-tab ng-repeat="workspace in TipoConceptos"   heading="{{workspace.nombre}}"   active=workspace.active>
+                        <div  ng-init="workspace=workspace">
+                           
+                                <ul>
+                                <li ng-repeat="role in tabs[workspace.tipo]">
+                                    <input type="checkbox" ng-change="GuardaConcepto(role)" ng-model="role.value" data-checklist-model="role" data-checklist-value="role.value"> {{role.concepto}}
+
+                                  </li>
+                                </ul>
+                          
+                           
+                        </div>     
+                    </uib-tab>
+                   
+                </uib-tabset>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary pull-right" ng-click="GuardarConcepto()"> Guardar </a>
+                <a class="btn btn-default pull-right" data-dismiss="modal"> Cerrar </a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<!--===================================================-->
+<!--End Modal para colocar el numero del punteo-->
+
+    <div id="mdlLoading" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="spinner">
+                <div class="cube1"></div>
+                <div class="cube2"></div>
+            </div>
+        </div>
+    </div>
+<!--INICIA modal que muestra el reporte en pdf -->
+<!--===================================================-->
+<div id="reporteModalPdf" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#1f897f;">
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="pci-cross pci-circle" style="color:#fff;"></i>
+                </button>
+                <h4 class="modal-title text-center" id="myLargeModalLabel" style="color:#fff;">Conciliación</h4>
+            </div>
+            <div id="htmlReporteConciliacion" class="modal-body text-center">
+
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Detalle" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="width: 1100px ;">
+        <div class="modal-content">
+            <div class="modal-header label-mint">
+                <button type="button" class="close" data-dismiss="modal"><i class="pci-cross pci-circle text-white"></i></button>
+                <h4 class="modal-title text-white">Detalle póliza</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered tabla-punteo" cellspacing="0" style="font-size: 10px;">
+                    <thead>
+                        <tr>
+                            <th>Empleado</th>
+                            <th>Organizacion</th>
+                            <th>Concepto</th>
+                            <th>Tipo</th>
+                            <th>Descripción</th>
+                            <th>Signo</th>
+                            <th class="text-right">Importe</th>
+                            <th width="10px">Visible</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="det in detalle">
+                            <td style="width: 30%;">{{det.nombre_empleado}}</td>
+                            <td style="width: 20%;">{{det.u_organizativa}}</td>
+                            <td style="width: 30%;">{{det.concepto}}</td>
+                            <td style="width: 10%;">{{det.nombre}}</td>
+                            <td style="width: 20%;">{{det.cuentam4}}</td>
+                            <td>{{det.signo}}</td>
+                            <td class="text-right">{{det.importe | currency}}</td>
+                            <td style="width: 5%;">{{det.Visible}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                          <td colspan=5></td>
+                          <td>Total:</td>
+                          <td>{{suma | currency}}</td>
+                        </tr>
+                      </tfoot>
+                </table>
+
+             
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+   
+</div>
+
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+</div>
