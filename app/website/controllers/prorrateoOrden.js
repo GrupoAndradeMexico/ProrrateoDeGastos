@@ -91,7 +91,8 @@ prorrateoOrden.prototype.get_prorrateoOrden= function(req, res, next) {
     var numOrden = req.query.orden;
     var params = [
         { name: 'monto', value: req.query.monto, type: self.model.types.DECIMAL },
-        { name: 'esquema', value: req.query.esquema, type: self.model.types.INT },
+        { name: 'esquema', value: req.query.esquema, type: self.model.types.INT },          
+       // { name: 'orden', value: numOrden, type: self.model.types.STRING},
     ];
     
     this.model.query('[dbo].[SEL_INFO_PRORRATEOORDENESCOMPRA_SP]', params,async function(error, result) {
@@ -130,6 +131,7 @@ async function promiseInsertPoliza(datos, sucOrden, numOrden, self) {
                 { name: 'empProrrateo', value: datos.empProrrateo, type: self.model.types.INT},
                 { name: 'precioUnitario', value: datos.montoSuc, type: self.model.types.INT},
                 { name: 'orden', value: numOrden, type: self.model.types.STRING},
+                { name: 'idConcepto', value: datos.idConcepto, type: self.model.types.STRING},
                 ];
             self.model.query('INS_PRORRATEOORDEN_SP', params, async function(error, result) {
                 if (!error) {
