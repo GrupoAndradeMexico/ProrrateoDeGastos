@@ -1,103 +1,231 @@
-
+<link rel="stylesheet" href="css/esquemaProrrateo.css">
 <div style="background-color:white; padding:15px; overflow: hidden;">
-    <div  class="col-sm-12" style="text-align: center">
+    <div class="col-sm-12" style="text-align: center">
         <h2>Prorrateo Orden Compra</h2>
         <br>
-    </div> 
+    </div>
     <div class="row">
         <div class="col-md-3">
             <label class="form-label">Empresa:</label>
-            <select class="form-control" ng-model="empresa" 
-                ng-options="empresa as empresa.emp_nombre for empresa in lstEmpresas"
-                ng-change="getSucursales()">
+            <select class="form-control" ng-model="empresa"
+                ng-options="empresa as empresa.emp_nombre for empresa in lstEmpresas" ng-change="getSucursales()">
                 <option value="">Seleccione Empresa</option>
             </select>
         </div>
         <div class="col-md-3">
             <label class="form-label">Sucursal:</label>
-            <select class="form-control" ng-model="sucursal" 
-                ng-options="sucursal as sucursal.suc_nombre for sucursal in lstSucursales"
-               >
+            <select class="form-control" ng-model="sucursal"
+                ng-options="sucursal as sucursal.suc_nombre for sucursal in lstSucursales">
                 <option value="">Seleccione Sucursal</option>
             </select>
         </div>
         <div class="col-md-2">
             <label class="form-label">Fecha Inicio:</label>
-            <input class="form-control"  type="date" style="width: 100% !important; height: 34px;"
-            placeholder="dd-MM-yyyy" ng-model="fechaInicio"  max="{{maxFecha | date:'yyyy-MM-dd'}}" />
+            <input class="form-control" type="date" style="width: 100% !important; height: 34px;"
+                placeholder="dd-MM-yyyy" ng-model="fechaInicio" max="{{maxFecha | date:'yyyy-MM-dd'}}" />
         </div>
         <div class="col-md-2">
             <label class="form-label">Fecha Fin:</label>
-            <input class="form-control"  type="date" style="width: 100% !important; height: 34px;"
-            placeholder="dd-MM-yyyy" ng-model="fechaFin"  max="{{maxFecha | date:'yyyy-MM-dd'}}" />
+            <input class="form-control" type="date" style="width: 100% !important; height: 34px;"
+                placeholder="dd-MM-yyyy" ng-model="fechaFin" max="{{maxFecha | date:'yyyy-MM-dd'}}" />
         </div>
         <div class="col-md-2">
             <label class="form-label"></label>
-            <div   style="background-color:white; padding:5px; overflow: hidden;">
+            <div style="background-color:white; padding:5px; overflow: hidden;">
                 <button class="btn btn-primary" ng-click=" $('#loading').modal('show');getOrdenes()">Buscar</button>
             </div>
         </div>
     </div>
     <div ng-show="verDetalle" class="row">
-        <div  class="form-group col-sm-12">
-        <div class="col-md-3">
-            <label class="form-label">Esquema:</label>
-            <select class="form-control" ng-model="esquema" 
-                ng-options="esquema.id as esquema.nombre for esquema in lstEsquemas">
-                <option value="">Seleccione Esquema</option>
-            </select>
-        </div>
-   
-        <div class="col-md-3">
-            <label class="form-label"></label>
-            <div   style="background-color:white; padding:5px; overflow: hidden;">
-                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');GenerarProrrateo()">Generar Prorrateo</button>
+        <div class="form-group col-sm-12">
+            <div class="col-md-3">
+                <label class="form-label">Esquema:</label>
+                <select class="form-control" ng-model="esquema"
+                    ng-options="esquema.id as esquema.nombre for esquema in lstEsquemas">
+                    <option value="">Seleccione Esquema</option>
+                </select>
+            </div>
+
+            <div class="col-md-3" hidden>
+                <label class="form-label"></label>
+                <div style="background-color:white; padding:5px; overflow: hidden;">
+                    <button class="btn btn-primary" ng-click=" $('#loading').modal('show');GenerarProrrateo()">Generar
+                        Prorrateo</button>
+                </div>
             </div>
         </div>
-    </div>
-<div  class="form-group col-sm-12">
-    <div  class="col-sm-12" style="text-align: center">
-        <h4>Ordenes Compra {{nombreEmpresa}} - {{nombreSucursal}} </h4>
-        <br>
-    </div> 
-        <div class="panel-body">
-            <div  class="form-group col-sm-12" style="height:500px; overflow:auto;">
-                <table class="table table-bordered" cellspacing="0"
-                width="100%">
-                  <thead>
-                    <tr>
-                        <th>Orden</th>
-                        <th>Concepto</th>
-                        <th>Monto</th>
-                        <th>Fecha</th>
-                        <th>Prorratear</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="item in lstordenes">
-                        <td>{{item.orden}}</td>
-                        <td>{{item.concepto}}</td>
-                        <td>{{item.monto | currency}}</td>
-                        <td>{{item.fecha}}</td>
-                        <td><input type="checkbox" ng-model="item.prorrateable"/></td>
-                    </tr>      
-                  </tbody>
-                </table>
+        <div class="form-group col-sm-12">
+            <div class="col-sm-12" style="text-align: center">
+                <h4>Ordenes Compra {{nombreEmpresa}} - {{nombreSucursal}} </h4>
+                <br>
+            </div>
+            <div class="panel-body">
+                <div class="form-group col-sm-12" style="height:500px; overflow:auto;">
+                    <table class="table table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Orden</th>
+                                <th>Concepto</th>
+                                <th>Monto</th>
+                                <th>Fecha</th>
+                                <th>Prorratear</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in lstordenes">
+                                <td>{{item.orden}}</td>
+                                <td>{{item.concepto}}</td>
+                                <td>{{item.monto | currency}}</td>
+                                <td>{{item.fecha}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-info" aria-expanded="false"
+                                        ng-click="ModalProrrateo()">
+                                        Prorrateo
+                                    </button>
+                                </td>
+                                <!-- <td><input type="checkbox" ng-model="item.prorrateable"/></td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-</div>
-    </div>
-    </div>
     </div>
 </div>
 
-</div>
 
 <div id="mdlLoading" class="modal fade" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="spinner">
             <div class="cube1"></div>
             <div class="cube2"></div>
+        </div>
+    </div>
+</div>
+
+<!--Inicia modal Empleado -->
+<!--===================================================-->
+<div class="modal fade" id="modalProrrateo" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                    <i class="pci-cross pci-circle text-white" style="margin-top: -40%;"></i></button>
+                <h4 class="modal-title text-white">Detalle del prorrateo</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" style="width: 5%;">
+                                        
+                                    </th>
+                                    <th>Área</th>
+                                    <th>Concepto</th>
+                                    <th>Sucursal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">
+                                        <input type="radio"/>
+                                    </td>
+                                    <td>Cuautitlan. - Adm.  Cam y Autos</td>
+                                    <td>Papeleria y articulos oficina</td>
+                                    <td>Universidad</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="sucursalEsquema">Sucursal Esquema</label>
+                                <select class="form-control" id="sucursalEsquema">
+                                    <option value="+47">Ford Viga (50)</option>
+                                    <option value="+46">Nissan Abasto (25)</option>
+                                    <option value="+45">Nissan Zaragoza (25)</option>
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="AreaEsquema">Área Esquema</label>
+                                <select class="form-control" id="AreaEsquema">
+                                    <option value="+47">Área 1</option>
+                                    <option value="+46">Área 2</option>
+                                    <option value="+45">Área 3</option>
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="conceptoEsquema">Concepto Esquema</label>
+                                <select class="form-control" id="conceptoEsquema">
+                                    <option value="+47">Concepto 1</option>
+                                    <option value="+46">Concepto 2</option>
+                                    <option value="+45">Concepto 3</option>
+                                  </select>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 20px;">
+                            <div class="col-sm-12">
+                                <button type="button" class="btn btn-info" aria-expanded="false" ng-click="GenerarProrrateo()()">
+                                    guardar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h5>Relaciones Generadas</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Área</th>
+                                    <th>Concepto</th>
+                                    <th>Sucursal</th>
+                                    <th></th>
+                                    <th>Área Esquema</th>
+                                    <th>Concepto Esquema</th>
+                                    <th>Sucursal Esquema</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Cuautitlan. - Adm.  Cam y Autos</td>
+                                    <td>Papeleria y articulos oficina</td>
+                                    <td>Universidad</td>
+                                    <td></td>
+                                    <td>área 1</td>
+                                    <td>concepto 1</td>
+                                    <td>FORD VIGA</td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger" aria-expanded="false"
+                                        ng-click="EliminaSeleccion()">
+                                        Eliminar
+                                    </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 0%; margin-right:1%;">
+                <button type="button" class="btn btn-info" aria-expanded="false" ng-click="GenerarProrrateo()()">
+                    Prorratear
+                </button>
+            </div>
         </div>
     </div>
 </div>

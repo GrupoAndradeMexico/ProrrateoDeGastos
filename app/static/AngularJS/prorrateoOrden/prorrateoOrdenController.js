@@ -160,6 +160,11 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     
         });
     }
+
+
+    $scope.ModalProrrateo = function(){
+        $('#modalProrrateo').modal('show');
+    }
     
 
 })
