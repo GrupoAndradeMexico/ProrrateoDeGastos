@@ -78,8 +78,8 @@
                                 <td>{{item.monto | currency}}</td>
                                 <td>{{item.fecha}}</td>
                                 <td>
-                                    <button type="button" class="btn btn-info" aria-expanded="false"
-                                        ng-click="ModalProrrateo()">
+                                    <button type="button" class="btn btn-info" aria-expanded="false" ng-disabled="esquema === undefined"
+                                        ng-click="ModalProrrateo(item.orden)">
                                         Prorrateo
                                     </button>
                                 </td>
@@ -129,52 +129,50 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr ng-repeat="det in listDetalleOrden">
                                     <td class="text-center">
-                                        <input type="radio"/>
+                                        <input type="radio"  ng-model="det.select" ng-change="DetalleSelected(det)" checked="det.select"/>
                                     </td>
-                                    <td>Cuautitlan. - Adm.  Cam y Autos</td>
-                                    <td>Papeleria y articulos oficina</td>
-                                    <td>Universidad</td>
+                                    <td>{{det.area}}</td>
+                                    <td>{{det.conceptos}}</td>
+                                    <td>{{det.nombreSucursal}}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" >
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="sucursalEsquema">Sucursal Esquema</label>
-                                <select class="form-control" id="sucursalEsquema">
-                                    <option value="+47">Ford Viga (50)</option>
-                                    <option value="+46">Nissan Abasto (25)</option>
-                                    <option value="+45">Nissan Zaragoza (25)</option>
-                                  </select>
+
+                                <select class="form-control" id="sucursalEsquema" ng-model="sucursalSelect" ng-change="GetAreaConceptos()" ng-disabled="!detalleSeleccionado"
+                                    ng-options="detEsq as detEsq.nombreSucursal for detEsq in listDetalleEsquema">
+                                    <option value="">Selecciona una opción</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="AreaEsquema">Área Esquema</label>
-                                <select class="form-control" id="AreaEsquema">
-                                    <option value="+47">Área 1</option>
-                                    <option value="+46">Área 2</option>
-                                    <option value="+45">Área 3</option>
+                                <select class="form-control" id="AreaEsquema" ng-model="areaSelected" ng-disabled="!detalleSeleccionado"
+                                ng-options="area as area.PAR_DESCRIP1 for area in listAreasAfectacion">
+                                    <option value="">Selecciona una opción</option>
                                   </select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="conceptoEsquema">Concepto Esquema</label>
-                                <select class="form-control" id="conceptoEsquema">
-                                    <option value="+47">Concepto 1</option>
-                                    <option value="+46">Concepto 2</option>
-                                    <option value="+45">Concepto 3</option>
+                                <select class="form-control" id="conceptoEsquema" ng-model="conceptoSelected" ng-disabled="!detalleSeleccionado"
+                                ng-options="concepto as concepto.PAR_DESCRIP1 for concepto in listConeptosVentas" ng-change="HabilitaGuardar()">
+                                    <option value="">Selecciona una opción</option>
                                   </select>
                             </div>
                         </div>
                         <div class="row" style="padding-top: 20px;">
                             <div class="col-sm-12">
-                                <button type="button" class="btn btn-info" aria-expanded="false" ng-click="GenerarProrrateo()()">
-                                    guardar
+                                <button type="button" class="btn btn-info" aria-expanded="false" ng-click="GuardaRelacion()" ng-disabled="!detalleSeleccionado && !habilitaGuardado">
+                                    Guardar
                                 </button>
                             </div>
                         </div>
@@ -222,7 +220,7 @@
                 </div>
             </div>
             <div class="modal-footer" style="margin-top: 0%; margin-right:1%;">
-                <button type="button" class="btn btn-info" aria-expanded="false" ng-click="GenerarProrrateo()()">
+                <button type="button" class="btn btn-primary" aria-expanded="false" ng-click="GenerarProrrateo()()">
                     Prorratear
                 </button>
             </div>

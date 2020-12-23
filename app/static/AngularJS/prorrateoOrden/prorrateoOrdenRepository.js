@@ -69,5 +69,67 @@ registrationModule.factory('prorrateoOrdenRepository', function($http) {
 
             });
         },
+        detalleOrden: (orden) => {
+            return $http({
+                url: prorrateoOrdenURL + 'detalleOrden/',
+                method: "GET",
+                params: {
+                       orden: orden
+                    },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
+        },
+        getAreaAfectacion: (idEmpresa, idSucursal) => {
+            return $http({
+                url: prorrateoOrdenURL + 'areaAfectacion/',
+                method: "GET",
+                params: {
+                       idEmpresa,
+                       idSucursal
+                    },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
+        },
+        getConceptosProrrateo: (idEmpresa, idSucursal) => {
+            return $http({
+                url: prorrateoOrdenURL + 'conceptosProrrateo/',
+                method: "GET",
+                params: {
+                       idEmpresa,
+                       idSucursal
+                    },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
+        },
+        guardarRelacion: (data) => {
+            return $http({
+                url: prorrateoOrdenURL + 'guardarRelacion/',
+                method: "GET",
+                params: {
+                    idEsquema: data.idEsquema,
+                    idEmpresa: data.idEmpresa,
+                    idSucursal: data.idSucursal,
+                    Orden: data.Orden,
+                    Area: data.Area,
+                    Concepto: data.Concepto,
+                    TipoIVA: data.TipoIVA,
+                    monto: data.monto
+
+                    },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
+        }
     };
 });

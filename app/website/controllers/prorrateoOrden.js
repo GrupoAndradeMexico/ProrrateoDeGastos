@@ -144,4 +144,74 @@ async function promiseInsertPoliza(datos, sucOrden, numOrden, self) {
     });
 }
 
+prorrateoOrden.prototype.get_detalleOrden = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'folio', value: req.query.orden, type: self.model.types.STRING }
+    ];
+
+    this.model.query('SEL_DETALLE_ORDEN_COMPRA_PRORRATEO', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoOrden.prototype.get_areaAfectacion = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
+        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT }
+    ];
+
+    this.model.query('SEL_AREA_AFECTACION', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoOrden.prototype.get_conceptosProrrateo = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
+        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT }
+    ];
+
+    this.model.query('SEL_CONCEPTOS_PRORRATEO', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoOrden.prototype.get_guardarRelacion = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'idEsquema', value: req.query.idEsquema, type: self.model.types.INT },
+        { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
+        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
+        { name: 'Orden', value: req.query.Orden, type: self.model.types.STRING },
+        { name: 'Area', value: req.query.Area, type: self.model.types.STRING },
+        { name: 'Concepto', value: req.query.Concepto, type: self.model.types.STRING },
+        { name: 'TipoIVA', value: req.query.TipoIVA, type: self.model.types.STRING },
+        { name: 'monto', value: req.query.monto, type: self.model.types.DECIMAL }
+    ];
+
+    this.model.query('INS_DETALLEPRORRATEO_ORDEN_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+
 module.exports = prorrateoOrden;
