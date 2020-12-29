@@ -15,6 +15,10 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     $scope.ordenSelected = ''
     $scope.listaDetalleProrrateoOrden = [];
     $scope.montoTotalOrden = 0;
+    $scope.numDetalleOrden = 0;
+    $scope.numDetallePro = 0;
+    $scope.numDetalleEsquema = 0;
+    $scope.habilitaProrrateo = false;
 
     $scope.seguridad = function () {
         polizaNominaRepository.seguridad($scope.idUsuario).then(function (result) {
@@ -292,6 +296,7 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
             if (result.data.length > 0) {
                 $scope.listaDetalleProrrateoOrden = result.data;
             }
+            ValidaNumeroRegistros();
 
         });
     }
@@ -344,6 +349,29 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
             });
 
         });
+    }
+
+    function ValidaNumeroRegistros(){
+
+        $scope.numDetalleOrden = $scope.listDetalleOrden.length;
+        $scope.numDetalleEsquema = $scope.listDetalleEsquema.length;
+
+        var totalRegistros = $scope.numDetalleOrden *  $scope.numDetalleEsquema;
+
+        if(totalRegistros === $scope.listaDetalleProrrateoOrden.length){
+            $scope.habilitaProrrateo = true;
+        }
+        else if(totalRegistros < $scope.listaDetalleProrrateoOrden.length)
+        {
+            swal('Alerta','El número de detalles supera lo esperado','warning')
+            $scope.habilitaProrrateo = false;
+        }
+        else if(totalRegistros > $scope.listaDetalleProrrateoOrden.length)
+        {
+            swal('Alerta','El número de detalles es menor a lo esperado','warning')
+            $scope.habilitaProrrateo = false;
+        }
+
     }
 
 })
