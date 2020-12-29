@@ -1,4 +1,4 @@
-registrationModule.controller('prorrateoOrdenController', function ($scope, $rootScope, $location, localStorageService, alertFactory, $http, $log, $timeout, uiGridConstants, $sce,polizasRepository, polizaNominaRepository, prorrateoSucursalRepository, prorrateoOrdenRepository, esquemaProrrateoRepository) {
+registrationModule.controller('prorrateoOrdenController', function ($scope, $rootScope, $location, localStorageService, alertFactory, $http, $log, $timeout, uiGridConstants, $sce, polizasRepository, polizaNominaRepository, prorrateoSucursalRepository, prorrateoOrdenRepository, esquemaProrrateoRepository) {
     $rootScope.userData = localStorageService.get('userData');
     $scope.idUsuario = $rootScope.userData.idUsuario;
     $scope.verDetalle = false;
@@ -12,7 +12,9 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     $scope.conceptoSelected
     $scope.detalleSeleccionado = false;
     $scope.habilitaGuardado = false;
-    $scope.ordenSelected=''
+    $scope.ordenSelected = ''
+    $scope.listaDetalleProrrateoOrden = [];
+    $scope.montoTotalOrden = 0;
 
     $scope.seguridad = function () {
         polizaNominaRepository.seguridad($scope.idUsuario).then(function (result) {
@@ -26,7 +28,7 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
         }, function (error) {
         });
     };
-  setTimeout(function () {
+    setTimeout(function () {
         $(".cargando").remove();
         if ($scope.idUsuario != undefined) {
             prorrateoOrdenRepository.getEmpresas().then(function (result) {
@@ -40,61 +42,58 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     $scope.getSucursales = function () {
         prorrateoOrdenRepository.getSucursales($scope.empresa.emp_idempresa).then(function (result) {
             if (result.data.length > 0) {
-                $scope.lstSucursales = result.data;    
+                $scope.lstSucursales = result.data;
             }
-    });
+        });
     }
 
     $scope.getOrdenes = function () {
         $scope.getEsquemas();
         $scope.verDetalle = false;
         $('#mdlLoading').modal('show');
-        if($scope.empresa == undefined || $scope.sucursal == undefined || $scope.fechaInicio  == undefined || $scope.fechaFin  == undefined)
-        {
+        if ($scope.empresa == undefined || $scope.sucursal == undefined || $scope.fechaInicio == undefined || $scope.fechaFin == undefined) {
             $('#mdlLoading').modal('hide');
             alertFactory.warning('Todos los criterios de busqueda son obligatorios');
- 
+
         }
-        else{
-        $scope.nombreEmpresa = $scope.empresa.emp_nombre;
-        $scope.nombreSucursal = $scope.sucursal.suc_nombre;
-        let dateI = new Date($scope.fechaInicio);
-        let dayI = dateI.getDate();
-        let monthI = dateI.getMonth() + 1;
-        let yearI = dateI.getFullYear();
-        let inicio = dayI + '/' + monthI + '/' + yearI;
-        let dateF = new Date($scope.fechaFin);
-        let dayF = dateF.getDate();
-        let monthF = dateF.getMonth() + 1;
-        let yearF = dateF.getFullYear();
-        let fin = dayF + '/' + monthF + '/' + yearF;
-        $scope.getEsquemas();
-        prorrateoOrdenRepository.getOrdenes($scope.empresa.emp_idempresa, $scope.sucursal.suc_idsucursal, inicio, fin).then(function (result) {
-            if (result.data.length > 0) {
-                $scope.lstordenes = result.data;
-                $('#mdlLoading').modal('hide');
-                $scope.verDetalle = true;   
-            }
-            else
-            {
-                $('#mdlLoading').modal('hide');
-                alertFactory.warning('No se encontraron resultados');
-            }
-        });
-    }
-    
+        else {
+            $scope.nombreEmpresa = $scope.empresa.emp_nombre;
+            $scope.nombreSucursal = $scope.sucursal.suc_nombre;
+            let dateI = new Date($scope.fechaInicio);
+            let dayI = dateI.getDate();
+            let monthI = dateI.getMonth() + 1;
+            let yearI = dateI.getFullYear();
+            let inicio = dayI + '/' + monthI + '/' + yearI;
+            let dateF = new Date($scope.fechaFin);
+            let dayF = dateF.getDate();
+            let monthF = dateF.getMonth() + 1;
+            let yearF = dateF.getFullYear();
+            let fin = dayF + '/' + monthF + '/' + yearF;
+            $scope.getEsquemas();
+            prorrateoOrdenRepository.getOrdenes($scope.empresa.emp_idempresa, $scope.sucursal.suc_idsucursal, inicio, fin).then(function (result) {
+                if (result.data.length > 0) {
+                    $scope.lstordenes = result.data;
+                    $('#mdlLoading').modal('hide');
+                    $scope.verDetalle = true;
+                }
+                else {
+                    $('#mdlLoading').modal('hide');
+                    alertFactory.warning('No se encontraron resultados');
+                }
+            });
+        }
+
     }
 
     $scope.getEsquemas = function () {
-        prorrateoOrdenRepository.getEsquemas($scope.empresa.emp_idempresa, $scope.sucursal.suc_idsucursal,0,0).then(function (result) {
+        prorrateoOrdenRepository.getEsquemas($scope.empresa.emp_idempresa, $scope.sucursal.suc_idsucursal, 0, 0).then(function (result) {
             if (result.data.length > 0) {
-                $scope.lstEsquemas = result.data;    
+                $scope.lstEsquemas = result.data;
             }
-            else
-            {
+            else {
                 $scope.lstEsquemas = [];
             }
-    });
+        });
     }
 
     /*
@@ -119,80 +118,83 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     }
     */
 
-   $scope.GenerarProrrateo = async function () {
-    var resolved = [];
-    var errors = [];
+    //    $scope.GenerarProrrateo = async function () {
+    //     var resolved = [];
+    //     var errors = [];
 
-    for (var i = 0; i < $scope.lstordenes.length; i++) {
-        if($scope.lstordenes[i].prorrateable == true)
-        {
-            $('#mdlLoading').modal('show');
-            try {
-                let detalle = await promiseOrden($scope.sucursal.suc_idsucursal, $scope.lstordenes[i].monto, $scope.esquema, $scope.lstordenes[i].orden);
-                var resR ={orden: $scope.lstordenes[i].orden, detalle: detalle }
-                resolved.push(resR);
-                //resolved.push(await promiseOrden($scope.sucursal.suc_idsucursal, $scope.lstordenes[i].monto, $scope.esquema, $scope.lstordenes[i].orden));
-            }
-            catch (e) {
-                //errors.push(e);
-                let detalle = e;
-                var resE ={orden: $scope.lstordenes[i].orden, detalle: detalle }
-                errors.push(resE);
-            }
-        }
-    }
-    if(resolved.length > 0)
-    {
-        angular.forEach(resolved, function (o, key) {
-            alertFactory.success('Polizas creadas correctamente orden: ' + o.orden);
-        });
-    }
+    //     for (var i = 0; i < $scope.lstordenes.length; i++) {
+    //         if($scope.lstordenes[i].prorrateable == true)
+    //         {
+    //             $('#mdlLoading').modal('show');
+    //             try {
+    //                 let detalle = await promiseOrden($scope.sucursal.suc_idsucursal, $scope.lstordenes[i].monto, $scope.esquema, $scope.lstordenes[i].orden);
+    //                 var resR ={orden: $scope.lstordenes[i].orden, detalle: detalle }
+    //                 resolved.push(resR);
+    //                 //resolved.push(await promiseOrden($scope.sucursal.suc_idsucursal, $scope.lstordenes[i].monto, $scope.esquema, $scope.lstordenes[i].orden));
+    //             }
+    //             catch (e) {
+    //                 //errors.push(e);
+    //                 let detalle = e;
+    //                 var resE ={orden: $scope.lstordenes[i].orden, detalle: detalle }
+    //                 errors.push(resE);
+    //             }
+    //         }
+    //     }
+    //     if(resolved.length > 0)
+    //     {
+    //         angular.forEach(resolved, function (o, key) {
+    //             alertFactory.success('Polizas creadas correctamente orden: ' + o.orden);
+    //         });
+    //     }
 
-    if(errors.length > 0)
-    {
-        angular.forEach(errors, function (o, key) {
-            alertFactory.success('Ocurrio un error con la siguiente Orden: ' + o.orden);
-        });
-        
-    }
-    $('#mdlLoading').modal('hide');
+    //     if(errors.length > 0)
+    //     {
+    //         angular.forEach(errors, function (o, key) {
+    //             alertFactory.success('Ocurrio un error con la siguiente Orden: ' + o.orden);
+    //         });
 
-}
+    //     }
+    //     $('#mdlLoading').modal('hide');
+
+    // }
 
     async function promiseOrden(idSucursal, monto, esquema, orden) {
         return new Promise((resolve, reject) => {
             prorrateoOrdenRepository.prorrateoOrden(idSucursal, monto, esquema, orden).then(function (result) {
                 if (result.data.length > 0) {
-                resolve(result.data);
+                    resolve(result.data);
                 }
             }).catch(err => {
                 reject(false);
             });
-    
+
         });
     }
 
 
-    $scope.ModalProrrateo = function(orden){
+    $scope.ModalProrrateo = function (orden, monto) {
 
         $scope.listDetalleOrden = [];
         $scope.listDetalleEsquema = []
         $scope.detalleSeleccionado = false;
         $scope.ordenSelected = orden;
+        $scope.montoTotalOrden = monto
 
         prorrateoOrdenRepository.detalleOrden(orden).then(result => {
-            if(result.data.length >0){
+            if (result.data.length > 0) {
                 $scope.listDetalleOrden = result.data;
-                for(i= 0; i<$scope.listDetalleOrden.length ; i++){
+                for (i = 0; i < $scope.listDetalleOrden.length; i++) {
                     $scope.listDetalleOrden[i].select = false;
                 }
-                
-                esquemaProrrateoRepository.getDetalleEsquema($scope.esquema).then( result => {
-                    if(result.data.length > 0){
+
+                esquemaProrrateoRepository.getDetalleEsquema($scope.esquema).then(result => {
+                    if (result.data.length > 0) {
                         $scope.listDetalleEsquema = result.data;
 
                         $scope.listDetalleEsquema = $scope.listDetalleEsquema.filter(x => x.nombreSucursal !== 'TOTAL');
-                       
+
+                        DetalleProrrateoOrden();
+
                         $('#modalProrrateo').modal('show');
                     }
                 })
@@ -201,73 +203,147 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
         })
     }
 
-    $scope.GetAreaConceptos = function(){
-        
+    $scope.GetAreaConceptos = function () {
+
         prorrateoOrdenRepository.getAreaAfectacion($scope.sucursalSelect.idEmpresa, $scope.sucursalSelect.idSucursal).then(result => {
-            if(result.data.length > 0 ){
+            if (result.data.length > 0) {
                 $scope.listAreasAfectacion = result.data;
             }
         });
 
         prorrateoOrdenRepository.getConceptosProrrateo($scope.sucursalSelect.idEmpresa, $scope.sucursalSelect.idSucursal).then(result => {
-            if(result.data.length > 0 ){
+            if (result.data.length > 0) {
                 $scope.listConeptosVentas = result.data;
             }
         });
 
     }
 
-    $scope.DetalleSelected = function (opcion){
-    
-        for(var i = 0; i< $scope.listDetalleOrden.length ; i++){
-            if($scope.listDetalleOrden[i].idSucursal !== opcion.idSucursal){
-                $scope.listDetalleOrden.select =  false;
+    $scope.DetalleSelected = function (opcion) {
+
+        for (var i = 0; i < $scope.listDetalleOrden.length; i++) {
+            if ($scope.listDetalleOrden[i].idSucursal !== opcion.idSucursal) {
+                $scope.listDetalleOrden.select = false;
             }
-            else
-            {
-                $scope.listDetalleOrden[i].select =  true;
+            else {
                 $scope.detalleSeleccionado = true;
             }
         }
     }
 
-    $scope.HabilitaGuardar = function(){
-        if( $scope.sucursalSelect !== undefined &&
+    $scope.HabilitaGuardar = function () {
+        if ($scope.sucursalSelect !== undefined &&
             $scope.areaSelected !== undefined &&
-            $scope.conceptoSelected !== undefined){
-                // console.log('sucursales: ',$scope.sucursalSelect);
-                // console.log('areaSelected: ', $scope.areaSelected);
-                // console.log('conceptoSelected: ', $scope.conceptoSelected);
-                // console.log('detalleOrden', $scope.listDetalleOrden)
-                $scope.habilitaGuardado = true;
-            }
+            $scope.conceptoSelected !== undefined) {
+            $scope.habilitaGuardado = true;
+        }
     }
-    
-
-    $scope.GuardaRelacion = function(){
 
 
-        var detalle = $scope.listDetalleOrden.filter(x=> x.select !== false)[0];
+    $scope.GuardaRelacion = function () {
 
-        data={
-            idEsquema:$scope.esquema,
-            idEmpresa:$scope.sucursalSelect.idEmpresa,
-            idSucursal:$scope.sucursalSelect.idSucursal,
-            Orden:$scope.ordenSelected,
-            Area:$scope.areaSelected.PAR_IDENPARA,
-            Concepto:$scope.conceptoSelected.PAR_IDENPARA,
+
+        var detalle = $scope.listDetalleOrden.filter(x => x.select !== false)[0];
+
+        $scope.listaDetalleProrrateoOrden = [];
+
+        data = {
+            idEsquema: $scope.esquema,
+            idEmpresa: $scope.sucursalSelect.idEmpresa,
+            idSucursal: $scope.sucursalSelect.idSucursal,
+            Orden: $scope.ordenSelected,
+            Area: $scope.areaSelected.PAR_IDENPARA,
+            Concepto: $scope.conceptoSelected.PAR_IDENPARA,
             TipoIVA: String(detalle.tipoIva),
-            monto:detalle.totalOrden
+            monto: (detalle.totalOrden * ($scope.sucursalSelect.porcentaje / 100))
 
         }
 
         prorrateoOrdenRepository.guardarRelacion(data).then(result => {
-            if(result.data.length > 0){
-                swal('Info', result.data[0].msg,'info')
+            if (result.data.length > 0) {
+                swal('Info', result.data[0].msg, 'info')
+                DetalleProrrateoOrden();
             }
         })
+    }
 
-        console.log(data);
+    $scope.EliminaSeleccion = function (id) {
+        prorrateoOrdenRepository.delRelacionAreaConcepto(id).then(result => {
+            if (result.data.length > 0) {
+                swal('Aviso', 'Se a eliminado la relación seleccionada', 'warning');
+                DetalleProrrateoOrden();
+            }
+        })
+    }
+
+    $scope.GenerarProrrateo = function () {
+        prorrateoOrdenRepository.insOrdenMasIva($scope.ordenSelected, $scope.sucursalSelect.idEmpresa, $scope.sucursalSelect.idSucursal).then(result => {
+            if (result.data.length > 0) {
+                swal('Info', 'Se inserto en ordenes masivas')
+            }
+        })
+    }
+
+    function DetalleProrrateoOrden() {
+
+        $scope.listaDetalleProrrateoOrden = [];
+
+        prorrateoOrdenRepository.getDetalleProrrateoOrden($scope.esquema, $scope.ordenSelected).then(result => {
+            if (result.data.length > 0) {
+                $scope.listaDetalleProrrateoOrden = result.data;
+            }
+
+        });
+    }
+
+    $scope.GenerarProrrateo = async function () {
+        var resolved = [];
+        var errors = [];
+
+        for (var i = 0; i < $scope.listaDetalleProrrateoOrden.length; i++) {
+            
+                $('#mdlLoading').modal('show');
+                try {
+                    let detalle = await promiseOrdenMasiva($scope.ordenSelected, $scope.listaDetalleProrrateoOrden[i].idEmpresaProrrateo, $scope.listaDetalleProrrateoOrden[i].idSucursalProrrateo);
+                    var resR = { orden: $scope.lstordenes[i].orden, detalle: detalle }
+                    resolved.push(resR);
+                    //resolved.push(await promiseOrden($scope.sucursal.suc_idsucursal, $scope.lstordenes[i].monto, $scope.esquema, $scope.lstordenes[i].orden));
+                }
+                catch (e) {
+                    //errors.push(e);
+                    let detalle = e;
+                    var resE = { orden: $scope.ordenSelected, detalle: detalle }
+                    errors.push(resE);
+                }
+            
+        }
+        if (resolved.length > 0) {
+            angular.forEach(resolved, function (o, key) {
+                alertFactory.success('Polizas creadas correctamente orden: ' + o.orden);
+            });
+        }
+
+        if (errors.length > 0) {
+            angular.forEach(errors, function (o, key) {
+                alertFactory.success('Ocurrio un error con la siguiente Orden: ' + o.orden);
+            });
+
+        }
+        $('#mdlLoading').modal('hide');
+
+    }
+
+    async function promiseOrdenMasiva(orden, idEmpresa, idSucursal) {
+        return new Promise((resolve, reject) => {
+            prorrateoOrdenRepository.insOrdenMasIva(orden, idEmpresa,idSucursal).then(function (result) {
+                if (result.data.length > 0) {
+                    resolve(result.data);
+                }
+            }).catch(err => {
+                reject(false);
+            });
+
+        });
     }
 
 })

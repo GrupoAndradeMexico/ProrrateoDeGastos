@@ -214,4 +214,52 @@ prorrateoOrden.prototype.get_guardarRelacion = function(req, res, next) {
 };
 
 
+prorrateoOrden.prototype.get_detalleProrrateoOrden = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'idEsquema', value: req.query.idEsquema, type: self.model.types.INT },
+        { name: 'folio', value: req.query.folio, type: self.model.types.STRING }
+    ];
+
+    this.model.query('SEL_DETALLE_PRORRATEO_ORDEN', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoOrden.prototype.get_delRelacionAreaConcepto = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'id', value: req.query.id, type: self.model.types.INT }
+    ];
+
+    this.model.query('DEL_RELACION_ESQUEMA_PRORRATEO_ORDEN', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoOrden.prototype.get_insOrdenMasIva = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'orden', value: req.query.orden, type: self.model.types.STRING },
+        { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
+        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT }
+    ];
+
+    this.model.query('INS_ORDENMASIVA_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = prorrateoOrden;

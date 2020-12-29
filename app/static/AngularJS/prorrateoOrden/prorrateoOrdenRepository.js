@@ -130,6 +130,48 @@ registrationModule.factory('prorrateoOrdenRepository', function($http) {
                 }
 
             });
+        },
+        getDetalleProrrateoOrden: (idEsquema, folio) => {
+            return $http({
+                url: prorrateoOrdenURL + 'detalleProrrateoOrden/',
+                method: "GET",
+                params: {
+                    idEsquema,
+                    folio
+                    },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
+        },
+        delRelacionAreaConcepto: (id) => {
+            return $http({
+                url: prorrateoOrdenURL + 'delRelacionAreaConcepto/',
+                method: "GET",
+                params: {
+                    id
+                    },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
+        },
+        insOrdenMasIva: (orden, idEmpresa, idSucursal) => {
+            return $http({
+                url: prorrateoOrdenURL + 'insOrdenMasIva/',
+                method: "GET",
+                params: {
+                    orden, 
+                    idEmpresa, 
+                    idSucursal
+                    },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
         }
     };
 });
