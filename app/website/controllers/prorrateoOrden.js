@@ -85,7 +85,7 @@ prorrateoOrden.prototype.get_esquemas = function(req, res, next) {
     });
 };
 
-prorrateoOrden.prototype.get_prorrateoOrden= function(req, res, next) {
+prorrateoOrden.prototype.get_prorrateoOrden = function(req, res, next) {
     var self = this;
     var sucOrden = req.query.idsucursal;
     var numOrden = req.query.orden;
@@ -202,7 +202,8 @@ prorrateoOrden.prototype.get_guardarRelacion = function(req, res, next) {
         { name: 'Area', value: req.query.Area, type: self.model.types.STRING },
         { name: 'Concepto', value: req.query.Concepto, type: self.model.types.STRING },
         { name: 'TipoIVA', value: req.query.TipoIVA, type: self.model.types.STRING },
-        { name: 'monto', value: req.query.monto, type: self.model.types.DECIMAL }
+        { name: 'monto', value: req.query.monto, type: self.model.types.DECIMAL },
+        { name: 'idDetalle', value: req.query.idDetalle, type: self.model.types.INT }
     ];
 
     this.model.query('INS_DETALLEPRORRATEO_ORDEN_SP', params, function(error, result) {
@@ -251,7 +252,8 @@ prorrateoOrden.prototype.get_insOrdenMasIva = function(req, res, next) {
     var params = [
         { name: 'orden', value: req.query.orden, type: self.model.types.STRING },
         { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
-        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT }
+        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
+        { name: 'idEsquema', value: req.query.idEsquema, type: self.model.types.INT }
     ];
 
     this.model.query('INS_ORDENMASIVA_SP', params, function(error, result) {

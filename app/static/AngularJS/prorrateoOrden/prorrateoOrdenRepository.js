@@ -122,8 +122,8 @@ registrationModule.factory('prorrateoOrdenRepository', function($http) {
                     Area: data.Area,
                     Concepto: data.Concepto,
                     TipoIVA: data.TipoIVA,
-                    monto: data.monto
-
+                    monto: data.monto,
+                    idDetalle: data.idDetalle
                     },
                 headers: {
                     'Content-Type': 'application/json'
@@ -131,7 +131,7 @@ registrationModule.factory('prorrateoOrdenRepository', function($http) {
 
             });
         },
-        getDetalleProrrateoOrden: (idEsquema, folio) => {
+        getDetalleProrrateoOrden: (idEsquema, folio,idConsecutivoOC) => {
             return $http({
                 url: prorrateoOrdenURL + 'detalleProrrateoOrden/',
                 method: "GET",
@@ -158,14 +158,15 @@ registrationModule.factory('prorrateoOrdenRepository', function($http) {
 
             });
         },
-        insOrdenMasIva: (orden, idEmpresa, idSucursal) => {
+        insOrdenMasIva: (orden, idEmpresa, idSucursal,idEsquema) => {
             return $http({
                 url: prorrateoOrdenURL + 'insOrdenMasIva/',
                 method: "GET",
                 params: {
                     orden, 
                     idEmpresa, 
-                    idSucursal
+                    idSucursal,
+                    idEsquema
                     },
                 headers: {
                     'Content-Type': 'application/json'

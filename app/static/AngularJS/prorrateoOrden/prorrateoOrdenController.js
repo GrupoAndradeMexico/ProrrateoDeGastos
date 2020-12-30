@@ -226,8 +226,8 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     $scope.DetalleSelected = function (opcion) {
 
         for (var i = 0; i < $scope.listDetalleOrden.length; i++) {
-            if ($scope.listDetalleOrden[i].idSucursal !== opcion.idSucursal) {
-                $scope.listDetalleOrden.select = false;
+            if ($scope.listDetalleOrden[i].area !== opcion.area) {
+                $scope.listDetalleOrden[i].select = false;
             }
             else {
                 $scope.detalleSeleccionado = true;
@@ -258,8 +258,9 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
             Orden: $scope.ordenSelected,
             Area: $scope.areaSelected.PAR_IDENPARA,
             Concepto: $scope.conceptoSelected.PAR_IDENPARA,
-            TipoIVA: String(detalle.tipoIva),
-            monto: (detalle.totalOrden * ($scope.sucursalSelect.porcentaje / 100))
+            TipoIVA: String(detalle.tipoiva),
+            monto: (detalle.totalOrden * ($scope.sucursalSelect.porcentaje / 100)),
+            idDetalle: detalle.idConsecutivoOC
 
         }
 
@@ -280,13 +281,13 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
         })
     }
 
-    $scope.GenerarProrrateo = function () {
-        prorrateoOrdenRepository.insOrdenMasIva($scope.ordenSelected, $scope.sucursalSelect.idEmpresa, $scope.sucursalSelect.idSucursal).then(result => {
-            if (result.data.length > 0) {
-                swal('Info', 'Se inserto en ordenes masivas')
-            }
-        })
-    }
+    // $scope.GenerarProrrateo = function () {
+    //     prorrateoOrdenRepository.insOrdenMasIva($scope.ordenSelected, $scope.sucursalSelect.idEmpresa, $scope.sucursalSelect.idSucursal,$scope.esquema).then(result => {
+    //         if (result.data.length > 0) {
+    //             swal('Info', 'Se inserto en ordenes masivas')
+    //         }
+    //     })
+    // }
 
     function DetalleProrrateoOrden() {
 
@@ -304,13 +305,54 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     $scope.GenerarProrrateo = async function () {
         var resolved = [];
         var errors = [];
+        var resolvedFact = [];
+        var errorFact = [];
+        var listaProrrateo = []
+        var indice = -1;
 
-        for (var i = 0; i < $scope.listaDetalleProrrateoOrden.length; i++) {
-            
+        for( var i=0;i<$scope.listaDetalleProrrateoOrden.length; i++){
+            indice = -1
+            var data = {
+                idEmpresa:0,
+                idSucursal:0
+            }
+
+            data.idEmpresa = $scope.listaDetalleProrrateoOrden[i].idEmpresaProrrateo;
+            data.idSucursal = $scope.listaDetalleProrrateoOrden[i].idSucursalProrrateo;
+
+            if(listaProrrateo.length < 1){
+
+                listaProrrateo.push(data)
+            }
+            else{
+
+                indice = listaProrrateo.findIndex(x => x.idEmpresa == $scope.listaDetalleProrrateoOrden[i].idEmpresaProrrateo && x.idSucursal == $scope.listaDetalleProrrateoOrden[i].idSucursalProrrateo)
+                
+                if(indice === -1){
+                    listaProrrateo.push(data)
+                }
+            }
+        }
+
+
+        try {
+            let factura = await promiseOrden($scope.sucursal.suc_idsucursal, $scope.montoTotalOrden, $scope.esquema, $scope.ordenSelected);
+            var resp = { orden: $scope.ordenSelected, detalle: factura }
+            resolvedFact.push(resp)
+        }
+        catch (e) {
+            let detalleError = e
+            let respError = { orden: $scope.ordenSelected, detalle: detalleError }
+            errorFact.push(respError)
+        }
+
+        if (resolvedFact.length > 0) {
+            for (var i = 0; i < listaProrrateo.length; i++) {
+
                 $('#mdlLoading').modal('show');
                 try {
-                    let detalle = await promiseOrdenMasiva($scope.ordenSelected, $scope.listaDetalleProrrateoOrden[i].idEmpresaProrrateo, $scope.listaDetalleProrrateoOrden[i].idSucursalProrrateo);
-                    var resR = { orden: $scope.lstordenes[i].orden, detalle: detalle }
+                    let detalle = await promiseOrdenMasiva($scope.ordenSelected, listaProrrateo[i].idEmpresa, listaProrrateo[i].idSucursal,$scope.esquema);
+                    var resR = { orden: $scope.ordenSelected, detalle: detalle }
                     resolved.push(resR);
                     //resolved.push(await promiseOrden($scope.sucursal.suc_idsucursal, $scope.lstordenes[i].monto, $scope.esquema, $scope.lstordenes[i].orden));
                 }
@@ -320,8 +362,86 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
                     var resE = { orden: $scope.ordenSelected, detalle: detalle }
                     errors.push(resE);
                 }
-            
+
+            }
+            if (resolved.length > 0) {
+                angular.forEach(resolved, function (o, key) {
+                    alertFactory.success('Polizas creadas correctamente orden: ' + o.orden);
+                });
+            }
+
+            if (errors.length > 0) {
+                angular.forEach(errors, function (o, key) {
+                    alertFactory.success('Ocurrio un error con la siguiente Orden: ' + o.orden);
+                });
+
+            }
         }
+
+        if (errorFact.length > 0) {
+            angular.forEach(errors, function (o, key) {
+                alertFactory.success('Ocurrio un error con la siguiente Orden al guardar la información de la factura: ' + o.orden);
+            });
+        }
+
+
+        $('#mdlLoading').modal('hide');
+
+    }
+
+    async function promiseOrdenMasiva(orden, idEmpresa, idSucursal, idEsquema) {
+        return new Promise((resolve, reject) => {
+            prorrateoOrdenRepository.insOrdenMasIva(orden, idEmpresa, idSucursal, idEsquema).then(function (result) {
+                if (result.data.length > 0) {
+                    resolve(result.data);
+                }
+            }).catch(err => {
+                reject(false);
+            });
+
+        });
+    }
+
+    function ValidaNumeroRegistros() {
+
+        $scope.numDetalleOrden = $scope.listDetalleOrden.length;
+        $scope.numDetalleEsquema = $scope.listDetalleEsquema.length;
+
+        var totalRegistros = $scope.numDetalleOrden * $scope.numDetalleEsquema;
+
+        if (totalRegistros === $scope.listaDetalleProrrateoOrden.length) {
+            $scope.habilitaProrrateo = true;
+        }
+        else if (totalRegistros < $scope.listaDetalleProrrateoOrden.length) {
+            swal('Alerta', 'El número de detalles supera lo esperado', 'warning')
+            $scope.habilitaProrrateo = false;
+        }
+        else if (totalRegistros > $scope.listaDetalleProrrateoOrden.length) {
+            swal('Alerta', 'El número de detalles es menor a lo esperado', 'warning')
+            $scope.habilitaProrrateo = false;
+        }
+
+    }
+
+    $scope.GenerarProrrateoFactura = async function () {
+        var resolved = [];
+        var errors = [];
+
+        $('#mdlLoading').modal('show');
+        try {
+            let detalle = await promiseOrden($scope.sucursal.suc_idsucursal, $scope.montoTotalOrden, $scope.esquema, $scope.ordenSelected);
+            var resR = { orden: $scope.lstordenes[i].orden, detalle: detalle }
+            resolved.push(resR);
+            //resolved.push(await promiseOrden($scope.sucursal.suc_idsucursal, $scope.lstordenes[i].monto, $scope.esquema, $scope.lstordenes[i].orden));
+        }
+        catch (e) {
+            //errors.push(e);
+            let detalle = e;
+            var resE = { orden: $scope.lstordenes[i].orden, detalle: detalle }
+            errors.push(resE);
+        }
+
+
         if (resolved.length > 0) {
             angular.forEach(resolved, function (o, key) {
                 alertFactory.success('Polizas creadas correctamente orden: ' + o.orden);
@@ -335,42 +455,6 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
 
         }
         $('#mdlLoading').modal('hide');
-
-    }
-
-    async function promiseOrdenMasiva(orden, idEmpresa, idSucursal) {
-        return new Promise((resolve, reject) => {
-            prorrateoOrdenRepository.insOrdenMasIva(orden, idEmpresa,idSucursal).then(function (result) {
-                if (result.data.length > 0) {
-                    resolve(result.data);
-                }
-            }).catch(err => {
-                reject(false);
-            });
-
-        });
-    }
-
-    function ValidaNumeroRegistros(){
-
-        $scope.numDetalleOrden = $scope.listDetalleOrden.length;
-        $scope.numDetalleEsquema = $scope.listDetalleEsquema.length;
-
-        var totalRegistros = $scope.numDetalleOrden *  $scope.numDetalleEsquema;
-
-        if(totalRegistros === $scope.listaDetalleProrrateoOrden.length){
-            $scope.habilitaProrrateo = true;
-        }
-        else if(totalRegistros < $scope.listaDetalleProrrateoOrden.length)
-        {
-            swal('Alerta','El número de detalles supera lo esperado','warning')
-            $scope.habilitaProrrateo = false;
-        }
-        else if(totalRegistros > $scope.listaDetalleProrrateoOrden.length)
-        {
-            swal('Alerta','El número de detalles es menor a lo esperado','warning')
-            $scope.habilitaProrrateo = false;
-        }
 
     }
 
