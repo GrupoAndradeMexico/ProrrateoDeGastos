@@ -1,0 +1,69 @@
+<link rel="stylesheet" href="css/esquemaProrrateo.css">
+
+<div style="background-color:white; padding:15px; overflow: hidden;">
+    <div class="col-sm-12" style="text-align: center">
+        <h2>Facturas Prorrateo</h2>
+        <br>
+    </div>
+  
+    <div  class="row">
+        <div class="form-group col-sm-12">
+            <div class="panel-body">
+                <div class="form-group col-sm-12" style="height:500px; overflow:auto;">
+                    <table  id="facturasPro"  class="table table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Orden Prorrateada</th>
+                                <th>Empresa</th>
+                                <th>Sucursal</th>
+                                <th>Importe</th>
+                                <th>Factura</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in lstfacturas">
+                                <td>{{item.orden}}</td>
+                                <td>{{item.empresa}}</td>
+                                <td>{{item.sucursal}}</td>
+                                <td>{{item.monto | currency}}</td>
+                                <td>{{item.factura}}</td>
+                                <td>
+                                    <button class="btn btn-circle"ng-click="Modalfacturas(item)">
+                                    <i style="color: #62A3EB; font-size: 20px;"  class="fa fa-eye" aria-hidden="true"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+</div>
+
+<!--Inicia modal Empleado -->
+<!--===================================================-->
+<div class="modal fade" id="modalProrrateo" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: black;">
+                    <i class="pci-cross pci-circle" style="margin-top: -40%;"></i></button>
+                <h4 class="modal-title ">Detalle del prorrateo</h4>
+            </div>
+            <div class="modal-body">
+        </div>
+    </div>
+</div>

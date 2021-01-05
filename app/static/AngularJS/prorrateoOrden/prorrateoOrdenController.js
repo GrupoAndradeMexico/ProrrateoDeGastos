@@ -77,6 +77,29 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
             prorrateoOrdenRepository.getOrdenes($scope.empresa.emp_idempresa, $scope.sucursal.suc_idsucursal, inicio, fin).then(function (result) {
                 if (result.data.length > 0) {
                     $scope.lstordenes = result.data;
+                $('#ordenesPro').DataTable().clear();
+            $('#ordenesPro').DataTable().destroy();
+            setTimeout(() => {
+                $('#ordenesPro').DataTable({
+                    destroy: true,
+                    "responsive": true,
+                    searching: true,
+                    paging: true,
+                    autoFill: false,
+                    fixedColumns: true,
+                    pageLength: 15,
+                    "order": [[3, "asc"]],
+                    "language": {
+                        search: '<i class="fa fa-search" aria-hidden="true"></i>',
+                        searchPlaceholder: 'Buscar',
+                        oPaginate: {
+                            sNext: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                            sPrevious: '<i class="fa fa-caret-left" aria-hidden="true"></i>'
+                        }
+                    }
+                });
+                $('#ordenesPro_length').hide();
+            })
                     $('#mdlLoading').modal('hide');
                     $scope.verDetalle = true;
                 }

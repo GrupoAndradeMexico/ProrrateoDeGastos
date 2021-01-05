@@ -37,6 +37,11 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         templateUrl: 'AngularJS/Templates/esquemaProrrateo.html', 
         controller: 'esquemaProrrateoController'
     });
+
+    $routeProvider.when('/prorrateoFactura', {
+        templateUrl: 'AngularJS/Templates/prorrateoFactura.html', 
+        controller: 'prorrateoFacturaController'
+    });
     
     $routeProvider.otherwise({ redirectTo: '/' });
 

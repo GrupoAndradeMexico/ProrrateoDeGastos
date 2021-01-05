@@ -4,5 +4,6 @@ module.exports = {
      polizas: require('./controllers/polizas'),
      prorrateoSucursal: require('./controllers/prorrateoSucursal'),
      prorrateoOrden: require('./controllers/prorrateoOrden'),
-     esquemaProrrateo: require('./controllers/esquemaProrrateo')
+     esquemaProrrateo: require('./controllers/esquemaProrrateo'),
+     prorrateoFactura: require('./controllers/prorrateoFactura')
   }
