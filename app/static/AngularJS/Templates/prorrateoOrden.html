@@ -148,7 +148,7 @@
                             <div class="col-sm-12">
                             <label class="form-label">Esquema:</label>
                             <select class="form-control" ng-model="esquema"
-                                ng-options="esquema.id as esquema.nombre for esquema in lstEsquemas">
+                                ng-options="esquema.id as esquema.nombre for esquema in lstEsquemas" ng-change="traeDetallePlantillas(esquema)">
                                 <option value="">Seleccione Esquema</option>
                             </select>
                             </div>

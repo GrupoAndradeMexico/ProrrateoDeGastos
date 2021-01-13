@@ -187,5 +187,17 @@ registrationModule.factory('prorrateoOrdenRepository', function($http) {
 
             });
         },
+        getDetalleProrrateoOrdenPlantilla: function(idEsquema) {
+            return $http({
+                url: prorrateoOrdenURL + 'detalleProrrateoOrdenPlantilla/',
+                method: "GET",
+                params: {
+                    idEsquema: idEsquema
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
     };
 });
