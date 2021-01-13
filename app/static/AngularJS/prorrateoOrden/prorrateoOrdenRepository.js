@@ -173,6 +173,19 @@ registrationModule.factory('prorrateoOrdenRepository', function($http) {
                 }
 
             });
-        }
+        },
+        detallesOC: (detalles) => {
+            return $http({
+                url: prorrateoOrdenURL + 'detallesOC/',
+                method: "GET",
+                params: {
+                    detalles
+                    },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+
+            });
+        },
     };
 });

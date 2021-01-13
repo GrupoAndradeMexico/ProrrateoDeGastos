@@ -131,7 +131,7 @@ async function promiseInsertPoliza(datos, sucOrden, numOrden, self) {
                 { name: 'empProrrateo', value: datos.empProrrateo, type: self.model.types.INT},
                 { name: 'precioUnitario', value: datos.montoSuc, type: self.model.types.INT},
                 { name: 'orden', value: numOrden, type: self.model.types.STRING},
-                { name: 'idConcepto', value: datos.idConcepto, type: self.model.types.STRING},
+                { name: 'idConcepto', value: datos.idconcepto, type: self.model.types.STRING},
                 ];
             self.model.query('INS_PRORRATEOORDEN_SP', params, async function(error, result) {
                 if (!error) {
@@ -151,7 +151,7 @@ prorrateoOrden.prototype.get_detalleOrden = function(req, res, next) {
         { name: 'folio', value: req.query.orden, type: self.model.types.STRING }
     ];
 
-    this.model.query('SEL_DETALLE_ORDEN_COMPRA_PRORRATEO', params, function(error, result) {
+    this.model.queryAllRecordSet('SEL_DETALLE_ORDEN_COMPRA_PRORRATEO', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
@@ -257,6 +257,21 @@ prorrateoOrden.prototype.get_insOrdenMasIva = function(req, res, next) {
     ];
 
     this.model.query('INS_ORDENMASIVA_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoOrden.prototype.get_detallesOC = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'detalles', value: req.query.detalles, type: self.model.types.STRING }
+        ];
+
+    this.model.query('SEL_DETALLE_ORDEN_VALIDA_ITEMS', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result

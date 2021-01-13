@@ -18,7 +18,7 @@
                                 <th>Sucursal</th>
                                 <th>Importe</th>
                                 <th>Factura</th>
-                                <th> </th>
+                                <th>Ver</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,7 +30,7 @@
                                 <td>{{item.factura}}</td>
                                 <td>
                                     <button class="btn btn-circle"ng-click="Modalfacturas(item)">
-                                    <i style="color: #62A3EB; font-size: 20px;"  class="fa fa-eye" aria-hidden="true"></i>
+                                    <i style="color: #62A3EB; font-size: 18px;"  class="fa fa-eye" aria-hidden="true"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -52,18 +52,21 @@
     </div>
 </div>
 
-<!--Inicia modal Empleado -->
-<!--===================================================-->
-<div class="modal fade" id="modalProrrateo" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+<!--================================ Modal para colocar imagen ================================-->
+
+<!--================================ Modal para colocar PDF ================================-->
+<div class="modal fade" id="mostrarPdf" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
     aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header headerModal">
-                <button type="button" class="close" data-dismiss="modal" style="color: black;">
-                    <i class="pci-cross pci-circle" style="margin-top: -40%;"></i></button>
-                <h4 class="modal-title ">Detalle del prorrateo</h4>
+            <div class="modal-header label-mint headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                    <i class="pci-cross pci-circle text-white"></i>
+                </button>
+                <h4 class="modal-title text-white" style="color: white;">{{modalTitle}}</h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="pdfReferenceContent"></div>
         </div>
     </div>
 </div>
+<!--================================ End Modal para para colocar PDF ================================-->

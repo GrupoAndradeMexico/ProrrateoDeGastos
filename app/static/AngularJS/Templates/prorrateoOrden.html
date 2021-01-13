@@ -39,7 +39,7 @@
     </div>
     <div ng-show="verDetalle" class="row">
         <div class="form-group col-sm-12">
-            <div class="col-md-3">
+            <div class="col-md-3" hidden>
                 <label class="form-label">Esquema:</label>
                 <select class="form-control" ng-model="esquema"
                     ng-options="esquema.id as esquema.nombre for esquema in lstEsquemas">
@@ -79,8 +79,8 @@
                                 <td>{{item.monto | currency}}</td>
                                 <td>{{item.fecha}}</td>
                                 <td>
-                                    <button type="button" class="btn btn-info" aria-expanded="false" ng-disabled="esquema === undefined"
-                                        ng-click="ModalProrrateo(item.orden, item.monto)">
+                                    <!-- <button type="button" class="btn btn-info" aria-expanded="false" ng-disabled="esquema === undefined" --></button>
+                                    <button type="button" class="btn btn-info" aria-expanded="false"  ng-click="ModalProrrateo(item.orden, item.monto)">
                                         Prorrateo
                                     </button>
                                 </td>
@@ -113,7 +113,7 @@
             <div class="modal-header headerModal">
                 <button type="button" class="close" data-dismiss="modal" style="color: black;">
                     <i class="pci-cross pci-circle" style="margin-top: -40%;"></i></button>
-                <h4 class="modal-title ">Detalle del prorrateo</h4>
+                <h4 class="modal-title ">Detalle Orden</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -126,16 +126,18 @@
                                     </th>
                                     <th>Área</th>
                                     <th>Concepto</th>
+                                    <th>Importe</th>
                                     <th>Sucursal</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="det in listDetalleOrden">
                                     <td class="text-center">
-                                        <input type="radio"  ng-model="det.select" ng-change="DetalleSelected(det)"/>
+                                        <input type="checkbox"  ng-model="det.select" ng-change="DetalleSelected(det)"/>
                                     </td>
                                     <td>{{det.area}}</td>
                                     <td>{{det.conceptos}}</td>
+                                    <td>{{det.totalOrden | currency}}</td>
                                     <td>{{det.nombreSucursal}}</td>
                                 </tr>
                             </tbody>
@@ -143,6 +145,24 @@
                     </div>
                     <div class="col-sm-6" >
                         <div class="row">
+                            <div class="col-sm-12">
+                            <label class="form-label">Esquema:</label>
+                            <select class="form-control" ng-model="esquema"
+                                ng-options="esquema.id as esquema.nombre for esquema in lstEsquemas">
+                                <option value="">Seleccione Esquema</option>
+                            </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <br>
+                                <label class="form-label"> </label>
+                                <button type="button" ng-show="crearEsquema == 1" class="btn btn-info" aria-expanded="false" ng-click="crearEsquemas()" >
+                                    Crear Esquema
+                                </button>
+                            </div>
+                        </div>
+                      <!--  <div class="row">
                             <div class="col-sm-12">
                                 <label for="sucursalEsquema">Sucursal Esquema</label>
 
@@ -177,19 +197,19 @@
                                 </button>
                             </div>
                         </div>
+                    -->
                     </div>
                 </div>
-                <div class="row">
+                <div ng-show="habilitaProrrateo" class="row">
                     <div class="col-sm-12">
-                        <h5>Relaciones Generadas</h5>
+                        <h5>Relaciones Esquema</h5>
                     </div>
-                </div>
-                <div class="row">
+                    <div  class="col-sm-12" style="height:200px; overflow:auto;"> 
                     <div class="col-sm-12">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Área</th>
+                                   <!-- <th>Área</th>
                                     <th>Concepto</th>
                                     <th>Sucursal</th>
                                     <th></th>
@@ -197,10 +217,16 @@
                                     <th>Concepto Esquema</th>
                                     <th>Sucursal Esquema</th>
                                     <th></th>
+                                    -->
+                                    <th>Empresa</th>
+                                    <th>Sucursal</th>
+                                    <th>Área</th>
+                                    <th>Concepto</th>
+
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="rel in listaDetalleProrrateoOrden">
+                               <!-- <tr ng-repeat="rel in listaDetalleProrrateoOrden">
                                     <td>{{rel.area}}</td>
                                     <td>{{rel.concepto}}</td>
                                     <td>{{rel.sucursal}}</td>
@@ -215,9 +241,17 @@
                                     </button>
                                     </td>
                                 </tr>
+                                -->
+                                <tr ng-repeat="rel in lstDetallesEsq">
+                                    <td>{{rel.empresa}}</td>
+                                    <td>{{rel.sucursal}}</td>
+                                    <td>{{rel.area_descripcion}}</td>
+                                    <td>{{rel.concepto_descripcion}}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
+                </div>
                 </div>
             </div>
             <div class="modal-footer" style="margin-top: 0%; margin-right:1%;">
