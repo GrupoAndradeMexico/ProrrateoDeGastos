@@ -15,9 +15,7 @@ registrationModule.controller('plantillaProrrateoController', function ($scope, 
         idAreaPro:'',
         areaPro:'',
         idConcepto:'',
-        conceptoPro:'',
-        iva: 16,
-        monto: 0
+        conceptoPro:''
     }
     $scope.esquemaSelected;
     $scope.esquema;
@@ -28,6 +26,7 @@ registrationModule.controller('plantillaProrrateoController', function ($scope, 
     $scope.listaRelaciones = [];
     $scope.nombreRelacion;
     $scope.frecuenciaSelected = "0";
+    $scope.relacionesEncontradas = [];
 
 
     $scope.init = () => {
@@ -39,17 +38,17 @@ registrationModule.controller('plantillaProrrateoController', function ($scope, 
     }
 
     LeeDetalleOrden = function(orden){
+
         $scope.listDetalleOrden = [];
-        
-        
+
         prorrateoOrdenRepository.detalleOrden(orden).then(result => {
             if (result.data.length > 0){
                
                 var datos = result.data[0];
 
-                ObtieneEsquemas(datos.idEmpresa, datos.idSucursal);
+                ObtieneEsquemas(datos[0].idEmpresa, datos[0].idSucursal);
 
-                $scope.listDetalleOrden = result.data;
+                $scope.listDetalleOrden = result.data[0];
                 for (i = 0; i < $scope.listDetalleOrden.length; i++) {
                     $scope.listDetalleOrden[i].select = false;
                 }
@@ -124,8 +123,75 @@ registrationModule.controller('plantillaProrrateoController', function ($scope, 
             }
         }
 
-        /* Obtenemos la lista de relaciones */
+        let valores = $scope.listDetalleOrden.filter(x => x.select !== false)[0];
+        
+        let data ={
+            idEmpresa: valores.idEmpresa,
+            idSucursal: valores.idSucursal,
+            areaDesc: valores.area,
+            conceptoDesc: valores.conceptos,
+            nombreSucursal: valores.nombreSucursal
+        }
 
+        $scope.relacionesEncontradas =[]
+        /* Obtenemos la lista de relaciones */
+        plantillaProrrateoRepository.relacionesCreadas(data).then(result => {
+            console.log(result)
+            if(result.data.length >0){
+                $scope.relacionesEncontradas = result.data;
+                Relaciones(data)
+            }
+        })
+
+    }
+
+    Relaciones = function(data){
+        for (let i = 0; i < $scope.listDetalleEsquema.length; i++) {
+            const element = $scope.listDetalleEsquema[i];
+            
+            for (let j = 0; j < $scope.relacionesEncontradas.length; j++) {
+                const elementRel = $scope.relacionesEncontradas[j];
+
+                $scope.relacion = {
+                    idEmpresaOrden:0,
+                    idSucursalOrden:0,
+                    sucursalOrden:'',
+                    idAreaOrden:'',
+                    areaOrden:'',
+                    idConceptoOrden:'',
+                    conceptoOrden:'',
+                    idEmpresaPro:0,
+                    idSucursalPro:0,
+                    idAreaPro:'',
+                    areaPro:'',
+                    idConcepto:'',
+                    conceptoPro:''
+                }
+                
+                if(element.idEmpresa == elementRel.idEmpresa && element.idSucursal === elementRel.idSucursal){
+                  
+                    $scope.relacion = {
+                        idEmpresaOrden:   data.idEmpresa,
+                        idSucursalOrden:  data.idSucursal,
+                        sucursalOrden:    data.nombreSucursal,
+                        idAreaOrden:      '',
+                        areaOrden:        data.areaDesc,
+                        idConceptoOrden:  '',
+                        conceptoOrden:    data.conceptoDesc,
+                        idEmpresaPro:     element.idEmpresa,
+                        idSucursalPro:    element.idSucursal,
+                        sucursalPro:      element.nombreSucursal,
+                        idAreaPro:        elementRel.idArea,
+                        areaPro:          elementRel.areaDecripcion,
+                        idConcepto:       elementRel.idConepto,
+                        conceptoPro:      elementRel.conceptoDescripcion
+                    }
+
+                    $scope.listaRelaciones.push($scope.relacion);
+
+                }
+            }
+        }
     }
 
     $scope.GuardaRelacion = function(){
