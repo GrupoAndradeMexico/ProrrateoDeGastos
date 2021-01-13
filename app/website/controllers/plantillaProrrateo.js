@@ -112,5 +112,23 @@ plantillaProrrateo.prototype.get_guardaProrrateoOrden = function(req, res, next)
     });
 };
 
+plantillaProrrateo.prototype.get_relacionesCreadas = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+       
+        { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
+        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
+        { name: 'areaDesc', value: req.query.areaDesc, type: self.model.types.STRING },
+        { name: 'conceptoDesc', value: req.query.conceptoDesc, type: self.model.types.STRING }
+    ];
+
+    this.model.query('SEL_RELACION_AREA_CONCEPTO_CREADAS', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
 
 module.exports = plantillaProrrateo;

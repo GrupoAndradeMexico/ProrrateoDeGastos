@@ -33,7 +33,7 @@ registrationModule.controller('plantillaProrrateoController', function ($scope, 
     $scope.init = () => {
         $rootScope.userData = localStorageService.get('userData');
         $scope.idUsuario = $rootScope.userData.idUsuario;
-        $scope.ordenCompra = 'AU-AU-CUA-OT-PE-4245';
+        $scope.ordenCompra = sessionStorage.getItem('Orden'); //'AU-AU-CUA-OT-PE-4245';
         LeeDetalleOrden($scope.ordenCompra)
       
     }
@@ -123,6 +123,9 @@ registrationModule.controller('plantillaProrrateoController', function ($scope, 
                 $scope.detalleSeleccionado = true;
             }
         }
+
+        /* Obtenemos la lista de relaciones */
+
     }
 
     $scope.GuardaRelacion = function(){
