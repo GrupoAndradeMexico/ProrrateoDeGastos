@@ -223,13 +223,16 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
       $scope.ActualizaEsquema = function(){
           var datos = $scope.listSucursales.filter(x=> x.suc_idsucursal === $scope.sucursal)[0];
           var indiceDetalle = $scope.detalleSelect.filter(x=> x.select === undefined)[0]
+          var conceptSelected = $scope.listConceptos.filter(x => x.PAR_IDENPARA === $scope.concepto)[0];
+
           var data = {
               idDetalle:indiceDetalle.id,
               idUsuario:$scope.idUsuario,
               idEmpresa:datos.emp_idempresa,
               idSucursal:datos.suc_idsucursal,
               porcentaje: $scope.porcentajeSucursal,
-              idConcepto:$scope.concepto
+              idConcepto:conceptSelected.PAR_IDENPARA,
+              conceptoDesc:conceptSelected.PAR_DESCRIP1
           }
           
           esquemaProrrateoRepository.actualizaEsquema(data).then(result => {
