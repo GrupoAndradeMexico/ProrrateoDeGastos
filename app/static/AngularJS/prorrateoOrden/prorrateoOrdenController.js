@@ -19,6 +19,7 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     $scope.numDetallePro = 0;
     $scope.numDetalleEsquema = 0;
     $scope.habilitaProrrateo = false;
+    $scope.listDetalleOrdenTrue = [];
 
     $scope.seguridad = function () {
         polizaNominaRepository.seguridad($scope.idUsuario).then(function (result) {
@@ -200,20 +201,67 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
 
 
     $scope.ModalProrrateo = function (orden, monto) {
-
+        sessionStorage.setItem('Orden', orden);
+        $scope.habilitaProrrateo = false;
         $scope.listDetalleOrden = [];
         $scope.listDetalleEsquema = []
         $scope.detalleSeleccionado = false;
         $scope.ordenSelected = orden;
-        $scope.montoTotalOrden = monto
-
+        $scope.montoTotalOrden = monto;
+        $scope.crearEsquema = 0;
+        $scope.listaProrrateo = []
         prorrateoOrdenRepository.detalleOrden(orden).then(result => {
             if (result.data.length > 0) {
-                $scope.listDetalleOrden = result.data;
+                $scope.listDetalleOrden = result.data[0];
+                $scope.lstEsquemas  = result.data[1];
+                $scope.lstDetallesEsq = result.data[2];
+             
+    
                 for (i = 0; i < $scope.listDetalleOrden.length; i++) {
-                    $scope.listDetalleOrden[i].select = false;
+                    $scope.listDetalleOrden[i].select = true;
                 }
 
+                if($scope.lstEsquemas.length == 1)
+                {
+                    $scope.esquema = $scope.lstEsquemas[0].id;
+                    $scope.habilitaProrrateo = true;
+
+
+                }
+                if($scope.lstEsquemas.length == 0)
+                {
+                    $scope.crearEsquema = 1;
+                }
+
+                if($scope.lstDetallesEsq.length > 0)
+                {
+                    
+                    for( var i=0;i<$scope.lstDetallesEsq.length; i++){
+                        indice = -1
+                        var data = {
+                            idEmpresa:0,
+                            idSucursal:0
+                        }
+                        data.idEmpresa = $scope.lstDetallesEsq[i].id_empresa;
+                        data.idSucursal = $scope.lstDetallesEsq[i].id_sucursal;
+
+                        if($scope.listaProrrateo.length < 1){
+
+                            $scope.listaProrrateo.push(data)
+                        }
+                        else{
+            
+                            indice = $scope.listaProrrateo.findIndex(x => x.idEmpresa == $scope.lstDetallesEsq[i].id_empresa && x.idSucursal == $scope.lstDetallesEsq[i].id_sucursal)
+                            
+                            if(indice === -1){
+                                $scope.listaProrrateo.push(data)
+                            }
+                        }
+                     }
+                }
+
+                $('#modalProrrateo').modal('show');
+                /*    
                 esquemaProrrateoRepository.getDetalleEsquema($scope.esquema).then(result => {
                     if (result.data.length > 0) {
                         $scope.listDetalleEsquema = result.data;
@@ -221,11 +269,9 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
                         $scope.listDetalleEsquema = $scope.listDetalleEsquema.filter(x => x.nombreSucursal !== 'TOTAL');
 
                         DetalleProrrateoOrden();
-
-                        $('#modalProrrateo').modal('show');
                     }
                 })
-
+                */
             }
         })
     }
@@ -247,15 +293,48 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     }
 
     $scope.DetalleSelected = function (opcion) {
-
+        //$('#mdlLoading').modal('show');
+        $scope.listDetalleOrdenTrue = [];
         for (var i = 0; i < $scope.listDetalleOrden.length; i++) {
-            if ($scope.listDetalleOrden[i].area !== opcion.area) {
-                $scope.listDetalleOrden[i].select = false;
-            }
-            else {
-                $scope.detalleSeleccionado = true;
+            if ($scope.listDetalleOrden[i].area == opcion.area && $scope.listDetalleOrden[i].idConsecutivoOC == opcion.idConsecutivoOC)  {
+                $scope.listDetalleOrden[i].select = opcion.select;
             }
         }
+        var detalles = '';
+        for (var i = 0; i < $scope.listDetalleOrden.length; i++) {
+            if ($scope.listDetalleOrden[i].select == true)  {
+                let det =  $scope.listDetalleOrden[i].idConsecutivoOC + ',';
+                detalles += det;
+                $scope.listDetalleOrdenTrue.push($scope.listDetalleOrden[i]);
+            }
+        }
+        detalles =  detalles.substring(0, detalles.length - 1);
+        prorrateoOrdenRepository.detallesOC(detalles).then(result => {
+            if (result.data.length > 0) {
+                $scope.lstEsquemas = [];
+                $scope.habilitaProrrateo = false; 
+                $scope.detallesOC = result.data;
+                angular.forEach($scope.detallesOC, function (o, key) {
+                   if(o.detalles == $scope.listDetalleOrdenTrue.length) 
+                   {
+                    $scope.lstEsquemas.push(o); 
+                    $scope.esquema = $scope.lstEsquemas[0].id;
+                    $scope.habilitaProrrateo = true; 
+                    //$('#mdlLoading').modal('hide');
+                   }
+                   else
+                   {
+                    $scope.crearEsquema = 1;
+                   }
+                });
+
+            }
+            else{
+                $scope.lstEsquemas = [];
+                $scope.crearEsquema = 1;
+                //$('#mdlLoading').modal('hide');
+            }
+        })
     }
 
     $scope.HabilitaGuardar = function () {
@@ -330,10 +409,9 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
         var errors = [];
         var resolvedFact = [];
         var errorFact = [];
-        var listaProrrateo = []
         var indice = -1;
 
-        for( var i=0;i<$scope.listaDetalleProrrateoOrden.length; i++){
+        /*for( var i=0;i<$scope.listaDetalleProrrateoOrden.length; i++){
             indice = -1
             var data = {
                 idEmpresa:0,
@@ -355,7 +433,7 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
                     listaProrrateo.push(data)
                 }
             }
-        }
+        }*/
 
 
         try {
@@ -370,11 +448,11 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
         }
 
         if (resolvedFact.length > 0) {
-            for (var i = 0; i < listaProrrateo.length; i++) {
+            for (var i = 0; i < $scope.listaProrrateo.length; i++) {
 
                 $('#mdlLoading').modal('show');
                 try {
-                    let detalle = await promiseOrdenMasiva($scope.ordenSelected, listaProrrateo[i].idEmpresa, listaProrrateo[i].idSucursal,$scope.esquema);
+                    let detalle = await promiseOrdenMasiva($scope.ordenSelected, $scope.listaProrrateo[i].idEmpresa, $scope.listaProrrateo[i].idSucursal,$scope.esquema);
                     var resR = { orden: $scope.ordenSelected, detalle: detalle }
                     resolved.push(resR);
                     //resolved.push(await promiseOrden($scope.sucursal.suc_idsucursal, $scope.lstordenes[i].monto, $scope.esquema, $scope.lstordenes[i].orden));
@@ -480,5 +558,14 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
         $('#mdlLoading').modal('hide');
 
     }
+
+    $scope.crearEsquemas = function () {
+        $('#modalProrrateo').modal('hide');
+        if ($('.modal-backdrop').is(':visible')) {
+            $('body').removeClass('modal-open'); 
+            $('.modal-backdrop').remove(); 
+          };
+          $location.path('/plantillaProrrateo');
+    } 	
 
 })
