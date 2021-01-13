@@ -62,15 +62,16 @@ registrationModule.factory('esquemaProrrateoRepository', function($http){
         },
         guardaDetalle: function(data){
             return $http({
-                url: esquemaProrrateoURL + 'guardaDetalle/',
+                url: esquemaProrrateoURL + 'guardarDetalle/',
                 method: "GET",
                 params: {
                     idEmpresa:data.idEmpresa,
-                    idSucursal:data.idSucursales,
+                    idSucursales:data.idSucursales,
                     idEncabezado:data.idEncabezado,
                     porcentaje:data.porcentaje,
                     idUsuario:data.idUsuario,
-                    idConcepto:data.idConcepto
+                    idConcepto:data.idConcepto,
+                    conceptoDesc:data.conceptoDesc
                 },
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,7 +103,10 @@ registrationModule.factory('esquemaProrrateoRepository', function($http){
                     idEmpresa:data.idEmpresa,
                     idSucursal:data.idSucursal,
                     porcentaje:data.porcentaje,
-                    idConcepto:data.idConcepto
+                    idConcepto:data.idConcepto,
+                    conceptoDesc:data.conceptoDesc,
+                    idArea:data.idArea,
+                    areaDesc:data.areaDesc
                 },
                 headers: {
                     'Content-Type': 'application/json'

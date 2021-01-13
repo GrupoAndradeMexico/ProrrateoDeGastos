@@ -5,7 +5,7 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
     $scope.empresa;
     $scope.sucursalEmp;
     $scope.panelCrear = true;
-    $scope.esquemaDetalle = false;
+    $scope.esquemaDetalle = true;
     $scope.listSucursales= [];
     $scope.detalleEsquema= [];
     $scope.muestraTabla = false;
@@ -26,6 +26,9 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
     $scope.cbConceptos = true;
     $scope.listConceptos = [];
     $scope.concepto;
+    $scope.det={};
+    $scope.cbSucursales = false;
+    $scope.txtAproach = false;
 
     $scope.init = () => {
         $rootScope.userData = localStorageService.get('userData');
@@ -84,13 +87,16 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
 
     $scope.GuardaDetalle = function(valores){
 
+        var conceptSelected = $scope.listConceptos.filter(x => x.PAR_IDENPARA === $scope.concepto)[0];
+
         var data ={
             idEncabezado: $scope.encabezadoCreado,
             idEmpresa: $scope.sucursal.emp_idempresa,
             idSucursales: $scope.sucursal.suc_idsucursal,
             porcentaje: $scope.porcentajeSucursal,
             idUsuario: $scope.idUsuario,
-            idConcepto:$scope.concepto
+            idConcepto:conceptSelected.PAR_IDENPARA,
+            conceptoDesc:conceptSelected.PAR_DESCRIP1
         }
 
         $scope.detalleEsquema = [];
@@ -198,7 +204,7 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
     }
 
     $scope.setSelectedAproach = function (data){
-
+      
         $scope.sucursal = data.idSucursal;
         $scope.porcentajeSucursal = data.porcentaje;
         for(let i = 0; i< $scope.detalleSelect.length; i++){
@@ -207,6 +213,11 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
                 $scope.detalleSelect[i].select = false;
             }
         }
+
+        $scope.Conceptos();
+        // $scope.cbConceptos = false;
+        // $scope.cbSucursales = false;
+        // $scope.txtAproach = false;
       }
 
       $scope.ActualizaEsquema = function(){
@@ -218,26 +229,31 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
               idEmpresa:datos.emp_idempresa,
               idSucursal:datos.suc_idsucursal,
               porcentaje: $scope.porcentajeSucursal,
-              idConcepto:$scope.concepto.PAR_IDENPARA
+              idConcepto:$scope.concepto
           }
-          console.log(datos);
+          
           esquemaProrrateoRepository.actualizaEsquema(data).then(result => {
                 if(result.data.length >0){
+                    // $scope.cbConceptos = true;
+                    // $scope.cbSucursales = true;
+                    // $scope.txtAproach = true; 
                     $scope.GetDetallesEsquemaSelect();
                 }
           })
       }
 
       $scope.GuardaDetalleEdicion = function(){
+       
         var datos = $scope.listSucursales.filter(x=> x.suc_idsucursal === $scope.sucursal)[0];
-
+        var conceptSelected = $scope.listConceptos.filter(x => x.PAR_IDENPARA === $scope.concepto)[0];
         var data ={
             idEncabezado: $scope.esquemaSelected.id,
             idEmpresa: datos.emp_idempresa,
             idSucursales: datos.suc_idsucursal,
             porcentaje: $scope.porcentajeSucursal,
             idUsuario: $scope.idUsuario,
-            idConcepto:$scope.concepto
+            idConcepto:conceptSelected.PAR_IDENPARA,
+            conceptoDesc:conceptSelected.PAR_DESCRIP1
         }
 
         $scope.detalleEsquema = [];
@@ -252,6 +268,10 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
                 }else{
                     swal('Aviso',result.data[0].mensaje,'warning');
                 }
+
+                // $scope.cbConceptos = true;
+                // $scope.cbSucursales = true;
+                // $scope.txtAproach = true; 
             }
         })
     }
@@ -265,6 +285,9 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
             if(result.data.length > 0){
                 $scope.GetDetallesEsquemaSelect();
             }
+            // $scope.cbConceptos = true;
+            // $scope.cbSucursales = true;
+            // $scope.txtAproach = true; 
         })
     }
 
@@ -277,6 +300,10 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
                $scope.esquemaSelected.activo = false;
                $scope.GetDetallesEsquemaSelect()
             }
+
+            // $scope.cbConceptos = true;
+            // $scope.cbSucursales = true;
+            // $scope.txtAproach = true; 
         })
 
     }
@@ -284,7 +311,16 @@ registrationModule.controller('esquemaProrrateoController', function ($scope, $r
     $scope.Conceptos = function(opcion){
         $scope.listConceptos = [];
         var idSucursal  = 0
+        
+       if($scope.sucursal === null || $scope.sucursal === undefined){
+        $scope.cbConceptos = true;
+        return;
+       }else{
         $scope.cbConceptos = false;
+       }
+            
+       
+     
         if(opcion === 1 ){
             idSucursal = $scope.sucursal.suc_idsucursal;
         }else{
