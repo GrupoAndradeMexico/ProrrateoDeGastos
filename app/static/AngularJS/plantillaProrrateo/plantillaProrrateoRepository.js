@@ -84,13 +84,13 @@ registrationModule.factory('plantillaProrrateoRepository', function($http){
         },
         relacionesCreadas: function(data) {
             return $http({
-                url: plantilla + 'guardaProrrateoOrden/',
+                url: plantilla + 'relacionesCreadas/',
                 method: "GET",
                 params: {
-                    idEmpresa: data.idEmpresaPro,
-                    idSucursal: data.idSucursalPro,
-                    areaDesc: data.areaPro,
-                    conceptoDesc: data.conceptoPro
+                    idEmpresa: data.idEmpresa,
+                    idSucursal: data.idSucursal,
+                    areaDesc: data.areaDesc,
+                    conceptoDesc: data.conceptoDesc
 
                 },
                 headers: {
