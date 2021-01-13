@@ -1,3 +1,7 @@
+<style>
+    .separacion{ margin-top: 15px }
+</style>
+
 <div class="row" style="background-color:white; padding:20px; overflow: hidden;">
     <div class="col-sm-12" style="text-align: center" ng-init="init()">
         <h3>Plantilla de prorrateo</h3>
@@ -7,7 +11,7 @@
     <div class="col-sm-12">
         <h4>Datos de la orden de compra</h4>
 
-        <div class="row">
+        <div class="row separacion">
             <div class="col-sm-3">
                 <label for=""> <strong> Orden:</strong>{{ordenCompra}}</label>
             </div>
@@ -29,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row separacion">
             <div class="col-sm-2">
                 <div class="input-group">
                     <span class="input-group-addon" id="lblEsplantilla"><strong>Es planitilla?</strong></span>
@@ -61,7 +65,7 @@
          
             </div>
         </div>
-        <div class="row">
+        <div class="row separacion">
             <div class="col-sm-12">
                 <label for=""> <strong> Detalles de la orden de compra</strong></label>
                 <table class="table">
@@ -88,7 +92,7 @@
                 </table>
             </div>
         </div>
-        <div class="row">
+        <div class="row separacion">
             <h4>Genera relación</h4>
             <div class="col-sm-3">
                 <select class="form-control" id="sucursalEsquema" ng-model="sucursalSelect"
@@ -117,7 +121,7 @@
                 </button>
             </div>
         </div>
-        <div class="row">
+        <div class="row separacion">
             <h4>Relaciones creadas</h4>
             <div class="col-sm-12">
                 <table class="table">
@@ -153,7 +157,7 @@
                 </table>
             </div>
         </div>
-        <div class="row">
+        <div class="row separacion">
             <div class="col-sm-12">
                 <button type="button" class="btn btn-info" aria-expanded="false" ng-click="ConfirmarRelacion()">
                     Confirmar relaciones

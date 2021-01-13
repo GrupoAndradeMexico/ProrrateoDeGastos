@@ -82,6 +82,22 @@ registrationModule.factory('plantillaProrrateoRepository', function($http){
                 }
             });
         },
+        relacionesCreadas: function(data) {
+            return $http({
+                url: plantilla + 'guardaProrrateoOrden/',
+                method: "GET",
+                params: {
+                    idEmpresa: data.idEmpresaPro,
+                    idSucursal: data.idSucursalPro,
+                    areaDesc: data.areaPro,
+                    conceptoDesc: data.conceptoPro
+
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
     }
 
 })
