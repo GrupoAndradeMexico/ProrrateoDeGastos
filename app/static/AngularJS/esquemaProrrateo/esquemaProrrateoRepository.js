@@ -104,9 +104,7 @@ registrationModule.factory('esquemaProrrateoRepository', function($http){
                     idSucursal:data.idSucursal,
                     porcentaje:data.porcentaje,
                     idConcepto:data.idConcepto,
-                    conceptoDesc:data.conceptoDesc,
-                    idArea:data.idArea,
-                    areaDesc:data.areaDesc
+                    conceptoDesc:data.conceptoDesc
                 },
                 headers: {
                     'Content-Type': 'application/json'

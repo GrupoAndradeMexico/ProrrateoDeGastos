@@ -144,7 +144,8 @@ esquemaProrrateo.prototype.get_actualizaEsquema = function(req, res, next) {
         { name: 'idEmpresa', value: req.query.idEmpresa, type: self.model.types.INT },
         { name: 'idSucursal', value: req.query.idSucursal , type: self.model.types.INT },
         { name: 'porcentaje', value: req.query.porcentaje , type: self.model.types.INT },
-        { name: 'idConcepto', value: req.query.idConcepto , type: self.model.types.STRING }
+        { name: 'idConcepto', value: req.query.idConcepto , type: self.model.types.STRING },
+        { name: 'conceptoDesc', value: req.query.conceptoDesc , type: self.model.types.STRING }
     ];
 
     this.model.query('UPD_DETALLE_ESQUEMA_PRORRATEO', params, function(error, result) {
