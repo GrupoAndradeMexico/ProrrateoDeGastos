@@ -202,6 +202,7 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
 
     $scope.ModalProrrateo = function (orden, monto) {
         sessionStorage.setItem('Orden', orden);
+        $scope.lstEsquemas = [];
         $scope.habilitaProrrateo = false;
         $scope.listDetalleOrden = [];
         $scope.listDetalleEsquema = []
@@ -213,52 +214,31 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
         prorrateoOrdenRepository.detalleOrden(orden).then(result => {
             if (result.data.length > 0) {
                 $scope.listDetalleOrden = result.data[0];
-                $scope.lstEsquemas  = result.data[1];
-                $scope.lstDetallesEsq = result.data[2];
+                $scope.lstEsquemasPlantillas  = result.data[1];
+                //$scope.lstDetallesEsq = result.data[2];
              
     
                 for (i = 0; i < $scope.listDetalleOrden.length; i++) {
                     $scope.listDetalleOrden[i].select = true;
                 }
 
-                if($scope.lstEsquemas.length == 1)
+                if($scope.lstEsquemasPlantillas.length > 0)
                 {
-                    $scope.esquema = $scope.lstEsquemas[0].id;
-                    $scope.habilitaProrrateo = true;
 
-
-                }
-                if($scope.lstEsquemas.length == 0)
-                {
-                    $scope.crearEsquema = 1;
-                }
-
-                if($scope.lstDetallesEsq.length > 0)
-                {
-                    
-                    for( var i=0;i<$scope.lstDetallesEsq.length; i++){
-                        indice = -1
-                        var data = {
-                            idEmpresa:0,
-                            idSucursal:0
+                    angular.forEach($scope.lstEsquemasPlantillas, function (o, key) {
+                        if(o.detalles == $scope.listDetalleOrden.length) 
+                        {
+                            $scope.lstEsquemas.push(o);
+                            $scope.esquema = o.id;
+                            $scope.traeDetallePlantillas($scope.esquema); 
                         }
-                        data.idEmpresa = $scope.lstDetallesEsq[i].id_empresa;
-                        data.idSucursal = $scope.lstDetallesEsq[i].id_sucursal;
-
-                        if($scope.listaProrrateo.length < 1){
-
-                            $scope.listaProrrateo.push(data)
+                        if($scope.lstEsquemas.length == 0)
+                        {
+                        $scope.crearEsquema = 1;
                         }
-                        else{
-            
-                            indice = $scope.listaProrrateo.findIndex(x => x.idEmpresa == $scope.lstDetallesEsq[i].id_empresa && x.idSucursal == $scope.lstDetallesEsq[i].id_sucursal)
-                            
-                            if(indice === -1){
-                                $scope.listaProrrateo.push(data)
-                            }
-                        }
-                     }
+                    }) 
                 }
+                
 
                 $('#modalProrrateo').modal('show');
                 /*    
@@ -301,14 +281,17 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
             }
         }
         var detalles = '';
+        var montoDetalles = 0;
         for (var i = 0; i < $scope.listDetalleOrden.length; i++) {
             if ($scope.listDetalleOrden[i].select == true)  {
                 let det =  $scope.listDetalleOrden[i].idConsecutivoOC + ',';
                 detalles += det;
+                montoDetalles += $scope.listDetalleOrden[i].totalDetalle;
                 $scope.listDetalleOrdenTrue.push($scope.listDetalleOrden[i]);
             }
         }
         detalles =  detalles.substring(0, detalles.length - 1);
+        $scope.montoTotalOrden = montoDetalles;
         prorrateoOrdenRepository.detallesOC(detalles).then(result => {
             if (result.data.length > 0) {
                 $scope.lstEsquemas = [];
@@ -319,15 +302,17 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
                    {
                     $scope.lstEsquemas.push(o); 
                     $scope.esquema = $scope.lstEsquemas[0].id;
+                    $scope.traeDetallePlantillas($scope.esquema);
                     $scope.habilitaProrrateo = true; 
+                    $scope.crearEsquema = 0;
                     //$('#mdlLoading').modal('hide');
                    }
-                   else
-                   {
-                    $scope.crearEsquema = 1;
-                   }
+                  
                 });
-
+                if($scope.lstEsquemas.length ==0)
+                {
+                 $scope.crearEsquema = 1;
+                }
             }
             else{
                 $scope.lstEsquemas = [];
@@ -567,5 +552,48 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
           };
           $location.path('/plantillaProrrateo');
     } 	
+
+    $scope.traeDetallePlantillas =  function (Esquema) {
+        $scope.lstDetallesEsq = [];
+        if(Esquema != undefined || Esquema != null || Esquema != 0 )
+        {
+            prorrateoOrdenRepository.getDetalleProrrateoOrdenPlantilla(Esquema).then(result => {
+                if (result.data.length > 0) {
+                    $scope.lstDetallesEsq = result.data;
+                    $scope.habilitaProrrateo = true;
+                }
+
+                if($scope.lstDetallesEsq.length > 0)
+                {
+                    
+                    for( var i=0;i<$scope.lstDetallesEsq.length; i++){
+                        indice = -1
+                        var data = {
+                            idEmpresa:0,
+                            idSucursal:0
+                        }
+                        data.idEmpresa = $scope.lstDetallesEsq[i].id_empresa;
+                        data.idSucursal = $scope.lstDetallesEsq[i].id_sucursal;
+
+                        if($scope.listaProrrateo.length < 1){
+
+                            $scope.listaProrrateo.push(data)
+                        }
+                        else{
+            
+                            indice = $scope.listaProrrateo.findIndex(x => x.idEmpresa == $scope.lstDetallesEsq[i].id_empresa && x.idSucursal == $scope.lstDetallesEsq[i].id_sucursal)
+                            
+                            if(indice === -1){
+                                $scope.listaProrrateo.push(data)
+                            }
+                        }
+                     }
+                }
+            });
+        }
+        else
+        {
+        } 
+    }
 
 })
