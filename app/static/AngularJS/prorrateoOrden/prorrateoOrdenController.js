@@ -565,7 +565,7 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
             $('body').removeClass('modal-open'); 
             $('.modal-backdrop').remove(); 
           };
-          $location.path('/esquemaProrrateo');
+          $location.path('/plantillaProrrateo');
     } 	
 
 })
