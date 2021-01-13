@@ -1,0 +1,165 @@
+<div class="row" style="background-color:white; padding:20px; overflow: hidden;">
+    <div class="col-sm-12" style="text-align: center" ng-init="init()">
+        <h3>Plantilla de prorrateo</h3>
+    </div>
+</div>
+<div class="row" style="background-color:white; padding:20px; overflow: hidden;">
+    <div class="col-sm-12">
+        <h4>Datos de la orden de compra</h4>
+
+        <div class="row">
+            <div class="col-sm-3">
+                <label for=""> <strong> Orden:</strong>{{ordenCompra}}</label>
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <span class="input-group-addon" id="lblnombreEsquema"> <strong>Selecciona un Esquema</strong> </span>
+                    <select class="form-control" ng-model="esquemaSelected" id="esquemasEncontrados"
+                        ng-change="GetDetallesEsquemaSelect()"
+                        ng-options="esq as esq.nombre for esq in esquemasEncontrados">
+                        <option value="">Seleccione un esquema</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <span class="input-group-addon" id="lblnombreEsquema"><strong>Nombre relación</strong></span>
+                    <input type="text" class="form-control" placeholder="Nombre de la relación"
+                        ng-model="nombreRelacion" aria-describedby="basic-addon1">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="input-group">
+                    <span class="input-group-addon" id="lblEsplantilla"><strong>Es planitilla?</strong></span>
+                    <input type="checkbox" id="esPlantila" name="esPlantilla" value="1" >
+                </div>
+              
+            </div>
+            <div class="col-sm-2">
+                <div class="input-group">
+                    <span class="input-group-addon" id="lblEsplantilla"><strong>Frecuencia:</strong></span>
+                    <select name="select"class="form-control" ng-model="frecuenciaSelected">
+                        <option value="0" selected>Sin frecuencia</option>
+                        <option value="1" >Semanal</option>
+                        <option value="2">Quincenal</option>
+                        <option value="3">Mensual</option>
+                        <option value="4">Anual</option>
+                      </select>
+                </div>
+              
+            </div>
+            <div class="col-sm-2">
+                <div class="input-group">
+                    <span class="input-group-addon" id="lblEsplantilla"><strong>Fecha inicio</strong></span>
+                    <input type="date" id="start" name="trip-start"
+                    value="2018-07-22"
+                    min="2018-01-01" max="2018-12-31">
+                </div>
+
+         
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <label for=""> <strong> Detalles de la orden de compra</strong></label>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="width: 5%;">
+
+                            </th>
+                            <th>Área</th>
+                            <th>Concepto</th>
+                            <th>Sucursal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="det in listDetalleOrden">
+                            <td class="text-center">
+                                <input type="radio" ng-model="det.select" ng-change="DetalleSelected(det)" />
+                            </td>
+                            <td>{{det.area}}</td>
+                            <td>{{det.conceptos}}</td>
+                            <td>{{det.nombreSucursal}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <h4>Genera relación</h4>
+            <div class="col-sm-3">
+                <select class="form-control" id="sucursalEsquema" ng-model="sucursalSelect"
+                    ng-change="GetAreaConceptos()"
+                    ng-options="detEsq as detEsq.nombreSucursal for detEsq in listDetalleEsquema">
+                    <option value="">Selecciona una sucursal</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <select class="form-control" id="AreaEsquema" ng-model="areaSelected"
+                    ng-options="area as area.PAR_DESCRIP1 for area in listAreasAfectacion">
+                    <option value="">Selecciona una área</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <select class="form-control" id="conceptoEsquema" ng-model="conceptoSelected"
+                    ng-options="concepto as concepto.PAR_DESCRIP1 for concepto in listConeptosVentas"
+                    ng-change="HabilitaGuardar()">
+                    <option value="">Selecciona una opción</option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <button type="button" class="btn btn-info" aria-expanded="false" ng-click="GuardaRelacion()"
+                    ng-disabled="!detalleSeleccionado && !habilitaGuardado">
+                    Genera relación
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <h4>Relaciones creadas</h4>
+            <div class="col-sm-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Área</th>
+                            <th>Concepto</th>
+                            <th>Sucursal orden</th>
+                            <th></th>
+                            <th>Área Esquema</th>
+                            <th>Concepto Esquema</th>
+                            <th>Sucursal Esquema</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="rel in listaRelaciones">
+                            <td>{{rel.areaOrden}}</td>
+                            <td>{{rel.conceptoOrden}}</td>
+                            <td>{{rel.sucursalOrden}}</td>
+                            <td></td>
+                            <td>{{rel.areaPro}}</td>
+                            <td>{{rel.conceptoPro}}</td>
+                            <td>{{rel.sucursalPro}}</td>
+                            <td>
+                                <button type="button" class="btn btn-danger" aria-expanded="false"
+                                    ng-click="EliminaSeleccion($index)">
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <button type="button" class="btn btn-info" aria-expanded="false" ng-click="ConfirmarRelacion()">
+                    Confirmar relaciones
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

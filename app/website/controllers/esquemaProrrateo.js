@@ -68,6 +68,10 @@ esquemaProrrateo.prototype.get_guardaEncabezado = function(req, res, next) {
 
 esquemaProrrateo.prototype.get_guardaDetalle = function(req, res, next) {
     var self = this;
+
+// conceptoDesc
+// idArea
+// areaDesc
     
     var params = [
        
@@ -76,10 +80,13 @@ esquemaProrrateo.prototype.get_guardaDetalle = function(req, res, next) {
         { name: 'idEncabezado', value: req.query.idEncabezado, type: self.model.types.INT },
         { name: 'porcentaje', value: req.query.porcentaje, type: self.model.types.DECIMAL },
         { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
-        { name: 'idConcepto', value: req.query.idConcepto, type: self.model.types.STRING }
+        { name: 'idConcepto', value: req.query.idConcepto, type: self.model.types.STRING },
+        { name: 'conceptoDesc', value: req.query.conceptoDesc, type: self.model.types.STRING },
+        { name: 'idArea', value: req.query.idArea, type: self.model.types.STRING },
+        { name: 'areaDesc', value: req.query.areaDesc, type: self.model.types.STRING }
     ];
 
-    this.model.query('GUARDA_DETALLE_ESQUEMA_PRORRATEO', params, function(error, result) {
+    this.model.query('GUARDA_DETALLE_ESQUEMA_PRORRATEO_V2', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
@@ -92,10 +99,12 @@ esquemaProrrateo.prototype.get_guardarDetalle = function(req, res, next) {
     
     var params = [
         { name: 'idEncabezado', value: req.query.idEncabezado, type: self.model.types.INT },
-        { name: 'idEmpresa ', value: req.query.idEmpresa , type: self.model.types.INT },
-        { name: 'idSucursales ', value: req.query.idSucursales , type: self.model.types.INT },
+        { name: 'idEmpresa', value: req.query.idEmpresa , type: self.model.types.INT },
+        { name: 'idSucursales', value: req.query.idSucursales , type: self.model.types.INT },
         { name: 'porcentaje', value: req.query.porcentaje, type: self.model.types.DECIMAL },
-        { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT }
+        { name: 'idUsuario', value: req.query.idUsuario, type: self.model.types.INT },
+        { name: 'idConcepto', value: req.query.idConcepto, type: self.model.types.STRING },
+        { name: 'conceptoDesc', value: req.query.conceptoDesc, type: self.model.types.STRING },
     ];
 
     this.model.query('GUARDA_DETALLE_ESQUEMA_PRORRATEO', params, function(error, result) {

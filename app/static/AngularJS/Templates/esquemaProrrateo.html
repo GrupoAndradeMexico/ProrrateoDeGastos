@@ -69,6 +69,7 @@
                             </div>
                         </div>
                         <div class="row" ng-show="esquemaDetalle" style="padding-top: 20px;">
+                            
                             <div class="col-md-3">
                                 <select class="form-control" ng-model="sucursal" ng-change = "Conceptos(1)"
                                     ng-options="sucursal as sucursal.suc_nombre for sucursal in listSucursales">
@@ -196,7 +197,7 @@
                                 <div class="row" style="padding:15px;">
                                     <div class="col-sm-6">
                                         <label for="cbsucursales">Selecciona una sucursal</label>
-                                        <select class="form-control" ng-model="sucursal" id="cbsucursales" ng-change = "Conceptos(2)"
+                                        <select class="form-control" ng-model="sucursal" id="cbsucursales" ng-change = "Conceptos(2)" ng-disabled = "cbSucursales"
                                             ng-options="sucursal.suc_idsucursal as sucursal.suc_nombre for sucursal in listSucursales">
                                             <option value="">Seleccione Sucursal</option>
                                         </select>
@@ -214,7 +215,7 @@
                                     <div class="col-sm-6">
                                         <div class="input-group">
                                             <span class="input-group-addon" id="lblPorcentajeEdit">porcentaje</span>
-                                            <input type="number" class="form-control" placeholder="10%" min="0"
+                                            <input type="number" class="form-control" placeholder="10%" min="0" ng-disabled="txtAproach"
                                                 ng-model="porcentajeSucursal" aria-describedby="basic-addon1">
                                         </div>
                                     </div>
