@@ -229,16 +229,21 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
                         if(o.detalles == $scope.listDetalleOrden.length) 
                         {
                             $scope.lstEsquemas.push(o);
-                            $scope.esquema = o.id;
-                            $scope.traeDetallePlantillas($scope.esquema); 
+                            //$scope.esquema = o.id;
+                            //$scope.traeDetallePlantillas($scope.esquema); 
                         }
                         if($scope.lstEsquemas.length == 0)
                         {
                         $scope.crearEsquema = 1;
                         }
                     }) 
+                    $scope.esquema = $scope.lstEsquemas[0].id;
+                    $scope.traeDetallePlantillas($scope.esquema);
                 }
-                
+                else
+                {
+                    $scope.crearEsquema = 1;
+                }
 
                 $('#modalProrrateo').modal('show');
                 /*    
