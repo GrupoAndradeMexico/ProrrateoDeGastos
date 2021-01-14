@@ -153,6 +153,28 @@
                             </select>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                            <label class="form-label">Esquema:</label>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Sucursal</th>
+                                        <th>Porcentaje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="det in lstEsquemasPorc">
+                                        <td>{{det.nombre}}</td>
+                                        <td>{{det.sucursal}}</td>
+                                        <td>{{det.porcentaje}}%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <br>

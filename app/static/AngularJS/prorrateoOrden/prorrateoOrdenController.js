@@ -560,11 +560,13 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
 
     $scope.traeDetallePlantillas =  function (Esquema) {
         $scope.lstDetallesEsq = [];
+        $scope.lstEsquemasPorc = [];
         if(Esquema != undefined || Esquema != null || Esquema != 0 )
         {
             prorrateoOrdenRepository.getDetalleProrrateoOrdenPlantilla(Esquema).then(result => {
-                if (result.data.length > 0) {
-                    $scope.lstDetallesEsq = result.data;
+                if (result.data[0].length > 0) {
+                    $scope.lstDetallesEsq = result.data[0];
+                    $scope.lstEsquemasPorc = result.data[1];
                     $scope.habilitaProrrateo = true;
                 }
 

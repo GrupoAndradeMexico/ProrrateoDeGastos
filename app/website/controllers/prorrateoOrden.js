@@ -286,7 +286,7 @@ prorrateoOrden.prototype.get_detalleProrrateoOrdenPlantilla = function(req, res,
         { name: 'idEsquema', value: req.query.idEsquema, type: self.model.types.INT }
     ];
 
-    this.model.query('SEL_DETALLE_ORDEN_PLANTILLA', params, function(error, result) {
+    this.model.queryAllRecordSet('SEL_DETALLE_ORDEN_PLANTILLA', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
