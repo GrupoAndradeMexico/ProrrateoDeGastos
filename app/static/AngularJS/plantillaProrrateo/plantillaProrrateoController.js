@@ -32,7 +32,7 @@ registrationModule.controller('plantillaProrrateoController', function ($scope, 
     $scope.init = () => {
         $rootScope.userData = localStorageService.get('userData');
         $scope.idUsuario = $rootScope.userData.idUsuario;
-        $scope.ordenCompra = sessionStorage.getItem('Orden'); //'AU-AU-CUA-OT-PE-4245';
+        $scope.ordenCompra = 'AU-AU-CUA-OT-PE-4245';//sessionStorage.getItem('Orden'); //'AU-AU-CUA-OT-PE-4245';
         LeeDetalleOrden($scope.ordenCompra)
       
     }
@@ -301,7 +301,7 @@ registrationModule.controller('plantillaProrrateoController', function ($scope, 
 
                 }
 
-                swal('OK','Se guardo la relación área - concepto para reealizar el prorrateo','info')
+                swal('OK','Se guardo la relación área - concepto para realizar el prorrateo','info')
             }
         })
     }
