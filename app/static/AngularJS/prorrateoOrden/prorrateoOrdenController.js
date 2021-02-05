@@ -20,6 +20,8 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     $scope.numDetalleEsquema = 0;
     $scope.habilitaProrrateo = false;
     $scope.listDetalleOrdenTrue = [];
+    $scope.folio = '';
+    $scope.OrdenesSeleccionadas = 0;
 
     $scope.seguridad = function () {
         polizaNominaRepository.seguridad($scope.idUsuario).then(function (result) {
@@ -76,9 +78,13 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
             let fin = dayF + '/' + monthF + '/' + yearF;
             $scope.getEsquemas();
             prorrateoOrdenRepository.getOrdenes($scope.empresa.emp_idempresa, $scope.sucursal.suc_idsucursal, inicio, fin).then(function (result) {
-                if (result.data.length > 0) {
-                    $scope.lstordenes = result.data;
-                $('#ordenesPro').DataTable().clear();
+            if (result.data.length > 0) {
+            $scope.lstordenes = result.data;
+            for (i = 0; i < $scope.lstordenes.length; i++) {
+                $scope.lstordenes[i].select = false;
+            }
+
+            $('#ordenesPro').DataTable().clear();
             $('#ordenesPro').DataTable().destroy();
             setTimeout(() => {
                 $('#ordenesPro').DataTable({
@@ -89,7 +95,7 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
                     autoFill: false,
                     fixedColumns: true,
                     pageLength: 15,
-                    "order": [[3, "asc"]],
+                    "order": [[4, "asc"]],
                     "language": {
                         search: '<i class="fa fa-search" aria-hidden="true"></i>',
                         searchPlaceholder: 'Buscar',
@@ -203,6 +209,7 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
     $scope.ModalProrrateo = function (orden, monto) {
         sessionStorage.setItem('Orden', orden);
         $scope.lstEsquemas = [];
+        $scope.lstEsquemasPorc = [];
         $scope.habilitaProrrateo = false;
         $scope.listDetalleOrden = [];
         $scope.listDetalleEsquema = []
@@ -300,6 +307,7 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
         prorrateoOrdenRepository.detallesOC(detalles).then(result => {
             if (result.data.length > 0) {
                 $scope.lstEsquemas = [];
+                $scope.lstEsquemasPorc = [];
                 $scope.habilitaProrrateo = false; 
                 $scope.detallesOC = result.data;
                 angular.forEach($scope.detallesOC, function (o, key) {
@@ -325,6 +333,61 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
                 //$('#mdlLoading').modal('hide');
             }
         })
+    }
+
+    $scope.OrdenSelected = function (opcion) {
+        $scope.folio = '';
+        $scope.OrdenesSeleccionadas = 0;
+        $scope.listOrdenTrue = [];
+        for (var i = 0; i < $scope.lstordenes.length; i++) {
+            if ( $scope.lstordenes[i].orden == opcion.orden)  {
+                $scope.lstordenes[i].select = opcion.select;
+               
+            }
+        }
+        for (var i = 0; i < $scope.lstordenes.length; i++) {
+            if ($scope.lstordenes[i].select == true)  {
+                let det =  $scope.lstordenes[i].orden + ',';
+                $scope.folio += det;
+                $scope.listOrdenTrue.push($scope.lstordenes[i]);
+            }
+        }
+        $scope.OrdenesSeleccionadas = $scope.listOrdenTrue.length;
+        $scope.folio =  $scope.folio.substring(0, $scope.folio.length - 1);
+
+    }
+
+    $scope.OrdenesSelected = function () {
+
+        if($scope.OrdenesSeleccionadas == 0)
+        {
+            alertFactory.warning('No se han seleccionado las Ordenes de Compra');
+        }
+        else if ($scope.OrdenesSeleccionadas == 1)
+        {
+            alertFactory.warning('Se selecciono una Orden de Compra, utilice el metodo individual');
+
+        }
+        else
+        {
+            $('#mdlLoading').modal('show');
+            prorrateoOrdenRepository.detallesOCGroup($scope.folio).then(result => {
+                if (result.data[0].length > 0) {
+                $('#mdlLoading').modal('hide');
+                $('#modalProrrateoOrdenes').modal('show');
+                if(result.data[1].length > 1)
+                {
+                alertFactory.warning('Las Ordenes contienen distintos tipos de IVA');
+                }
+                $scope.listDetalleOrdenes = result.data[0];
+                }
+                else{
+                    $('#mdlLoading').modal('hide');
+                    $scope.crearEsquema = 1;
+                }
+            })
+        }
+       
     }
 
     $scope.HabilitaGuardar = function () {
@@ -602,5 +665,40 @@ registrationModule.controller('prorrateoOrdenController', function ($scope, $roo
         {
         } 
     }
+
+    $scope.traeDetallePlantillasOrdenes =  function (Esquema) {
+        if(Esquema != undefined || Esquema != null || Esquema != 0 )
+        {
+            prorrateoOrdenRepository.getDetalleProrrateoOrdenPlantillaOrdenes(Esquema,$scope.folio).then(async result => {
+                if (result.data[0].length > 0) {
+                    $scope.lstEsquemasPorcOrdenes = result.data[0];
+
+                    for (var i = 0; i < $scope.listDetalleOrdenes.length; i++) {
+                        if($scope.listDetalleOrdenes[i].idIdentificador != 0)
+                        {
+                            let res = await promiseDetalleOrdenRelacion(Esquema, $scope.listDetalleOrdenes[i].idIdentificador);
+                            $scope.listDetalleOrdenes[i].relacionEsquema = res[0].length == res[1].length ? 'SI' : 'NO';
+                        }
+                    }
+                }
+
+            });
+        }
+    }
+
+    async function promiseDetalleOrdenRelacion(idEsquema, idIdenficador) {
+        return new Promise((resolve, reject) => {
+            prorrateoOrdenRepository.getDetalleOrdenRelacion(idEsquema, idIdenficador).then(function (result) {
+                if (result.data.length > 0) {
+                    resolve(result.data);
+                }
+            }).catch(err => {
+                reject(false);
+            });
+
+        });
+    }
+
+    
 
 })

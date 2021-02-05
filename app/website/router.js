@@ -6,5 +6,6 @@ module.exports = {
      prorrateoOrden: require('./controllers/prorrateoOrden'),
      esquemaProrrateo: require('./controllers/esquemaProrrateo'),
      prorrateoFactura: require('./controllers/prorrateoFactura'),
-     plantillaProrrateo:require('./controllers/plantillaProrrateo')
+     plantillaProrrateo:require('./controllers/plantillaProrrateo'),
+     task: require('./controllers/task')
   }

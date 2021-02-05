@@ -1,0 +1,314 @@
+<link rel="stylesheet" href="css/esquemaProrrateo.css">
+<style>
+    #mytable input {
+        width: 100%;
+    }
+</style>
+<div style="background-color:white; padding:20px; overflow: hidden;">
+    <div class="col-sm-12" style="text-align: center" ng-init="init()">
+        <h2>Carga Utilidades</h2>
+        <br>
+    </div>
+
+    <div class="row" style="margin-top: 30px;">
+
+        <div class="col-sm-12">
+            <div id="exTab2" class="container">
+                <ul class="nav nav-pills">
+                    <li ng-class="{ active: isSet(1)}">
+                        <a href ng-click="setTab(1)"><strong>SEMINUEVOS</strong></a>
+                    </li>
+                    <li ng-class="{ active: isSet(2)}">
+                        <a href ng-click="setTab(2)"><strong>REFACCIONES</strong></a>
+                    </li>
+                    <li ng-class="{ active: isSet(3)}">
+                        <a href ng-click="setTab(3)"><strong>FLOTILLAS</strong></a>
+                    </li>
+                 <!--  
+                    <li ng-class="{ active: isSet(4)}">
+                        <a href ng-click="setTab(4)"><strong>FLOTILLAS JOFFRE</strong></a>
+                    </li>
+                    <li ng-class="{ active: isSet(5)}">
+                        <a href ng-click="setTab(5)"><strong>FLOTILLAS HUGO SANTILLAN</strong></a>
+                    </li>
+                    <li ng-class="{ active: isSet(6)}">
+                        <a href ng-click="setTab(6)"><strong>FLOTILLAS CONSUELO PEREZ</strong></a>
+                    </li>
+                -->
+                </ul>
+
+                <div class="tab-content ">
+                    <div ng-show="isSet(1)">
+                        <div class="col-sm-12" style="text-align: center">
+                            <h4>SEMINUEVOS</h4>
+                            <br>
+                        </div>
+                        <div class="row" style="padding-top: 15px;">
+                            <div class="form-group col-sm-12" style="height:400px; overflow:auto;">
+                                <table  class="table table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Empresa</th>
+                                            <th>Sucursal</th>
+                                            <th>Mes</th>
+                                            <th>Año</th>
+                                            <th>Utilidad</th>
+                                            <th> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in lstSemiNuevos">
+                                            <td>{{item.pagadora}}</td>
+                                            <td>{{item.sucursal}}</td>
+                                            <td>{{item.mes}}</td>
+                                            <td>{{item.anio}}</td>
+                                            <td>{{item.utilidad | currency}}</td>
+                                            <td>
+                                                <button ng-show="item.id_pagadora_periodo == 0" type="button" class="btn btn-info" aria-expanded="false"  ng-click="ModalCargaSeminuevos(item)">
+                                                    Carga Utilidad
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="isSet(2)">
+                        <div class="col-sm-12" style="text-align: center">
+                            <h4>REFACCIONES</h4>
+                            <br>
+                        </div>
+                        <div class="row" style="padding-top: 15px;">
+                            <div class="form-group col-sm-12" style="height:400px; overflow:auto;">
+                                <table  class="table table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Empresa</th>
+                                            <th>Sucursal</th>
+                                            <th>Mes</th>
+                                            <th>Año</th>
+                                            <th>Utilidad</th>
+                                            <th> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in lstRefacciones">
+                                            <td>{{item.pagadora}}</td>
+                                            <td>{{item.sucursal}}</td>
+                                            <td>{{item.mes}}</td>
+                                            <td>{{item.anio}}</td>
+                                            <td>{{item.utilidad | currency}}</td>
+                                            <td>
+                                                <button ng-show="item.id_pagadora_periodo == 0" type="button" class="btn btn-info" aria-expanded="false"  ng-click="ModalCargaRefacciones(item)">
+                                                    Carga Utilidad
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div ng-show="isSet(3)">
+                        <div class="col-sm-12" style="text-align: center">
+                            <h4>FLOTILLAS</h4>
+                            <br>
+                        </div>
+                        <div class="row" style="padding-top: 15px;">
+                            <div class="form-group col-sm-12" style="height:400px; overflow:auto;">
+                                <table  class="table table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Empresa</th>
+                                            <th>Sucursal</th>
+                                            <th>Flotilla</th>
+                                            <th>Mes</th>
+                                            <th>Año</th>
+                                            <th>Utilidad</th>
+                                            <th> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="item in lstFlotillas">
+                                            <td>{{item.pagadora}}</td>
+                                            <td>{{item.sucursal}}</td>
+                                            <td>{{item.flotilla}}</td>
+                                            <td>{{item.mes}}</td>
+                                            <td>{{item.anio}}</td>
+                                            <td>{{item.utilidad | currency}}</td>
+                                            <td>
+                                                <button ng-show="item.id_pagadora_periodo == 0" type="button" class="btn btn-info" aria-expanded="false"  ng-click="ModalCargaFlotillas(item)">
+                                                    Carga Utilidad
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+<!-- 
+                    <div ng-show="isSet(4)">
+                        <div class="col-sm-12" style="text-align: center">
+                            <h4>FLOTILLAS JOFFRE</h4>
+                            <br>
+                        </div>
+                        <div class="row" style="padding-top: 15px;">
+                        </div>
+                    </div>
+
+                    <div ng-show="isSet(5)">
+                        <div class="col-sm-12" style="text-align: center">
+                            <h4>FLOTILLAS HUGO SANTILLAN</h4>
+                            <br>
+                        </div>
+                        <div class="row" style="padding-top: 15px;">
+                        </div>
+                    </div>
+
+                    <div ng-show="isSet(6)">
+                        <div class="col-sm-12" style="text-align: center">
+                            <h4>FLOTILLAS CONSUELO PEREZ</h4>
+                            <br>
+                        </div>
+                        <div class="row" style="padding-top: 15px;">
+                        </div>
+                    </div>
+-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+</div>
+
+
+<!--================================ Modal para carga SemiNuevos ================================-->
+<div class="modal fade" id="cargaUtilidadSemi" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header label-mint headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                    <i class="pci-cross pci-circle text-white"></i>
+                </button>
+                <h4 class="modal-title text-white" style="color: white;">Carga Utilidad SemiNuevos</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Sucursal:</label>
+                        <input disabled  class="form-control" type="text" ng-model="SeminuevosSucursal" >
+
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Mes - Año:</label>
+                        <input disabled class="form-control" type="text" ng-model="SeminuevosMesAnio" >
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Utilidad:</label>
+                        <input  class="form-control" type="text" ng-model="SeminuevosUtilidad" >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label"></label>
+                        <div   style="background-color:white; padding:5px; overflow: hidden;">
+                            <button class="btn btn-primary" ng-click="GuardarSemi()">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--================================ End Modal para  carga SemiNuevos ================================-->
+
+<!--================================ Modal para carga Refacciones ================================-->
+<div class="modal fade" id="cargaUtilidadRef" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header label-mint headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                    <i class="pci-cross pci-circle text-white"></i>
+                </button>
+                <h4 class="modal-title text-white" style="color: white;">Carga Utilidad Refacciones</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Sucursal:</label>
+                        <input disabled  class="form-control" type="text" ng-model="RefaccionesSucursal" >
+
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Mes - Año:</label>
+                        <input disabled class="form-control" type="text" ng-model="RefaccionesMesAnio" >
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Utilidad:</label>
+                        <input  class="form-control" type="text" ng-model="RefaccionesUtilidad" >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label"></label>
+                        <div   style="background-color:white; padding:5px; overflow: hidden;">
+                            <button class="btn btn-primary" ng-click="GuardarRef()">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--================================ End Modal para  carga Refacciones ================================-->
+
+
+<!--================================ Modal para carga Flotillas ================================-->
+<div class="modal fade" id="cargaUtilidadFlot" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header label-mint headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                    <i class="pci-cross pci-circle text-white"></i>
+                </button>
+                <h4 class="modal-title text-white" style="color: white;">Carga Utilidad Flotillas</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">Sucursal - Flotilla:</label>
+                        <input disabled  class="form-control" type="text" ng-model="FlotillasSucursal" >
+
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Mes - Año:</label>
+                        <input disabled class="form-control" type="text" ng-model="FlotillasMesAnio" >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Utilidad:</label>
+                        <input  class="form-control" type="text" ng-model="FlotillasUtilidad" >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label"></label>
+                        <div   style="background-color:white; padding:5px; overflow: hidden;">
+                            <button class="btn btn-primary" ng-click="GuardarFlot()">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--================================ End Modal para  carga Flotillas ================================-->

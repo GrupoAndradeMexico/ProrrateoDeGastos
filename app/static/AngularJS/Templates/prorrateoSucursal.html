@@ -51,13 +51,22 @@
         </div>
     </div>
 <div  class="form-group col-sm-12">
-    <div  class="col-sm-12" style="text-align: center">
+  <!--  <div  class="col-sm-12" style="text-align: center">
         <h2>Gastos</h2>
-        <br>
+      
     </div> 
+-->
+    <br>
     <div class="panel panel-primary" ng-repeat="dep in lstDep">
         <div class="panel-heading">
-           Departamento: {{dep.DESCRIPCION}}
+            <div style="padding-top: 10px">
+                <div class="col-md-8"> 
+                    Departamento: {{dep.DESCRIPCION}}
+                </div>
+                <div class="pull-right">
+                    <input  type="button" class="btn btn-success" value="Detalle" ng-click="abrirModalDetalle(dep)">                                
+                </div>
+            </div>
         </div>
         <div class="panel-body">
             <div  ng-show= 'dep.gastos.length > 0' class="form-group col-sm-12" style="height:300px; overflow:auto;">
@@ -120,6 +129,64 @@
         <div class="spinner">
             <div class="cube1"></div>
             <div class="cube2"></div>
+        </div>
+    </div>
+</div>
+
+
+<!--Inicia modal Detalle -->
+<!--===================================================-->
+<div class="modal fade" id="modalDetalle" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" 
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg"> 
+        <div class="modal-content">
+            <div class="modal-header headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: black;">
+                    <i class="pci-cross pci-circle" style="margin-top: -40%;"></i></button>
+                <h4 class="modal-title ">{{Gasto}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div  class="col-sm-12"> 
+                        <br>
+    <div class="panel panel-primary" ng-repeat="dep in detalleAgenciaGasto">
+        <div class="panel-heading">
+            <div style="padding-top: 10px">
+                <div class="col-md-8"> 
+                    Sucursal: {{dep.agencia}} %
+                </div>
+                <div class="pull-right">
+                    Total: ${{dep.total}}                             
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="form-group col-sm-12" style="height:300px; overflow:auto;">
+                <table class="table table-bordered" cellspacing="0"
+                width="100%">
+                  <thead>
+                    <tr>
+                        <th>Cuenta</th>
+                        <th>Descripcion</th>
+                        <th>Gasto</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="item in dep.detalle">
+                        <td>{{item.CUENTA}}</td>
+                        <td>{{item.DESCRIPCION}}</td>
+                        <td>{{((item.CARGO - item.GASTO) * dep.porcentaje) /100 | currency}}</td>
+
+                    </tr>      
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

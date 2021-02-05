@@ -47,6 +47,11 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         templateUrl: 'AngularJS/Templates/plantillaProrrateo.html', 
         controller: 'plantillaProrrateoController'
     });
+
+    $routeProvider.when('/cargaUtilidad', {
+        templateUrl: 'AngularJS/Templates/cargaUtilidad.html', 
+        controller: 'cargaUtilidadController'
+    });
     
     $routeProvider.otherwise({ redirectTo: '/' });
 

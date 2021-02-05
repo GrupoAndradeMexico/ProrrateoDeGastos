@@ -294,4 +294,51 @@ prorrateoOrden.prototype.get_detalleProrrateoOrdenPlantilla = function(req, res,
     });
 };
 
+prorrateoOrden.prototype.get_detallesOCGroup = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'folio', value: req.query.folio, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('SEL_DETALLE_ORDENES_COMPRA_PRORRATEO', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoOrden.prototype.get_detalleProrrateoOrdenPlantillaOrdenes = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'idEsquema', value: req.query.idEsquema, type: self.model.types.INT },
+        { name: 'folio', value: req.query.folio, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('SEL_DETALLE_ORDENES_PLANTILLA', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoOrden.prototype.get_detalleOrdenRelacion = function(req, res, next) {
+    var self = this;
+    
+    var params = [
+        { name: 'idEsquema', value: req.query.idEsquema, type: self.model.types.INT },
+        { name: 'idIdentificador', value: req.query.idIdentificador, type: self.model.types.INT }
+    ];
+
+    this.model.queryAllRecordSet('SEL_DETALLE_ORDENES_RELACIONES', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = prorrateoOrden;
