@@ -6,7 +6,10 @@
     "SQL_database": "polizasnomina",
     "SQL_connectionTimeout": 60000,
     "urlCORS": "http://localhost:5600/",
-    "procesaGastos": "*/1 * * * 1-6",
-    "procesaUtilidadFSR": "*/2 * * * 1-6",
-    "procesaPorcentajeFSR": "*/1 * * * 1-6"
+    "procesaGastos": "14 12 10 * *",
+    "procesaUtilidadFSR": "14 12 10 * *",
+    "procesaPorcentajeFSR": "14 12 10 * *",
+    "procesaPercepciones": "14 12 10 * *",
+    "procesaPolizas": "33 18 * * 1-6"
+    
 }

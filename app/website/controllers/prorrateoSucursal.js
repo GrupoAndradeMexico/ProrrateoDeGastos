@@ -167,5 +167,112 @@ prorrateoSucursal.prototype.post_ejecucionGastoBalanza = function(req, res, next
     });
 };
 
+prorrateoSucursal.prototype.post_ejecucionSemiNuevos = function(req, res, next) {
+    var self = this; 
+    var idSemiNuevos =  req.body.idSemiNuevos;
+    var nombreBase =  req.body.nombreBase;
+    var fechaInicio = req.body.fechaInicio;
+    var fechaFin = req.body.fechaFin;
+
+    var params = [
+        { name: 'idSemiNuevos', value: idSemiNuevos, type: self.model.types.INT },
+        { name: 'nombreBase', value:  nombreBase, type: self.model.types.STRING },
+        { name: 'fechaInicio', value: fechaInicio, type: self.model.types.STRING },
+        { name: 'fechaFin', value: fechaFin, type: self.model.types.STRING },
+    ];
+    
+    this.model.query('[dbo].[INS_UTILIDAD_SEMINUEVOS_BACK_SP]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoSucursal.prototype.post_ejecucionRefacciones = function(req, res, next) {
+    var self = this;
+    var idRefacciones = req.body.idRefacciones;
+    var nombreBase =  req.body.nombreBase;
+    var fechaInicio = req.body.fechaInicio;
+    var fechaFin = req.body.fechaFin;
+    var idpersona = req.body.idpersona;
+    var params = [
+        { name: 'idRefacciones', value: idRefacciones, type: self.model.types.INT },
+        { name: 'nombreBase', value:  nombreBase, type: self.model.types.STRING },
+        { name: 'fechaInicio', value: fechaInicio, type: self.model.types.STRING },
+        { name: 'fechaFin', value: fechaFin, type: self.model.types.STRING },
+        { name: 'idpersona', value: idpersona, type: self.model.types.STRING },
+    ];
+    
+    this.model.query('[dbo].[INS_UTILIDAD_REFACCIONES_BACK_SP]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoSucursal.prototype.post_ejecucionFlotillas = function(req, res, next) {
+    var self = this;
+    var idFlotillas = req.body.idFlotillas;
+    var nombreBase =  req.body.nombreBase;
+    var fechaInicio = req.body.fechaInicio;
+    var fechaFin = req.body.fechaFin;
+    var flotilla = req.body.flotilla;
+
+    var params = [
+        { name: 'idFlotillas', value: idFlotillas, type: self.model.types.INT },
+        { name: 'nombreBase', value:  nombreBase, type: self.model.types.STRING },
+        { name: 'fechaInicio', value: fechaInicio, type: self.model.types.STRING },
+        { name: 'fechaFin', value: fechaFin, type: self.model.types.STRING },
+        { name: 'flotilla', value: flotilla, type: self.model.types.STRING },
+    ];
+    
+    this.model.query('[dbo].[INS_UTILIDAD_FLOTILLAS_BACK_SP]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoSucursal.prototype.post_ejecucionPercepciones = function(req, res, next) {
+    var self = this;
+    var mes = req.body.mes;
+    var anio = req.body.anio;
+    var id_pagadora =  req.body.id_pagadora;
+
+    var params = [
+        { name: 'mes', value: mes, type: self.model.types.INT },
+        { name: 'anio', value: anio, type: self.model.types.INT },
+        { name: 'id_pagadora', value: id_pagadora, type: self.model.types.STRING },
+    ];
+    
+    this.model.query('[dbo].[INS_PERCEPCIONES_PAGADORA_SP]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoSucursal.prototype.post_ejecucionInforme = function(req, res, next) {
+    var self = this;
+    var mes = req.body.mes;
+    var anio = req.body.anio;
+
+    var params = [
+        { name: 'mes', value: mes, type: self.model.types.INT },
+        { name: 'anio', value: anio, type: self.model.types.INT },
+    ];
+    
+    this.model.query('[dbo].[CALCULO_DE_INFORME_V2]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 
 module.exports = prorrateoSucursal;
