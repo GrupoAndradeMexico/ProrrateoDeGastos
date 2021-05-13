@@ -40,5 +40,18 @@ registrationModule.factory('prorrateoSucursalRepository', function($http) {
                 }
             });
         },
+        getPorcentajesGastos: function(mes, anio) {
+            return $http({
+                url: prorrateoSucursalURL + 'porcentajesGastos/',
+                method: "GET",
+                params: {
+                    mes: mes,
+                    anio: anio
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        }, 
     };
 });

@@ -36,6 +36,7 @@ registrationModule.controller('prorrateoSucursalController', function ($scope, $
 
     $scope.getGastos = function () {
         $scope.getPlantillasXPagadora();
+      
         $scope.verDetalle = false;
         $('#mdlLoading').modal('show');
         $scope.fechaGasto;
@@ -55,6 +56,7 @@ registrationModule.controller('prorrateoSucursalController', function ($scope, $
         cargomes = 'CTA.CTA_CARGO' + month;
         abonomes = 'CTA.CTA_ABONO' + month;
         let year = dateObj.getFullYear();
+        $scope.getPorcentajesGastos(month, year);
         prorrateoSucursalRepository.getBalanza($scope.empresa, cargo, abono, cargomes, abonomes, year).then(function (result) {
             if (result.data.length > 0) {
                 $scope.lstDep = result.data[0];
@@ -84,6 +86,123 @@ registrationModule.controller('prorrateoSucursalController', function ($scope, $
             }
     });
     }
+
+    $scope.getPorcentajesGastos = function (mes, anio) {
+        prorrateoSucursalRepository.getPorcentajesGastos(mes, anio).then(function (result) {
+            if (result.data.length > 0) {
+                $scope.lstPorcentajesGastos = result.data[0];    
+                $scope.lstPorcentajesSeminuevos = result.data[1]; 
+                $scope.lstPorcentajesRefacciones = result.data[2]; 
+            }
+    });
+    }
+
+    $scope.abrirModalDetalle = function (departamento) {
+    $scope.detalleAgenciaGasto = [];
+    $scope.Gasto = departamento.DESCRIPCION;
+    var detalleDep = departamento.gastos;   
+    angular.forEach(detalleDep, function (det, key) {  
+        det.CALCULOPORC = 0;
+      });
+    var flot = 'FLOT';    
+    var casa = 'CASA'
+    var semi = 'SEMI';
+
+    if (departamento.DESCRIPCION.includes(flot))
+    {
+
+    }
+    else if (departamento.DESCRIPCION.includes(casa)) 
+    {
+        angular.forEach($scope.lstPorcentajesRefacciones, function (agencia, key) {
+            let data = {
+                agencia:'',
+                detalle:[],
+                total:0,
+                porcentaje:0
+            }
+            data.agencia = agencia.sucursal +' - '+ agencia.porcentaje;
+            data.porcentaje = agencia.porcentaje;
+           let tot = 0;
+            angular.forEach(detalleDep, function (det, key) {  
+              det.CALCULOPORC = Math.round(((det.CARGO - det.ABONO) * agencia.porcentaje) / 100);
+              det.PORCENTAJE = agencia.porcentaje;
+              tot += det.CALCULOPORC;
+            });
+            data.total = Math.round(tot);
+            data.total = formatMoney(data.total);
+            data.detalle = detalleDep;
+            $scope.detalleAgenciaGasto.push(data);
+        });
+
+    }
+    else if (departamento.DESCRIPCION.includes(semi)) 
+    {
+        angular.forEach($scope.lstPorcentajesSeminuevos, function (agencia, key) {
+            let data = {
+                agencia:'',
+                detalle:[],
+                total:0,
+                porcentaje:0
+            }
+            data.agencia = agencia.sucursal +' - '+ agencia.porcentaje;
+            data.porcentaje = agencia.porcentaje;
+           let tot = 0;
+            angular.forEach(detalleDep, function (det, key) {  
+              det.CALCULOPORC = Math.round(((det.CARGO - det.ABONO) * agencia.porcentaje) / 100);
+              det.PORCENTAJE = agencia.porcentaje;
+              tot += det.CALCULOPORC;
+            });
+            data.total = Math.round(tot);
+            data.total = formatMoney(data.total);
+            data.detalle = detalleDep;
+            $scope.detalleAgenciaGasto.push(data);
+        });
+    }
+    else
+    {
+    angular.forEach($scope.lstPorcentajesGastos, function (agencia, key) {
+        let data = {
+            agencia:'',
+            detalle:[],
+            total:0,
+            porcentaje:0
+        }
+        data.agencia = agencia.sucursal +' - '+ agencia.porcentaje;
+        data.porcentaje = agencia.porcentaje;
+       let tot = 0;
+        angular.forEach(detalleDep, function (det, key) {  
+          det.CALCULOPORC = Math.round(((det.CARGO - det.ABONO) * agencia.porcentaje) / 100);
+          det.PORCENTAJE = agencia.porcentaje;
+          tot += det.CALCULOPORC;
+        });
+        data.total = Math.round(tot);
+        data.total = formatMoney(data.total);
+        data.detalle = detalleDep;
+        $scope.detalleAgenciaGasto.push(data);
+    });
+
+    }
+
+    $('#modalDetalle').modal('show');
+
+}
+
+function formatMoney(amount, decimalCount = 2, decimal = ".", thousands = ",") {
+    try {
+      decimalCount = Math.abs(decimalCount);
+      decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+  
+      const negativeSign = amount < 0 ? "-" : "";
+  
+      let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
+      let j = (i.length > 3) ? i.length % 3 : 0;
+  
+      return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
+    } catch (e) {
+      console.log(e)
+    }
+};
 
 
 })

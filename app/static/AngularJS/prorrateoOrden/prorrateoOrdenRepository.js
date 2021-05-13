@@ -199,5 +199,43 @@ registrationModule.factory('prorrateoOrdenRepository', function($http) {
                 }
             });
         },
+        getDetalleProrrateoOrdenPlantillaOrdenes: function(idEsquema,folio) {
+            return $http({
+                url: prorrateoOrdenURL + 'detalleProrrateoOrdenPlantillaOrdenes/',
+                method: "GET",
+                params: {
+                    idEsquema: idEsquema,
+                    folio:folio
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
+        detallesOCGroup: function(folio) {
+            return $http({
+                url: prorrateoOrdenURL + 'detallesOCGroup/',
+                method: "GET",
+                params: {
+                    folio: folio
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
+        getDetalleOrdenRelacion: function(idEsquema,idIdentificador) {
+            return $http({
+                url: prorrateoOrdenURL + 'detalleOrdenRelacion/',
+                method: "GET",
+                params: {
+                    idEsquema: idEsquema,
+                    idIdentificador: idIdentificador
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
     };
 });
