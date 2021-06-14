@@ -52,6 +52,12 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         templateUrl: 'AngularJS/Templates/cargaUtilidad.html', 
         controller: 'cargaUtilidadController'
     });
+
+    $routeProvider.when('/gastos', {
+        templateUrl: 'AngularJS/Templates/gastosNoCentra.html', 
+        controller: 'gastosNoCentraController'
+    });
+    
     
     $routeProvider.otherwise({ redirectTo: '/' });
 

@@ -274,5 +274,58 @@ prorrateoSucursal.prototype.post_ejecucionInforme = function(req, res, next) {
     });
 };
 
+prorrateoSucursal.prototype.post_actualizaProceso = function(req, res, next) {
+    var self = this;
+    var idDetalle = req.body.idDetalle;
+
+    var params = [
+        { name: 'idDetalle', value: idDetalle, type: self.model.types.INT },
+    ];
+    
+    this.model.query('[dbo].[UPD_PROCESO_POLIZAS_SP]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoSucursal.prototype.post_OCTrasinmex = function(req, res, next) {
+    var self = this;
+    var prorrateado = req.body.prorrateado;
+    var insertaOrden = req.body.insertaOrden;
+
+    var params = [
+        { name: 'prorrateado', value: prorrateado, type: self.model.types.INT },
+        { name: 'insertaOrden', value: insertaOrden, type: self.model.types.INT },
+    ];
+    
+    this.model.query('[dbo].[ORDEN_COMPRA_TRASIMEX_CPVCON]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoSucursal.prototype.post_polizaCorpo = function(req, res, next) {
+    var self = this;
+    var mes = req.body.mes;
+    var anio = req.body.anio;
+    var idDetalle = req.body.idDetalle;
+
+    var params = [
+        { name: 'mes', value: mes, type: self.model.types.INT },
+        { name: 'anio', value: anio, type: self.model.types.INT },
+        { name: 'idDetalle', value: idDetalle, type: self.model.types.INT },
+    ];
+    
+    this.model.query('[dbo].[INS_POLIZACORPORATIVO_SP]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
 
 module.exports = prorrateoSucursal;

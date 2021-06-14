@@ -95,7 +95,7 @@
                 $scope.empleadoDatos = empleado.data;
                 localStorageService.set('empleadoDatos', $scope.empleadoDatos);
             } else {
-
+        
             }
         })
     }
