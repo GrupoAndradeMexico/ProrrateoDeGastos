@@ -35,9 +35,9 @@ cron.schedule(procesaPolizas, async  function () {
      //let mes = ("0" + (dateObj.getMonth() + 1)).slice(-2);
      //let anio = dateObj.getFullYear();
      
-     var hora = 18; 
-     var dia = '11'
-     var mes = '05';
+     var hora = 11; 
+     var dia = '21'
+     var mes = '04';
      var anio = '2021';
      let  fecha = dia +'/'+ mes +'/'+ anio;
      
@@ -60,16 +60,19 @@ cron.schedule(procesaPolizas, async  function () {
                      var errors = [];
                      for (var i = 0; i < solicitudes.length; i++) {
                          try {
+                            var paramBit = {
+                                idDetalle: solicitudes[i].idDetalle,
+                                }
                             switch (solicitudes[i].idProceso) {
                                 case 1:
                                   text = solicitudes[i].proceso;
-                                  //var paramsSol = {
-                                    //mes: solicitudes[i].mes,
-                                    //anio: solicitudes[i].anio,
-                                    //id_pagadora: solicitudes[i].id_pagadora,
-                                    //}
-                                  //let gasto = await ejecucionGastoBalanza(paramsSol);
-                                  break;
+                                  var paramInf = {
+                                    mes: 4,
+                                    anio: 2021,
+                                    idDetalle: solicitudes[i].idDetalle
+                                    }
+                                  let gasto1 = await ejecucionUtilidades(paramInf);
+                                  let x = gasto1;
                                 case 2:
                                   text = solicitudes[i].proceso;
                                   break;
@@ -86,8 +89,27 @@ cron.schedule(procesaPolizas, async  function () {
                                     anio: anio,
                                     }
                                   let gasto = await ejecucionInforme(paramInf);
-                                  
+                                  //let actualiza = await ejecucionActualizaProceso(paramBit);
                                   break;
+                                case 25:
+                                    text = solicitudes[i].proceso;
+                                    var paramInf = {
+                                      mes: mes,
+                                      anio: anio,
+                                      idDetalle: solicitudes[i].idDetalle
+                                      }
+                                    let gasto25 = await ejecucionPolizaCorpo(paramInf);
+                                    let actualiza25 = await ejecucionActualizaProceso(paramBit);
+                                break;
+                                case 26:
+                                    text = solicitudes[i].proceso;
+                                    var paramInf26 = {
+                                        prorrateado: 1,
+                                        insertaOrden: 1,
+                                      }
+                                    let gasto26 = await ejecucionOCTRA(paramInf26);
+                                    //let actualiza = await ejecucionActualizaProceso(paramBit);
+                                break;
 
                               }
                          } catch (e) {
@@ -355,6 +377,98 @@ async function ejecucionGastoBalanza(params) {
   });
 }
 
+async function ejecucionUtilidades(params) {
+
+    var model = new taskModel({
+        parameters: conf
+      });  
+
+    var params = [
+        { name: 'mes', value: params.mes, type: model.types.INT },
+        { name: 'anio', value: params.anio, type: model.types.INT },
+    ];
+    var self = this;
+    model.queryAllRecordSet('SEL_GASTOS_BALANZA_SP', params,async function (error, result) {
+        if (error) {
+        }
+        else {
+            var solicitudesSemiNuevos = result[1];
+            if(solicitudesSemiNuevos.length == 0)
+            {console.log("SIN PENDIENTES SEMINUEVOS");}
+            else
+            {
+               var errorsSemiNuevos = [];
+               console.log('Numero de SemiNuevos ' + solicitudesSemiNuevos.length)
+               for (var i = 0; i < solicitudesSemiNuevos.length; i++) {
+                   try {
+                       var paramsSemi = {
+                           idSemiNuevos: solicitudesSemiNuevos[i].idSemiNuevos,
+                           nombreBase: solicitudesSemiNuevos[i].nombreBase,
+                           fechaInicio: solicitudesSemiNuevos[i].fechaInicio,
+                           fechaFin: solicitudesSemiNuevos[i].fechaFin,
+                             }
+                       let guarda = await ejecucionUtilidadSemiNuevos(paramsSemi);
+                       console.log('Registro Numero ' + i);
+                        } catch (e) {
+                           errorsSemiNuevos.push(e);
+                        }
+                    }           
+            }
+            var solicitudesRefacciones = result[2];
+            if(solicitudesRefacciones.length == 0)
+            {console.log("SIN PENDIENTES Refacciones");}
+            else
+            {
+               var errorsRefacciones = [];
+               console.log('Numero de Refacciones ' + solicitudesRefacciones.length)
+               for (var i = 0; i < solicitudesRefacciones.length; i++) {
+                   try {
+                       var paramsRef = {
+                           idRefacciones: solicitudesRefacciones[i].idRefacciones,
+                           nombreBase: solicitudesRefacciones[i].nombreBase,
+                           fechaInicio: solicitudesRefacciones[i].fechaInicio,
+                           fechaFin: solicitudesRefacciones[i].fechaFin,
+                           idpersona: solicitudesRefacciones[i].id_persona
+                             }
+                       let guarda = await ejecucionUtilidadRefacciones(paramsRef);
+                       console.log('Registro Numero ' + i);
+                        } catch (e) {
+                           errorsRefacciones.push(e);
+                        }
+                    }           
+            }
+           var solicitudesFlotillas = result[3];
+            if(solicitudesFlotillas.length == 0)
+            {console.log("SIN PENDIENTES FLOTILLAS");}
+            else
+            {
+                    var resolvedFlotillas = [];
+                    var errors = [];
+                    console.log('Numero de Flotillas ' + solicitudesFlotillas.length)
+                    for (var i = 0; i < solicitudesFlotillas.length; i++) {
+                        try {
+                            var paramsFlot = {
+                               idFlotillas: solicitudesFlotillas[i].idFlotillas,
+                               nombreBase: solicitudesFlotillas[i].nombreBase,
+                               fechaInicio: solicitudesFlotillas[i].fechaInicio,
+                               fechaFin: solicitudesFlotillas[i].fechaFin,
+                               flotilla: solicitudesFlotillas[i].flotilla
+                             }
+                            let guarda = await ejecucionUtilidadFlotillas(paramsFlot);
+                            console.log('Registro Numero ' + i);
+                            //console.log(paramsFlot)
+                
+                        } catch (e) {
+                           resolvedFlotillas.push(e);
+                        }
+                    }           
+            }
+        }
+    }); 
+
+    
+   }
+
 async function ejecucionUtilidadSemiNuevos(params) {
  return new Promise((resolve, reject) => {
      var puerto = conf.urlCORS.split(':')[2].substr(0, 4), host = conf.urlCORS.split('//')[1].split(':')[0];
@@ -503,6 +617,90 @@ async function ejecucionInforme(params) {
             host: host,
             port: puerto,
             path: "/api/prorrateoSucursal/ejecucionInforme",
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }, function (res3) {
+            var response = "";
+            res3.on('data', (d) => {
+                response += d;
+            }).on('end', () => {
+                console.log(response);
+                resolve(response);
+            }).on('error', function (err) {
+                console.log('HTTP2 request failed: ' + err);
+                reject(err);
+            });
+        });
+    req.write(JSON.stringify(params));
+    req.end();
+  });
+}
+
+async function ejecucionActualizaProceso(params) {
+    return new Promise((resolve, reject) => {
+        var puerto = conf.urlCORS.split(':')[2].substr(0, 4), host = conf.urlCORS.split('//')[1].split(':')[0];
+        var req = http.request({
+            host: host,
+            port: puerto,
+            path: "/api/prorrateoSucursal/actualizaProceso",
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }, function (res3) {
+            var response = "";
+            res3.on('data', (d) => {
+                response += d;
+            }).on('end', () => {
+                console.log(response);
+                resolve(response);
+            }).on('error', function (err) {
+                console.log('HTTP2 request failed: ' + err);
+                reject(err);
+            });
+        });
+    req.write(JSON.stringify(params));
+    req.end();
+  });
+}
+
+async function ejecucionOCTRA(params) {
+    return new Promise((resolve, reject) => {
+        var puerto = conf.urlCORS.split(':')[2].substr(0, 4), host = conf.urlCORS.split('//')[1].split(':')[0];
+        var req = http.request({
+            host: host,
+            port: puerto,
+            path: "/api/prorrateoSucursal/OCTrasinmex",
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }, function (res3) {
+            var response = "";
+            res3.on('data', (d) => {
+                response += d;
+            }).on('end', () => {
+                console.log(response);
+                resolve(response);
+            }).on('error', function (err) {
+                console.log('HTTP2 request failed: ' + err);
+                reject(err);
+            });
+        });
+    req.write(JSON.stringify(params));
+    req.end();
+  });
+}
+
+async function ejecucionPolizaCorpo(params) {
+    return new Promise((resolve, reject) => {
+        var puerto = conf.urlCORS.split(':')[2].substr(0, 4), host = conf.urlCORS.split('//')[1].split(':')[0];
+        var req = http.request({
+            host: host,
+            port: puerto,
+            path: "/api/prorrateoSucursal/polizaCorpo",
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

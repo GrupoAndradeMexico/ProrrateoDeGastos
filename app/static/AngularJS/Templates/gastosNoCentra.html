@@ -1,0 +1,156 @@
+
+<div style="background-color:white; padding:15px; overflow: hidden;">
+    <div  class="col-sm-12" style="text-align: center">
+        <h2>Gastos No Centralizados</h2>
+        <br>
+    </div> 
+    <div class="row">
+        <div class="col-md-3">
+            <label class="form-label">Empresa:</label>
+            <select class="form-control" ng-model="empresa" 
+                ng-options="empresa.id_pagadora as empresa.nombre_pagadora for empresa in lstEmpresasPagadoras"
+                ng-change="getLugaresdeTrabajo()">
+                <option value="">Seleccione Empresa</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Año:</label>
+            <select class="form-control" ng-model="selectedAnio"
+                ng-options="anio.anio for anio in lstAnios">
+                <option value="">Seleccione Año</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Mes:</label>
+            <select class="form-control" ng-model="selectedMes"
+                ng-options="mes.id as mes.text for mes in lstMeses">
+                <option value="">Seleccione Mes</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Quincena:</label>
+            <select class="form-control" ng-model="selectedQuincena"
+                ng-options="quincena.id as quincena.text for quincena in lstQuincenas">
+                <option value="">Seleccione Quincena</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label"></label>
+            <div   style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');getInfoGastos()">Buscar</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <div ng-show="verDetalle"  class="form-group col-sm-12">
+        <br>
+        <div  class="form-group col-sm-12">
+        <table id="tableGastos" class="table table-bordered" cellspacing="0"
+        width="100%">
+          <thead>
+            <tr>
+                <th>Lugar Trabajo</th>
+                <th>Nominas</th>
+                <th>Gastos Varios</th>
+                <th>SUA (IMSS)</th>
+                <th>2% s/ Nominas</th>
+                <th>Gastos Diversos Directo</th>
+                <th>Prestación Serv.</th>
+                <th>Flotillas Especiales</th>
+                <th>Tesoreria</th>
+                <th>PTU</th>
+                <th>Vales Despensa</th>
+                <th>Fondo Ahorro</th>
+                <th>Flotillas 8 CS</th>
+                <th>Compras</th>
+                <th>Recursos Humanos</th>
+                <th>Flotillas 5 JR</th>
+                <th>Flotillas 6 HS</th>
+                <th>Flotillas 7 CP</th>
+                <th>Flotillas 9 FJ</th>
+                <th>Contraloria</th>
+                <th>Sistemas</th>
+                <th>Consejo</th>
+                <th>Planeación Financiera</th>
+                <th>Juridico</th>
+                <th>SemiNuevos</th>
+                <th>Corporativo BCD</th>
+                <th>Mercadotecnia</th>
+                <th>Flotillas 2 GS</th>
+                <th>Finanzas</th>
+                <th>CasaNova</th>
+                <th>Central Flotillas</th>
+                <th>Pago Terceros</th>
+                <th>SubTotal</th>
+                <th>IVA</th>
+                <th>Retención</th>
+                <th>Total</th>
+                <th>Total Facturado</th>
+                <th>Importe</th>
+                <th>Aplica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in lstGastos">
+                <td>{{item.lugarTrabajo}}</td>
+                <td>{{item.Nominas | currency}}</td>
+                <td>{{item.generalesCorporativo | currency}}</td>    
+                <td>{{item.SUA | currency}}</td>
+                <td>{{item.Nominas2 | currency}}</td>
+                <td>{{item.GastosDiversos | currency}}</td>   
+                <td>{{item.prestacionServ | currency}}</td>  
+                <td>{{item.flotillasEspeciales | currency}}</td>  
+                <td>{{item.tesoreria | currency}}</td>  
+                <td>{{item.PTU | currency}}</td>  
+                <td>{{item.valesDespensa | currency}}</td>  
+                <td>{{item.fondoAhorro | currency}}</td>  
+                <td>{{item.flotilla8Claudia | currency}}</td>  
+                <td>{{item.compras | currency}}</td>     
+                <td>{{item.recursosHumanos | currency}}</td>  
+                <td>{{item.flot5JC | currency}}</td>  
+                <td>{{item.flot6Hugo | currency}}</td>  
+                <td>{{item.flot7Consuelo | currency}}</td>  
+                <td>{{item.flot9FJ | currency}}</td>   
+                <td>{{item.contraloria | currency}}</td>     
+                <td>{{item.sistemas | currency}}</td>  
+                <td>{{item.consejo | currency}}</td> 
+                <td>{{item.planeacionFinanciera | currency}}</td> 
+                <td>{{item.juridico | currency}}</td> 
+                <td>{{item.seminuevos | currency}}</td> 
+                <td>{{item.corporativo | currency}}</td> 
+                <td>{{item.mercadotecnia | currency}}</td> 
+                <td>{{item.flotGM | currency}}</td>
+                <td>{{item.finanzas | currency}}</td> 
+                <td>{{item.casanova | currency}}</td> 
+                <td>{{item.flotCentral | currency}}</td> 
+                <td>{{item.pagoTerceros | currency}}</td> 
+                <td>{{item.subTotal | currency}}</td> 
+                <td>{{item.IVA | currency}}</td> 
+                <td>{{item.Retencion | currency}}</td> 
+                <td>{{item.Total | currency}}</td>
+                <td>{{item.totalFacturado | currency}}</td> 
+                <td>{{item.precioUnitario | currency}}</td> 
+                <td>{{item.aplica}}</td>  
+            </tr>      
+          </tbody>
+        </table>
+    </div>
+
+    </div>
+</div>
+    </div>
+      
+    </div>
+</div>
+
+</div>
+
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+</div>

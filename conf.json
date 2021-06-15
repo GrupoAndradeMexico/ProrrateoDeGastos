@@ -10,6 +10,6 @@
     "procesaUtilidadFSR": "14 12 10 * *",
     "procesaPorcentajeFSR": "14 12 10 * *",
     "procesaPercepciones": "14 12 10 * *",
-    "procesaPolizas": "33 18 * * 1-6"
+    "procesaPolizas": "08 14 * * 1-6"
     
 }

@@ -133,7 +133,7 @@
                                     <!--Category name-->
                                     <li class="list-header">Navegación</li>
                                     <!--Menu list item-->
-                                    <li ng-show="polizaNominaAcceso == 1">
+                                    <li ng-show="datosUsuario[0].idRol == 2">
                                         <a href="/polizaNomina">
                                             <i class="glyphicon glyphicon-credit-card"></i>
                                             <span class="menu-title">
@@ -141,7 +141,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li ng-show="polizaNominaAcceso == 1">
+                                    <li ng-show="datosUsuario[0].idRol == 2">
                                         <a href="/polizas">
                                             <i class="glyphicon glyphicon-list-alt"></i>
                                             <span class="menu-title">
@@ -149,7 +149,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li ng-show="polizaNominaAcceso == 1">
+                                    <li ng-show="datosUsuario[0].idRol == 2">
                                         <a href="/prorrateoSucursal">
                                             <i class="glyphicon glyphicon-list-alt"></i>
                                             <span class="menu-title">
@@ -157,7 +157,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li ng-show="polizaNominaAcceso == 1">
+                                    <li ng-show="datosUsuario[0].idRol == 2">
                                         <a href="/prorrateoOrden">
                                             <i class="glyphicon glyphicon-book"></i>
                                             <span class="menu-title">
@@ -165,7 +165,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li ng-show="polizaNominaAcceso == 1">
+                                    <li ng-show="datosUsuario[0].idRol == 2">
                                         <a href="/esquemaProrrateo">
                                             <i class="glyphicon glyphicon-indent-left"></i>
                                             <span class="menu-title">
@@ -173,7 +173,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li ng-show="polizaNominaAcceso == 1">
+                                    <li ng-show="datosUsuario[0].idRol == 2">
                                         <a href="/prorrateoFactura">
                                             <i class="glyphicon glyphicon-tasks"></i>
                                             <span class="menu-title">
@@ -181,7 +181,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li ng-show="polizaNominaAcceso == 1">
+                                    <li ng-show="datosUsuario[0].idRol == 2">
                                         <a href="/plantillaProrrateo">
                                             <i class="glyphicon glyphicon-tasks"></i>
                                             <span class="menu-title">
@@ -189,11 +189,19 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li ng-show="polizaNominaAcceso == 1">
+                                    <li ng-show="datosUsuario[0].idRol == 4">
                                         <a href="/cargaUtilidad">
                                             <i class="glyphicon glyphicon-tasks"></i>
                                             <span class="menu-title">
                                                 <strong>Carga Utilidad</strong>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li ng-show="datosUsuario[0].idRol == 2">
+                                        <a href="/gastos">
+                                            <i class="glyphicon glyphicon-credit-card"></i>
+                                            <span class="menu-title">
+                                                <strong>Gastos No Centralizados</strong>
                                             </span>
                                         </a>
                                     </li>
@@ -331,6 +339,8 @@
   
     <script src="AngularJS/cargaUtilidad/cargaUtilidadController.js"></script>
     <script src="AngularJS/cargaUtilidad/cargautilidadRepository.js"></script>
+    <script src="AngularJS/gastoNoCentra/gastosNoCentraController.js"></script>
+    <script src="AngularJS/gastoNoCentra/gastosNoCentraRepository.js"></script>
   
 </body> 
 
