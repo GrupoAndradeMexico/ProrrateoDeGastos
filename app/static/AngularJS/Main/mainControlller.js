@@ -6,25 +6,9 @@ registrationModule.controller('mainController', function ($scope, $rootScope, $l
     $scope.init = function () {
         $rootScope.datosUsuario = localStorageService.get('empleadoDatos');
       
-        if($rootScope.datosUsuario != null || $rootScope.datosUsuario != undefined)
-        {
         $rootScope.mostrarMenu = 1;
-        $rootScope.polizaNominaAcceso = 1;
-        $rootScope.conciliacionAccesso = 1;
-        }
-        else
-        {
-            localStorageService.clearAll('userData');
-            localStorageService.clearAll('empleadoDatos');
-            localStorageService.clearAll('lgnUser');
-            localStorage.removeItem('paramBusqueda');
-        
-            alertFactory.infoTopFull('No cuenta con el acceso a esta aplicación');
-
-        }
-
-
-
+        //$rootScope.polizaNominaAcceso = 1;
+        //$rootScope.conciliacionAccesso = 1;        
     
     }
 
