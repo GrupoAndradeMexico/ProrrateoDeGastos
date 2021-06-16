@@ -57,6 +57,11 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         templateUrl: 'AngularJS/Templates/gastosNoCentra.html', 
         controller: 'gastosNoCentraController'
     });
+
+    $routeProvider.when('/consultaPolizaNomina', {
+        templateUrl: 'AngularJS/Templates/consultaPolizaNomina.html', 
+        controller: 'consultaPolizaNominaController'
+    });
     
     
     $routeProvider.otherwise({ redirectTo: '/' });
