@@ -9,8 +9,8 @@
         localStorage.removeItem('paramBusqueda');
         if (!($('#lgnUser').val().indexOf('[') > -1)) {
             localStorageService.set('lgnUser', $('#lgnUser').val());
-            $scope.permisos($rootScope.currentEmployee);
-            $scope.getEmpleado($rootScope.currentEmployee);
+            //$scope.permisos($rootScope.currentEmployee);
+            //$scope.getEmpleado($rootScope.currentEmployee);
         } else {
             if (($('#lgnUser').val().indexOf('[') > -1) && !localStorageService.get('lgnUser')) {
                 if (getParameterByName('employee') != '') {
@@ -57,19 +57,27 @@
             }else {
                 if (result.data.length > 0) {
                     $scope.login = result.data[0][0];
-                    $scope.getEmpleado(usuario);
+                    //$scope.getEmpleado(usuario);
+                    if($scope.login == undefined)
+                    { 
+                        alertFactory.error('No tienes acceso a esta aplicacion');
+                        setTimeout(function () {
+                            $(".cargando").remove();
+                        }, 500);
+                    }
+                    else{
                     if ($scope.login.idPerfil == 4) {
                         $rootScope.polizaNominaAcceso = 1;
                         $rootScope.conciliacionAccesso = 0;
-                        alertFactory.warning('Bienvenido a Tesorería: ' + result.data[0][0].nombreUsuario);
-                        location.href = '/conciliacionInicio';
+                        alertFactory.warning('Bienvenido a Carga Utilidades: ' + result.data[0][0].nombreUsuario);
+                        location.href = $scope.login.pathUrl;
                         localStorageService.set('userData', $scope.login);
                     } else {
-                        if ($scope.login.idPerfil == 5) {
+                        if ($scope.login.idPerfil == 2) {
                             $rootScope.polizaNominaAcceso = 1;
                             $rootScope.conciliacionAccesso = 1;
-                            alertFactory.warning('Bienvenido a Tesorería: ' + result.data[0][0].nombreUsuario);
-                            location.href = '/polizaNomina';
+                            alertFactory.warning('Bienvenido a Prorrateo Sucursal: ' + result.data[0][0].nombreUsuario);
+                            location.href = $scope.login.pathUrl;
                             localStorageService.set('userData', $scope.login);
                         } else {
                             $rootScope.polizaNominaAcceso = 0;
@@ -80,6 +88,7 @@
 
                         }
                     }
+                }
 
                 } else {
                     alertFactory.info('Valide el usuario y/o contraseña');
@@ -95,7 +104,7 @@
                 $scope.empleadoDatos = empleado.data;
                 localStorageService.set('empleadoDatos', $scope.empleadoDatos);
             } else {
-        
+
             }
         })
     }
