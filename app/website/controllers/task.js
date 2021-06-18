@@ -67,8 +67,8 @@ cron.schedule(procesaPolizas, async  function () {
                                 case 1:
                                   text = solicitudes[i].proceso;
                                   var paramInf = {
-                                    mes: 4,
-                                    anio: 2021,
+                                    mes: mes,
+                                    anio: anio,
                                     idDetalle: solicitudes[i].idDetalle
                                     }
                                   let gasto1 = await ejecucionUtilidades(paramInf);
@@ -81,24 +81,32 @@ cron.schedule(procesaPolizas, async  function () {
                                   break;
                                 case 4:
                                   text = solicitudes[i].proceso;
+                                  var paramInf4 = {
+                                    mes: mes,
+                                    anio: anio,
+                                    idDetalle: solicitudes[i].idDetalle
+                                    }
+                                  let gasto4 = await ejecucionPorcentajeFSR(paramInf4);
+                                  let x = gasto4;
+
                                   break;
                                 case 24:
                                   text = solicitudes[i].proceso;
-                                  var paramInf = {
+                                  var paramInf24 = {
                                     mes: mes,
                                     anio: anio,
                                     }
-                                  let gasto = await ejecucionInforme(paramInf);
+                                  let gasto24 = await ejecucionInforme(paramInf24);
                                   //let actualiza = await ejecucionActualizaProceso(paramBit);
                                   break;
                                 case 25:
                                     text = solicitudes[i].proceso;
-                                    var paramInf = {
+                                    var paramInf25 = {
                                       mes: mes,
                                       anio: anio,
                                       idDetalle: solicitudes[i].idDetalle
                                       }
-                                    let gasto25 = await ejecucionPolizaCorpo(paramInf);
+                                    let gasto25 = await ejecucionPolizaCorpo(paramInf25);
                                     let actualiza25 = await ejecucionActualizaProceso(paramBit);
                                 break;
                                 case 26:
@@ -108,6 +116,26 @@ cron.schedule(procesaPolizas, async  function () {
                                         insertaOrden: 1,
                                       }
                                     let gasto26 = await ejecucionOCTRA(paramInf26);
+                                    //let actualiza = await ejecucionActualizaProceso(paramBit);
+                                break;
+                                case 27:
+                                    text = solicitudes[i].proceso;
+                                    var paramInf27 = {
+                                        mes: mes,
+                                        anio: anio,
+                                        idDetalle: solicitudes[i].idDetalle
+                                      }
+                                    let gasto27 = await insertaGastosBalanza(paramInf27);
+                                    //let actualiza = await ejecucionActualizaProceso(paramBit);
+                                break;
+                                case 28:
+                                    text = solicitudes[i].proceso;
+                                    var paramInf28 = {
+                                        mes: mes,
+                                        anio: anio,
+                                        idDetalle: solicitudes[i].idDetalle
+                                      }
+                                    let gasto28 = await ejecucionGastosBalanza(paramInf28);
                                     //let actualiza = await ejecucionActualizaProceso(paramBit);
                                 break;
 
@@ -701,6 +729,63 @@ async function ejecucionPolizaCorpo(params) {
             host: host,
             port: puerto,
             path: "/api/prorrateoSucursal/polizaCorpo",
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }, function (res3) {
+            var response = "";
+            res3.on('data', (d) => {
+                response += d;
+            }).on('end', () => {
+                console.log(response);
+                resolve(response);
+            }).on('error', function (err) {
+                console.log('HTTP2 request failed: ' + err);
+                reject(err);
+            });
+        });
+    req.write(JSON.stringify(params));
+    req.end();
+  });
+}
+
+async function insertaGastosBalanza(params) {
+    return new Promise((resolve, reject) => {
+        var puerto = conf.urlCORS.split(':')[2].substr(0, 4), host = conf.urlCORS.split('//')[1].split(':')[0];
+        var req = http.request({
+            host: host,
+            port: puerto,
+            path: "/api/prorrateoSucursal/insertaGastosBalanza",
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }, function (res3) {
+            var response = "";
+            res3.on('data', (d) => {
+                response += d;
+            }).on('end', () => {
+                console.log(response);
+                resolve(response);
+            }).on('error', function (err) {
+                console.log('HTTP2 request failed: ' + err);
+                reject(err);
+            });
+        });
+    req.write(JSON.stringify(params));
+    req.end();
+  });
+}
+
+
+async function ejecucionGastosBalanza(params) {
+    return new Promise((resolve, reject) => {
+        var puerto = conf.urlCORS.split(':')[2].substr(0, 4), host = conf.urlCORS.split('//')[1].split(':')[0];
+        var req = http.request({
+            host: host,
+            port: puerto,
+            path: "/api/prorrateoSucursal/ejecucionGastosBalanza",
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
