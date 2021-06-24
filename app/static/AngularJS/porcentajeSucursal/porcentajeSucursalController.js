@@ -95,11 +95,32 @@ $scope.ModalActualizaPorcentaje = function (detalle)
         $('#actualizaPorcentaje').modal('show');
 }
 
+
+$scope.actualizarPorcentaje = function(){
+    $('#mdlLoading').modal('show');
+    porcentajeSucursalRepository.actualizarPorcentaje($scope.consecutivo,$scope.selectedAnio.anio, $scope.selectedMes, $scope.detporcentaje,  $scope.idUsuario).then(function (result) {
+        if (result.data[0].estatus == 1 ) {  
+            $scope.getInfoPorcentajes();
+            alertFactory.info(result.data[0].msj);
+            $('#mdlLoading').modal('hide');
+            $('#actualizaPorcentaje').modal('hide');
+        }
+        else
+        {
+            $('#mdlLoading').modal('hide');
+            alertFactory.warning(result.data[0].msj);
+        }
+
+});
+
+}
+
 $scope.ModalInsertaPorcentaje = function ()
 {
         $scope.getsucursales();
         $scope.InsMesAnio = $scope.selectedMes+ ' - ' + $scope.selectedAnio.anio;
         $scope.Insporcentaje = 0;
+        $scope.selectedSucursal= null
         $('#insertaPorcentaje').modal('show');
 }
 
@@ -111,5 +132,34 @@ $scope.getsucursales = function () {
         }
     });
 }   
+
+$scope.guardarPorcentaje = function(){
+    if($scope.selectedSucursal == undefined || $scope.selectedSucursal == null)
+    {
+        alertFactory.warning('La sucursal es requerida');
+    }
+    else{
+    $('#mdlLoading').modal('show');
+    porcentajeSucursalRepository.guardarPorcentaje($scope.selectedAnio.anio, $scope.selectedMes, $scope.Insporcentaje,  $scope.idUsuario, $scope.selectedSucursal ).then(function (result) {
+        if (result.data[0].estatus == 1 ) {  
+            $scope.getInfoPorcentajes();
+            alertFactory.info(result.data[0].msj);
+            $('#mdlLoading').modal('hide');
+            $('#insertaPorcentaje').modal('hide');
+        }
+        else if (result.data[0].estatus == 2)
+        {
+            $('#mdlLoading').modal('hide');
+            alertFactory.warning(result.data[0].msj);
+        }
+        else
+        {
+            $('#mdlLoading').modal('hide');
+            alertFactory.warning(result.data[0].msj);
+        }
+});
+}
+}
+
 
 })
