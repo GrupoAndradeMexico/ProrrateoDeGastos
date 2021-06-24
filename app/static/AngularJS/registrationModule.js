@@ -57,6 +57,12 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         templateUrl: 'AngularJS/Templates/gastosNoCentra.html', 
         controller: 'gastosNoCentraController'
     });
+
+    $routeProvider.when('/porcentaje', {
+        templateUrl: 'AngularJS/Templates/porcentajeSucursal.html', 
+        controller: 'porcentajeSucursalController'
+    });
+    
     
     
     $routeProvider.otherwise({ redirectTo: '/' });

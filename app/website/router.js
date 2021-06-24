@@ -9,4 +9,5 @@ module.exports = {
      plantillaProrrateo:require('./controllers/plantillaProrrateo'),
      task: require('./controllers/task'),
      gastosNoCentra: require('./controllers/gastos'),
+     porcentajeSucursal: require('./controllers/porcentajeSucursal'),
   }

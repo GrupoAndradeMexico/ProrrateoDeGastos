@@ -1,0 +1,168 @@
+
+<div style="background-color:white; padding:15px; overflow: hidden;">
+    <div  class="col-sm-12" style="text-align: center">
+        <h2>Porcentaje Sucursal</h2>
+        <br>
+    </div> 
+    <div class="row">
+        <div class="col-md-3">
+            <label class="form-label">Año:</label>
+            <select class="form-control" ng-model="selectedAnio"
+                ng-options="anio.anio for anio in lstAnios"
+                ng-change="getLimpia()">
+                <option value="">Seleccione Año</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Mes:</label>
+            <select class="form-control" ng-model="selectedMes"
+                ng-options="mes.id as mes.text for mes in lstMeses"
+                ng-change="getLimpia()">
+                <option value="">Seleccione Mes</option>
+            </select>
+        </div>
+  
+        <div class="col-md-2">
+            <label class="form-label"></label>
+            <div   style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');getInfoPorcentajes()">Buscar</button>
+            </div>
+        </div>
+        <div  ng-show="verTotalPorcentaje"  class="col-md-2">
+            <label class="form-label">Total Porcentaje:</label>
+            <input  class="form-control" type="text" ng-model="totalPorcentaje" disabled/>
+        </div>
+        <div  ng-show="verInserta" class="col-md-2">
+            <label class="form-label"></label>
+            <div   style="background-color:white; padding:5px; overflow: hidden;">
+                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');ModalInsertaPorcentaje()">Insetar Porcentaje</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <div ng-show="verDetalle"  class="form-group col-sm-12">
+        <br>
+        <div  class="form-group col-sm-12">
+        <table id="tableGastos" class="table table-bordered" cellspacing="0"
+        width="100%">
+          <thead>
+            <tr>
+                <th>Sucursal</th>
+                <th>Porcentaje</th>
+                <th>Mes</th>
+                <th>Año</th> 
+                <th> </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in lstPorcentajes">
+                <td>{{item.sucursal}}</td>
+                <td>{{item.porcentaje}}%</td>
+                <td>{{item.mes}}</td>
+                <td>{{item.anio}}</td>  
+                <td>
+                    <button  type="button" class="btn btn-info" aria-expanded="false"  ng-click="ModalActualizaPorcentaje(item)">
+                        Actualiza Porcentaje
+                    </button>
+                </td>
+            </tr>      
+          </tbody>
+        </table>
+    </div>
+
+    </div>
+</div>
+    </div>
+      
+    </div>
+</div>
+
+</div>
+
+<!--================================ Modal para Actualizar Porcentaje ================================-->
+<div class="modal fade" id="actualizaPorcentaje" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header label-mint headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                    <i class="pci-cross pci-circle text-white"></i>
+                </button>
+                <h4 class="modal-title text-white" style="color: white;">Actualiza Porcentaje</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Sucursal:</label>
+                        <input disabled  class="form-control" type="text" ng-model="detSucursal" >
+
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Mes - Año:</label>
+                        <input disabled class="form-control" type="text" ng-model="detsMesAnio" >
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Porcentaje:</label>
+                        <input  class="form-control" type="text" ng-model="detporcentaje" >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label"></label>
+                        <div   style="background-color:white; padding:5px; overflow: hidden;">
+                            <button class="btn btn-primary" ng-click="actualizarPorcentaje()">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--================================ Modal para Insertar Porcentaje  ================================-->
+<div class="modal fade" id="insertaPorcentaje" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header label-mint headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                    <i class="pci-cross pci-circle text-white"></i>
+                </button>
+                <h4 class="modal-title text-white" style="color: white;">Insertar Porcentaje</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Sucursal:</label>
+                        <select class="form-control" ng-model="selectedSucursal"
+                        ng-options="suc.idsucursal as suc.sucursal for suc in lstSucursales">
+                        <option value="">Seleccione Sucursal</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Mes - Año:</label>
+                        <input disabled class="form-control" type="text" ng-model="InsMesAnio" >
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Porcentaje:</label>
+                        <input  class="form-control" type="text" ng-model="Insporcentaje" >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label"></label>
+                        <div   style="background-color:white; padding:5px; overflow: hidden;">
+                            <button class="btn btn-primary" ng-click="GuardarPorcentaje()">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+</div>

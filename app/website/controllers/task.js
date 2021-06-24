@@ -87,8 +87,6 @@ cron.schedule(procesaPolizas, async  function () {
                                     idDetalle: solicitudes[i].idDetalle
                                     }
                                   let gasto4 = await ejecucionPorcentajeFSR(paramInf4);
-                                  let x = gasto4;
-
                                   break;
                                 case 24:
                                   text = solicitudes[i].proceso;
