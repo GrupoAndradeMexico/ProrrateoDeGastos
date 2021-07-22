@@ -6,10 +6,12 @@
     "SQL_database": "polizasnomina",
     "SQL_connectionTimeout": 60000,
     "urlCORS": "http://localhost:5600/",
-    "procesaGastos": "14 12 10 * *",
-    "procesaUtilidadFSR": "14 12 10 * *",
-    "procesaPorcentajeFSR": "14 12 10 * *",
-    "procesaPercepciones": "14 12 10 * *",
-    "procesaPolizas": "08 12 * * 1-6"
+    "procesaGastos": "14 16 10 * *",
+    "procesaUtilidadFSR": "14 16 10 * *",
+    "procesaPorcentajeFSR": "14 16 10 * *",
+    "procesaPercepciones": "14 16 10 * *",
+    "procesaPolizas": "28 16 * * 1-6",
+    "procesaOCProrrateoGastos": "0 0 */1 * * *",
+    "procesaFacturasProrrateoGastos": "0 0 */1 * * *"
     
 }

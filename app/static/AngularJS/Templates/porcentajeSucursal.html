@@ -35,7 +35,7 @@
         <div  ng-show="verInserta" class="col-md-2">
             <label class="form-label"></label>
             <div   style="background-color:white; padding:5px; overflow: hidden;">
-                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');ModalInsertaPorcentaje()">Insetar Porcentaje</button>
+                <button  ng-disabled="aplicaPorcentaje == 0" class="btn btn-primary" ng-click=" $('#loading').modal('show');ModalInsertaPorcentaje()">Insetar Porcentaje</button>
             </div>
         </div>
     </div>
@@ -61,7 +61,7 @@
                 <td>{{item.mes}}</td>
                 <td>{{item.anio}}</td>  
                 <td>
-                    <button  type="button" class="btn btn-info" aria-expanded="false"  ng-click="ModalActualizaPorcentaje(item)">
+                    <button ng-disabled="item.aplicaPorcentaje == 0" type="button" class="btn btn-info" aria-expanded="false"  ng-click="ModalActualizaPorcentaje(item)">
                         Actualiza Porcentaje
                     </button>
                 </td>

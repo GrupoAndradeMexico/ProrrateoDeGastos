@@ -62,6 +62,7 @@ $scope.getInfoPorcentajes = function () {
         if (result.data.length > 0) {  
             $scope.lstPorcentajes = result.data[0];
             $scope.totalPorcentaje = result.data[1][0].porcentajeTotal;
+            $scope.aplicaPorcentaje = result.data[1][0].aplicaPorcentaje;
            
             $scope.verTotalPorcentaje = true;
             if($scope.totalPorcentaje < 100)

@@ -31,7 +31,7 @@ gastos.prototype.get_InfoGastos = function(req, res, next) {
         { name: 'quincena', value: req.query.quincena, type: self.model.types.INT },
     ];
 
-    this.model.query('INS_PRORRATEOGASTOSBALANZA_QUINCENA_NOCENTRA_V1_SP', params, function(error, result) {
+    this.model.query('INS_PRORRATEOGASTOSBALANZA_QUINCENA_NOCENTRA_FRONT_V1_SP', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result

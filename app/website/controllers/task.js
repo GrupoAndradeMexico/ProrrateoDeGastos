@@ -10,6 +10,8 @@ var procesaUtilidadFSR = Rutas.procesaUtilidadFSR;
 var procesaPorcentajeFSR = Rutas.procesaPorcentajeFSR;
 var procesaPercepciones = Rutas.procesaPercepciones;
 var procesaPolizas = Rutas.procesaPolizas;
+var procesaOCProrrateoGastos = Rutas.procesaOCProrrateoGastos;
+var procesaFacturasProrrateoGastos = Rutas.procesaFacturasProrrateoGastos;
 
 
 var task = function (conf) {
@@ -35,9 +37,9 @@ cron.schedule(procesaPolizas, async  function () {
      //let mes = ("0" + (dateObj.getMonth() + 1)).slice(-2);
      //let anio = dateObj.getFullYear();
      
-     var hora = 11; 
-     var dia = '21'
-     var mes = '04';
+     var hora = 16; 
+     var dia = '12'
+     var mes = '06';
      var anio = '2021';
      let  fecha = dia +'/'+ mes +'/'+ anio;
      
@@ -73,6 +75,7 @@ cron.schedule(procesaPolizas, async  function () {
                                     }
                                   let gasto1 = await ejecucionUtilidades(paramInf);
                                   let x = gasto1;
+                                  let actualiza1 = await ejecucionActualizaProceso(paramBit);
                                 case 2:
                                   text = solicitudes[i].proceso;
                                   break;
@@ -373,6 +376,43 @@ cron.schedule(procesaPercepciones, async  function () {
      }); 
 });
 
+cron.schedule(procesaOCProrrateoGastos, async  function () {
+    // console.log(`=====INICIO=====`);
+     var model = new taskModel({
+       parameters: conf
+     });  
+  
+     var params = [];
+     var self = this;
+
+     model.query('[dbo].[INS_VALIDA_ORDENCIERRE_SP]', params,async function (error, result) {
+         if (error) {
+         }
+         else {
+            // console.log(result);
+             var solicitudes = result;
+         }
+     }); 
+});
+
+cron.schedule(procesaFacturasProrrateoGastos, async  function () {
+    // console.log(`=====INICIO=====`);
+     var model = new taskModel({
+       parameters: conf
+     });  
+  
+     var params = [];
+     var self = this;
+
+     model.query('[dbo].[INS_VALIDA_FACTURACIERRE_SP]', params,async function (error, result) {
+         if (error) {
+         }
+         else {
+            // console.log(result);
+             var solicitudes = result;
+         }
+     }); 
+});
 
 
 async function ejecucionGastoBalanza(params) {
