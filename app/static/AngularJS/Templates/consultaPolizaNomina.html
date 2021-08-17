@@ -1,98 +1,274 @@
+<script src="https://unpkg.com/sweetalert2@7.19.3/dist/sweetalert2.all.js"></script>
+<style>
+  .swal2-popup #swal2-content {
+    font-size: large;
+  }
 
-<div style="background-color:white; padding:15px; overflow: hidden;">
-    <div  class="col-sm-12" style="text-align: center">
-        <h2>Consulta Póliza Nomina</h2>
-        <br>
-    </div> 
+  .swal2-popup .swal2-title{
+    font-size: x-large;
+  }
+</style>
+<div style="background-color: white; padding: 15px; overflow: hidden" ng-init="init()" >
+  <div class="col-sm-12" style="text-align: center">
+    <h2 style="margin-top: 0px !important; margin-bottom: 0px !important">
+      Consulta Póliza Nomina
+    </h2>
+    <br />
+  </div>
+
+  <div class="tab">
+    <button class="tablinks" onclick="openCity(event, 'todas')">
+      Genera pólizas masivas
+    </button>
+    <button class="tablinks" onclick="openCity(event, 'individual')">
+      Genera póliza por sucursal
+    </button>
+  </div>
+
+  <!-- Tab content -->
+  <div id="todas" class="tabcontent">
+    <h3 style="margin-top: 0px !important; margin-bottom: 0px !important">
+      Genera pólizas masivas todas las empresas por fecha de paga
+    </h3>
+    <!-- FILA DE COMBOS -->
     <div class="row">
-        <div class="col-md-3">
-            <label class="form-label">Empresa:</label>
-            <select class="form-control" ng-model="empresa" 
-                ng-options="empresa.id_pagadora as empresa.nombre_pagadora for empresa in lstEmpresasPagadoras"
-                ng-change="getLugaresdeTrabajo()">
-                <option value="">Seleccione Empresa</option>
-            </select>
+      <div class="col-md-2">
+        <label class="form-label">Año:</label>
+        <select
+          class="form-control"
+          ng-model="selectedAnio"
+          ng-options="anio.anio for anio in lstAnios"
+          ng-change="ObtieneFechasPagasBitacora()"
+        >
+          <option value="">Seleccione Año</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Mes:</label>
+        <select
+          class="form-control"
+          ng-model="selectedMes"
+          ng-options="mes.id as mes.text for mes in lstMeses"
+          ng-change="ObtieneFechasPagasBitacora()"
+        >
+          <option value="">Seleccione Mes</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label"></label>
+        <div style="background-color: white; padding: 5px; overflow: hidden">
+          <button
+            class="btn btn-primary"
+            ng-click=" $('#loading').modal('show');ObtieneFechasPagasBitacora()"
+          >
+            Consultar Periodos
+          </button>
         </div>
-        <div class="col-md-2">
-            <label class="form-label">Año:</label>
-            <select class="form-control" ng-model="selectedAnio"
-                ng-options="anio.anio for anio in lstAnios"
-                ng-change="ObtieneFechasPagas()">
-                <option value="">Seleccione Año</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Mes:</label>
-            <select class="form-control" ng-model="selectedMes"
-                ng-options="mes.id as mes.text for mes in lstMeses" ng-change="ObtieneFechasPagas()">
-                <option value="">Seleccione Mes</option>
-            </select>
-        </div>
-        <div class="col-md-2">
-            <label class="form-label">Quincena:</label>
-            <select class="form-control" ng-model="fechaPagaSelected"
-                ng-options="fPaga as fPaga.paga for fPaga in lstQuincenas"
-                ng-change="LimpiaTabla()">
-                <option value="">Seleccione Quincena</option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label"></label>
-            <div   style="background-color:white; padding:5px; overflow: hidden;">
-                <button class="btn btn-primary" ng-click=" $('#loading').modal('show');GetAsientoContable()">Buscar</button>
-            </div>
-        </div>
+      </div>
     </div>
+
+    <!-- FILA TABLA DE PAGAS -->
     <div class="row">
-    <div ng-show="verDetalle"  class="form-group col-sm-12">
-        <br>
-        <div  class="form-group col-sm-12">
-        <table id="tableGastos" class="table table-bordered" cellspacing="0"
-        width="100%">
+      <div class="col-md-12" style="width: 50%; height: 50%;">
+        <table
+          id="tablePagas"
+          class="table table-bordered table-sm"
+          cellspacing="0"
+          width="100%"
+        >
           <thead>
             <tr>
-                <th>Cuenta Contable</th>
-                <th>Concepto</th>
-                <th>Debe</th>
-                <th>Haber</th>
-                <th>Persona</th>
+              <th>Periodo</th>
+              <th>Fecha Paga</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="item in lstGastos">
+            <tr ng-repeat="item in lstQuincenas">
+              <td style="font-size:x-small;">{{item.paga}}</td>
+              <td style="font-size:x-small;">{{item.fechasPaga}}</td>
+              <td><button type="button" class="btn btn-success btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo)" ng-disabled="item.bloqueo==1" >Generar Pólizas</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- FILA BITACORA DE NOMINA -->
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Pólizas generadas y/o solicitadas</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table
+            id="tableBitacora"
+            class="table table-bordered"
+            cellspacing="0"
+            width="100%"
+          >
+            <thead>
+              <tr>
+                <th>Sucursal</th>
+                <th>Pagadora</th>
+                <th>Mes</th>
+                <th>Año</th>
+                <th>Tipo</th>
+                <th>Número</th>
+                <th>Fecha de ejecución</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in lstBitacora">
+                <td>{{item.sucursal}}</td>
+                <td>{{item.pagadora}}</td>
+                <td>{{item.mes}}</td>
+                <td>{{item.anio}}</td>
+                <td>{{item.tipo}}</td>
+                <td>{{item.semQuin}}</td>
+                <td>{{item.fechaProceso}}</td>
+                <td><button type="button" class="btn btn-info btn-xs" ng-click ="$('#loading').modal('show');ConsultaPoliza(item.id_work_locat,item.DSBPEncInfoEnc, item.sucursal)" >Consulta Pólizas</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+
+  </div>
+  <div id="individual" class="tabcontent">
+    <h3 style="margin-top: 0px !important; margin-bottom: 0px !important">
+      Consulta de la poliza por generase en BPRO, por sucursal y fecha de paga
+    </h3>
+
+    <!-- ROW BOTONES  -->
+    <div class="row">
+      <div class="col-md-2">
+        <label class="form-label">Sucursal:</label>
+        <select
+          class="form-control"
+          ng-model="empresa"
+          ng-options="empresa.id as empresa.nombre for empresa in lstEmpresasPagadoras"
+          ng-change="getLugaresdeTrabajo()"
+        >
+          <option value="">Seleccione Sucursal</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Año:</label>
+        <select
+          class="form-control"
+          ng-model="selectedAnio"
+          ng-options="anio.anio for anio in lstAnios"
+          ng-change="ObtieneFechasPagas()"
+        >
+          <option value="">Seleccione Año</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Mes:</label>
+        <select
+          class="form-control"
+          ng-model="selectedMes"
+          ng-options="mes.id as mes.text for mes in lstMeses"
+          ng-change="ObtieneFechasPagas()"
+        >
+          <option value="">Seleccione Mes</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Periodo:</label>
+        <select
+          class="form-control"
+          ng-model="fechaPagaSelected"
+          ng-options="fPaga as fPaga.paga for fPaga in lstQuincenas"
+          ng-change="LimpiaTabla()"
+        >
+          <option value="">Seleccione Quincena</option>
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label"></label>
+        <div style="background-color: white; padding: 5px; overflow: hidden">
+          <button
+            class="btn btn-primary"
+            ng-click=" $('#loading').modal('show');GetAsientoContable()"
+          >
+            Consultar
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-2">
+        <label class="form-label"></label>
+        <div style="background-color: white; padding: 5px; overflow: hidden">
+          <button
+            class="btn btn-primary"
+            ng-click=" $('#loading').modal('show');GeneraPolizaIndividual()"
+            ng-disabled="btnGeneraPoliza"
+          >
+            Genera Póliza
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- ROW TABLA -->
+    <div class="row">
+      <div ng-show="verDetalle" class="form-group col-sm-12">
+        <br />
+        <div class="form-group col-sm-12">
+          <table
+            id="tableGastos"
+            class="table table-bordered"
+            cellspacing="0"
+            width="100%"
+          >
+            <thead>
+              <tr>
+                <th>Cuenta Contable BPRO</th>
+                <th>Concepto META4</th>
+                <th>Debe (Cargo)</th>
+                <th>Haber (Abono)</th>
+                <th>Persona</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in lstGastos">
                 <td>{{item.cuetaContable}}</td>
                 <td>{{item.concepto}}</td>
-                <td style="text-align: right;">{{item.debe | currency}}</td>
-                <td style="text-align: right;">{{item.haber | currency}}</td>
-                <td style="text-align: right;">{{item.id_persona_empresa}}</td>
-            </tr>      
-          </tbody>
-          <tfoot>
-              <tr>
-                  <td style="text-align: right;" colspan="2"> <strong>Totales</strong></td>
-                  <td style="text-align: right;"> <strong>{{totalDebe | currency}}</strong> </td>
-                  <td style="text-align: right;"> <strong>{{totalHaber | currency}}</strong> </td>
-                  <td></td>
+                <td style="text-align: right">{{item.debe | currency}}</td>
+                <td style="text-align: right">{{item.haber | currency}}</td>
+                <td style="text-align: right">{{item.id_persona_empresa}}</td>
               </tr>
-          </tfoot>
-        </table>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td style="text-align: right" colspan="2">
+                  <strong>Totales</strong>
+                </td>
+                <td style="text-align: right">
+                  <strong>{{totalDebe | currency}}</strong>
+                </td>
+                <td style="text-align: right">
+                  <strong>{{totalHaber | currency}}</strong>
+                </td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
     </div>
-
-    </div>
-</div>
-    </div>
-      
-    </div>
-</div>
-
+  </div>
 </div>
 
 <div id="mdlLoading" class="modal fade" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="spinner">
-            <div class="cube1"></div>
-            <div class="cube2"></div>
-        </div>
+  <div class="modal-dialog modal-lg">
+    <div class="spinner">
+      <div class="cube1"></div>
+      <div class="cube2"></div>
     </div>
+  </div>
 </div>
