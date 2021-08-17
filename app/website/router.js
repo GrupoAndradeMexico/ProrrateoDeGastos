@@ -7,7 +7,7 @@ module.exports = {
      esquemaProrrateo: require('./controllers/esquemaProrrateo'),
      prorrateoFactura: require('./controllers/prorrateoFactura'),
      plantillaProrrateo:require('./controllers/plantillaProrrateo'),
-     task: require('./controllers/task'),
+     //task: require('./controllers/task'),
      gastosNoCentra: require('./controllers/gastos'),
      porcentajeSucursal: require('./controllers/porcentajeSucursal'),
   }

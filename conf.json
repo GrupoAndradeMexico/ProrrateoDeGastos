@@ -10,8 +10,8 @@
     "procesaUtilidadFSR": "14 16 10 * *",
     "procesaPorcentajeFSR": "14 16 10 * *",
     "procesaPercepciones": "14 16 10 * *",
-    "procesaPolizas": "28 16 * * 1-6",
-    "procesaOCProrrateoGastos": "0 0 */1 * * *",
-    "procesaFacturasProrrateoGastos": "0 0 */1 * * *"
+    "procesaPolizas": "18 15 * * 1-6",
+    "procesaOCProrrateoGastos": "0 0 */3 * * *",
+    "procesaFacturasProrrateoGastos": "0 0 */3 * * *"
     
 }

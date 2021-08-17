@@ -32,15 +32,15 @@ cron.schedule(procesaPolizas, async  function () {
        parameters: conf
      });  
      let dateObj = new Date();
-     //let hora = dateObj.getHours(); 
-     //let dia = ("0" + dateObj.getDate()).slice(-2);
-     //let mes = ("0" + (dateObj.getMonth() + 1)).slice(-2);
-     //let anio = dateObj.getFullYear();
+     let hora = dateObj.getHours(); 
+     let dia = ("0" + dateObj.getDate()).slice(-2);
+     let mes = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+     let anio = dateObj.getFullYear();
      
-     var hora = 16; 
-     var dia = '12'
-     var mes = '06';
-     var anio = '2021';
+     //var hora = 16; 
+     //var dia = '12'
+     //var mes = '06';
+     //var anio = '2021';
      let  fecha = dia +'/'+ mes +'/'+ anio;
      
      var params = [
@@ -464,7 +464,7 @@ async function ejecucionUtilidades(params) {
             else
             {
                var errorsSemiNuevos = [];
-               console.log('Numero de SemiNuevos ' + solicitudesSemiNuevos.length)
+               console.log('Numero de SemiNuevos ' + (solicitudesSemiNuevos.length - 1))
                for (var i = 0; i < solicitudesSemiNuevos.length; i++) {
                    try {
                        var paramsSemi = {
@@ -474,7 +474,7 @@ async function ejecucionUtilidades(params) {
                            fechaFin: solicitudesSemiNuevos[i].fechaFin,
                              }
                        let guarda = await ejecucionUtilidadSemiNuevos(paramsSemi);
-                       console.log('Registro Numero ' + i);
+                       console.log('Registro Numero ' + i + ' de:' + (solicitudesSemiNuevos.length - 1));
                         } catch (e) {
                            errorsSemiNuevos.push(e);
                         }
@@ -486,7 +486,7 @@ async function ejecucionUtilidades(params) {
             else
             {
                var errorsRefacciones = [];
-               console.log('Numero de Refacciones ' + solicitudesRefacciones.length)
+               console.log('Numero de Refacciones ' +  (solicitudesRefacciones.length - 1))
                for (var i = 0; i < solicitudesRefacciones.length; i++) {
                    try {
                        var paramsRef = {
@@ -497,7 +497,7 @@ async function ejecucionUtilidades(params) {
                            idpersona: solicitudesRefacciones[i].id_persona
                              }
                        let guarda = await ejecucionUtilidadRefacciones(paramsRef);
-                       console.log('Registro Numero ' + i);
+                       console.log('Registro Numero ' + i + ' de:' + (solicitudesRefacciones.length - 1));
                         } catch (e) {
                            errorsRefacciones.push(e);
                         }
@@ -510,7 +510,7 @@ async function ejecucionUtilidades(params) {
             {
                     var resolvedFlotillas = [];
                     var errors = [];
-                    console.log('Numero de Flotillas ' + solicitudesFlotillas.length)
+                    console.log('Numero de Flotillas ' + (solicitudesFlotillas.length - 1))
                     for (var i = 0; i < solicitudesFlotillas.length; i++) {
                         try {
                             var paramsFlot = {
@@ -521,7 +521,7 @@ async function ejecucionUtilidades(params) {
                                flotilla: solicitudesFlotillas[i].flotilla
                              }
                             let guarda = await ejecucionUtilidadFlotillas(paramsFlot);
-                            console.log('Registro Numero ' + i);
+                            console.log('Registro Numero ' + i + ' de:' + (solicitudesFlotillas.length - 1));
                             //console.log(paramsFlot)
                 
                         } catch (e) {
