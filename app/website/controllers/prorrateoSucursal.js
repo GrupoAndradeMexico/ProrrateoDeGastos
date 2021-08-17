@@ -328,4 +328,63 @@ prorrateoSucursal.prototype.post_polizaCorpo = function(req, res, next) {
     });
 };
 
+prorrateoSucursal.prototype.post_ejecucionPorcentajeFSR = function(req, res, next) {
+    var self = this;
+    var mes = req.body.mes;
+    var anio = req.body.anio;
+
+    var params = [
+        { name: 'mes', value: mes, type: self.model.types.INT },
+        { name: 'anio', value:  anio, type: self.model.types.INT },
+    ];
+    
+    this.model.query('[dbo].[UPD_PORCENTAJES_SRF_SP]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+
+prorrateoSucursal.prototype.post_insertaGastosBalanza = function(req, res, next) {
+    var self = this;
+    var mes = req.body.mes;
+    var anio = req.body.anio;
+    var idDetalle = req.body.idDetalle;
+
+    var params = [
+        { name: 'mes', value: mes, type: self.model.types.INT },
+        { name: 'anio', value: anio, type: self.model.types.INT },
+        { name: 'idDetalle', value: idDetalle, type: self.model.types.INT },
+    ];
+    
+    this.model.query('[dbo].[INS_GASTOS_BALANZA_SP]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+prorrateoSucursal.prototype.post_ejecucionGastosBalanza = function(req, res, next) {
+    var self = this;
+    var mes = req.body.mes;
+    var anio = req.body.anio;
+    var idDetalle = req.body.idDetalle;
+
+    var params = [
+        { name: 'mes', value: mes, type: self.model.types.INT },
+        { name: 'anio', value: anio, type: self.model.types.INT },
+        { name: 'idDetalle', value: idDetalle, type: self.model.types.INT },
+    ];
+    
+    this.model.query('[dbo].[INS_PRORRATEOGASTOSBALANZA_QUINCENA_V1_SP]', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
 module.exports = prorrateoSucursal;

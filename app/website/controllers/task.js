@@ -10,6 +10,8 @@ var procesaUtilidadFSR = Rutas.procesaUtilidadFSR;
 var procesaPorcentajeFSR = Rutas.procesaPorcentajeFSR;
 var procesaPercepciones = Rutas.procesaPercepciones;
 var procesaPolizas = Rutas.procesaPolizas;
+var procesaOCProrrateoGastos = Rutas.procesaOCProrrateoGastos;
+var procesaFacturasProrrateoGastos = Rutas.procesaFacturasProrrateoGastos;
 
 
 var task = function (conf) {
@@ -30,15 +32,15 @@ cron.schedule(procesaPolizas, async  function () {
        parameters: conf
      });  
      let dateObj = new Date();
-     //let hora = dateObj.getHours(); 
-     //let dia = ("0" + dateObj.getDate()).slice(-2);
-     //let mes = ("0" + (dateObj.getMonth() + 1)).slice(-2);
-     //let anio = dateObj.getFullYear();
+     let hora = dateObj.getHours(); 
+     let dia = ("0" + dateObj.getDate()).slice(-2);
+     let mes = ("0" + (dateObj.getMonth() + 1)).slice(-2);
+     let anio = dateObj.getFullYear();
      
-     var hora = 11; 
-     var dia = '21'
-     var mes = '04';
-     var anio = '2021';
+     //var hora = 16; 
+     //var dia = '12'
+     //var mes = '06';
+     //var anio = '2021';
      let  fecha = dia +'/'+ mes +'/'+ anio;
      
      var params = [
@@ -67,12 +69,13 @@ cron.schedule(procesaPolizas, async  function () {
                                 case 1:
                                   text = solicitudes[i].proceso;
                                   var paramInf = {
-                                    mes: 4,
-                                    anio: 2021,
+                                    mes: mes,
+                                    anio: anio,
                                     idDetalle: solicitudes[i].idDetalle
                                     }
                                   let gasto1 = await ejecucionUtilidades(paramInf);
                                   let x = gasto1;
+                                  let actualiza1 = await ejecucionActualizaProceso(paramBit);
                                 case 2:
                                   text = solicitudes[i].proceso;
                                   break;
@@ -81,24 +84,30 @@ cron.schedule(procesaPolizas, async  function () {
                                   break;
                                 case 4:
                                   text = solicitudes[i].proceso;
+                                  var paramInf4 = {
+                                    mes: mes,
+                                    anio: anio,
+                                    idDetalle: solicitudes[i].idDetalle
+                                    }
+                                  let gasto4 = await ejecucionPorcentajeFSR(paramInf4);
                                   break;
                                 case 24:
                                   text = solicitudes[i].proceso;
-                                  var paramInf = {
+                                  var paramInf24 = {
                                     mes: mes,
                                     anio: anio,
                                     }
-                                  let gasto = await ejecucionInforme(paramInf);
+                                  let gasto24 = await ejecucionInforme(paramInf24);
                                   //let actualiza = await ejecucionActualizaProceso(paramBit);
                                   break;
                                 case 25:
                                     text = solicitudes[i].proceso;
-                                    var paramInf = {
+                                    var paramInf25 = {
                                       mes: mes,
                                       anio: anio,
                                       idDetalle: solicitudes[i].idDetalle
                                       }
-                                    let gasto25 = await ejecucionPolizaCorpo(paramInf);
+                                    let gasto25 = await ejecucionPolizaCorpo(paramInf25);
                                     let actualiza25 = await ejecucionActualizaProceso(paramBit);
                                 break;
                                 case 26:
@@ -108,6 +117,26 @@ cron.schedule(procesaPolizas, async  function () {
                                         insertaOrden: 1,
                                       }
                                     let gasto26 = await ejecucionOCTRA(paramInf26);
+                                    //let actualiza = await ejecucionActualizaProceso(paramBit);
+                                break;
+                                case 27:
+                                    text = solicitudes[i].proceso;
+                                    var paramInf27 = {
+                                        mes: mes,
+                                        anio: anio,
+                                        idDetalle: solicitudes[i].idDetalle
+                                      }
+                                    let gasto27 = await insertaGastosBalanza(paramInf27);
+                                    //let actualiza = await ejecucionActualizaProceso(paramBit);
+                                break;
+                                case 28:
+                                    text = solicitudes[i].proceso;
+                                    var paramInf28 = {
+                                        mes: mes,
+                                        anio: anio,
+                                        idDetalle: solicitudes[i].idDetalle
+                                      }
+                                    let gasto28 = await ejecucionGastosBalanza(paramInf28);
                                     //let actualiza = await ejecucionActualizaProceso(paramBit);
                                 break;
 
@@ -347,6 +376,43 @@ cron.schedule(procesaPercepciones, async  function () {
      }); 
 });
 
+cron.schedule(procesaOCProrrateoGastos, async  function () {
+    // console.log(`=====INICIO=====`);
+     var model = new taskModel({
+       parameters: conf
+     });  
+  
+     var params = [];
+     var self = this;
+
+     model.query('[dbo].[INS_VALIDA_ORDENCIERRE_SP]', params,async function (error, result) {
+         if (error) {
+         }
+         else {
+            // console.log(result);
+             var solicitudes = result;
+         }
+     }); 
+});
+
+cron.schedule(procesaFacturasProrrateoGastos, async  function () {
+    // console.log(`=====INICIO=====`);
+     var model = new taskModel({
+       parameters: conf
+     });  
+  
+     var params = [];
+     var self = this;
+
+     model.query('[dbo].[INS_VALIDA_FACTURACIERRE_SP]', params,async function (error, result) {
+         if (error) {
+         }
+         else {
+            // console.log(result);
+             var solicitudes = result;
+         }
+     }); 
+});
 
 
 async function ejecucionGastoBalanza(params) {
@@ -398,7 +464,7 @@ async function ejecucionUtilidades(params) {
             else
             {
                var errorsSemiNuevos = [];
-               console.log('Numero de SemiNuevos ' + solicitudesSemiNuevos.length)
+               console.log('Numero de SemiNuevos ' + (solicitudesSemiNuevos.length - 1))
                for (var i = 0; i < solicitudesSemiNuevos.length; i++) {
                    try {
                        var paramsSemi = {
@@ -408,7 +474,7 @@ async function ejecucionUtilidades(params) {
                            fechaFin: solicitudesSemiNuevos[i].fechaFin,
                              }
                        let guarda = await ejecucionUtilidadSemiNuevos(paramsSemi);
-                       console.log('Registro Numero ' + i);
+                       console.log('Registro Numero ' + i + ' de:' + (solicitudesSemiNuevos.length - 1));
                         } catch (e) {
                            errorsSemiNuevos.push(e);
                         }
@@ -420,7 +486,7 @@ async function ejecucionUtilidades(params) {
             else
             {
                var errorsRefacciones = [];
-               console.log('Numero de Refacciones ' + solicitudesRefacciones.length)
+               console.log('Numero de Refacciones ' +  (solicitudesRefacciones.length - 1))
                for (var i = 0; i < solicitudesRefacciones.length; i++) {
                    try {
                        var paramsRef = {
@@ -431,7 +497,7 @@ async function ejecucionUtilidades(params) {
                            idpersona: solicitudesRefacciones[i].id_persona
                              }
                        let guarda = await ejecucionUtilidadRefacciones(paramsRef);
-                       console.log('Registro Numero ' + i);
+                       console.log('Registro Numero ' + i + ' de:' + (solicitudesRefacciones.length - 1));
                         } catch (e) {
                            errorsRefacciones.push(e);
                         }
@@ -444,7 +510,7 @@ async function ejecucionUtilidades(params) {
             {
                     var resolvedFlotillas = [];
                     var errors = [];
-                    console.log('Numero de Flotillas ' + solicitudesFlotillas.length)
+                    console.log('Numero de Flotillas ' + (solicitudesFlotillas.length - 1))
                     for (var i = 0; i < solicitudesFlotillas.length; i++) {
                         try {
                             var paramsFlot = {
@@ -455,7 +521,7 @@ async function ejecucionUtilidades(params) {
                                flotilla: solicitudesFlotillas[i].flotilla
                              }
                             let guarda = await ejecucionUtilidadFlotillas(paramsFlot);
-                            console.log('Registro Numero ' + i);
+                            console.log('Registro Numero ' + i + ' de:' + (solicitudesFlotillas.length - 1));
                             //console.log(paramsFlot)
                 
                         } catch (e) {
@@ -701,6 +767,63 @@ async function ejecucionPolizaCorpo(params) {
             host: host,
             port: puerto,
             path: "/api/prorrateoSucursal/polizaCorpo",
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }, function (res3) {
+            var response = "";
+            res3.on('data', (d) => {
+                response += d;
+            }).on('end', () => {
+                console.log(response);
+                resolve(response);
+            }).on('error', function (err) {
+                console.log('HTTP2 request failed: ' + err);
+                reject(err);
+            });
+        });
+    req.write(JSON.stringify(params));
+    req.end();
+  });
+}
+
+async function insertaGastosBalanza(params) {
+    return new Promise((resolve, reject) => {
+        var puerto = conf.urlCORS.split(':')[2].substr(0, 4), host = conf.urlCORS.split('//')[1].split(':')[0];
+        var req = http.request({
+            host: host,
+            port: puerto,
+            path: "/api/prorrateoSucursal/insertaGastosBalanza",
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }, function (res3) {
+            var response = "";
+            res3.on('data', (d) => {
+                response += d;
+            }).on('end', () => {
+                console.log(response);
+                resolve(response);
+            }).on('error', function (err) {
+                console.log('HTTP2 request failed: ' + err);
+                reject(err);
+            });
+        });
+    req.write(JSON.stringify(params));
+    req.end();
+  });
+}
+
+
+async function ejecucionGastosBalanza(params) {
+    return new Promise((resolve, reject) => {
+        var puerto = conf.urlCORS.split(':')[2].substr(0, 4), host = conf.urlCORS.split('//')[1].split(':')[0];
+        var req = http.request({
+            host: host,
+            port: puerto,
+            path: "/api/prorrateoSucursal/ejecucionGastosBalanza",
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

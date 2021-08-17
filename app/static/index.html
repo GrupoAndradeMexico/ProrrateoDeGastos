@@ -133,7 +133,7 @@
                                     <!--Category name-->
                                     <li class="list-header">Navegación</li>
                                     <!--Menu list item-->
-                                    <li ng-show="datosUsuario[0].idRol == 2">
+                                  <!--  <li ng-show="datosUsuario[0].idRol == 2">
                                         <a href="/polizaNomina">
                                             <i class="glyphicon glyphicon-credit-card"></i>
                                             <span class="menu-title">
@@ -188,7 +188,7 @@
                                                 <strong>Plantillas Prorrateo</strong>
                                             </span>
                                         </a>
-                                    </li>
+                                    </li>-->
                                     <li ng-show="datosUsuario[0].idRol == 4">
                                         <a href="/cargaUtilidad">
                                             <i class="glyphicon glyphicon-tasks"></i>
@@ -210,6 +210,10 @@
                                             <i class="glyphicon glyphicon-credit-card"></i>
                                             <span class="menu-title">
                                                 <strong>Consulta Poliza Nomina</strong>
+                                        <a href="/porcentaje">
+                                            <i class="glyphicon glyphicon-tasks"></i>
+                                            <span class="menu-title">
+                                                <strong>Porcentaje Sucursal</strong>
                                             </span>
                                         </a>
                                     </li>
@@ -353,6 +357,9 @@
     <script src="AngularJS/consultaPolizaNomina/consultaPolizaNominaController.js"></script>
     <script src="AngularJS/consultaPolizaNomina/consultaPolizaNominaRepository.js"></script>
   
+    <script src="AngularJS/porcentajeSucursal/porcentajeSucursalController.js"></script>
+    <script src="AngularJS/porcentajeSucursal/porcentajeSucursalRepository.js"></script>
+    <script src="AngularJS/directiveFile/directiveCurrency.js"></script>
 </body> 
 
 </html>
