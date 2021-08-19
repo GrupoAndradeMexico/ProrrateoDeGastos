@@ -87,7 +87,7 @@
             <tr ng-repeat="item in lstQuincenas">
               <td style="font-size:x-small;">{{item.paga}}</td>
               <td style="font-size:x-small;">{{item.fechasPaga}}</td>
-              <td><button type="button" class="btn btn-success btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo)" ng-disabled="item.bloqueo==1" >Generar Pólizas</button></td>
+              <td><button type="button" class="btn btn-success btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.bloqueo==1" >Generar Pólizas</button></td>
             </tr>
           </tbody>
         </table>

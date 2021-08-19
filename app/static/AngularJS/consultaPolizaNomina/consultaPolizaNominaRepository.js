@@ -111,6 +111,35 @@ registrationModule.factory('consultaPolizaNominaRepository', function($http) {
                     'Content-Type': 'application/json'
                 }
             });
+        },
+        GeneraOrdenesMasivasCorpo: function(mes, anio, fechaNomina, tipoNomina ) {
+            return $http({
+                url: consultaPolizaNomna + 'GeneraOrdenesMasivasCorpo/',
+                method: "GET",
+                params: {
+                    mes,
+                    anio,
+                    fechaNomina,
+                    tipoNomina
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
+        GeneraPolizaMasiva: function(fechaPagaSelected,tipoSelected,frecuenciaSelected ) {
+            return $http({
+                url: consultaPolizaNomna + 'GeneraPolizaMasiva/',
+                method: "GET",
+                params: {
+                    fechaPagaSelected,
+                    tipoSelected,
+                    frecuenciaSelected
+                },
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
         }
     };
 });

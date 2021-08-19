@@ -16,7 +16,6 @@ registrationModule.controller(
     gastosNoCentraRepository,
     consultaPolizaNominaRepository
   ) {
-
     $rootScope.userData = localStorageService.get("userData");
     $scope.idUsuario = $rootScope.userData.idUsuario;
     $scope.selectedAnio;
@@ -101,169 +100,163 @@ registrationModule.controller(
 
           $scope.ObtieneFechasPagas();
           $scope.ObtieneFechasPagasBitacora();
-
         }
       });
-
-
-
     };
 
     $scope.ObtieneFechasPagas = function () {
-        if (
-          isNaN($scope.selectedMes) === false &&
-          isNaN($scope.selectedAnio.anio) === false
-        ) {
-          $scope.verDetalle = false;
-          consultaPolizaNominaRepository
-            .FechasPagas($scope.selectedMes, $scope.selectedAnio.anio)
-            .then((resp) => {
-              if (resp.data.length > 0) {
-                $scope.lstQuincenas = resp.data;
-
-                $("#tablePagas").DataTable().clear();
-                $("#tablePagas").DataTable().destroy();
-  
-                // setTimeout(() => {
-                //   $("#tablePagas").DataTable({
-                //     scrollY: "450px",
-                //     scrollX: true,
-                //     scrollCollapse: true,
-                //     columnDefs: [{ width: 150, targets: 1 }],
-                //     fixedColumns: true,
-                //     destroy: true,
-                //     responsive: true,
-                //     searching: true,
-                //     paging: false,
-                //     autoFill: false,
-                //     fixedColumns: false,
-                //     pageLength: 15,
-                //     dom: "Bfrtip",
-                //     buttons: ["csv", "excel"],
-                //     order: [[0, "asc"]],
-                //     language: {
-                //       search: '<i class="fa fa-search" aria-hidden="true"></i>',
-                //       searchPlaceholder: "Search",
-                //       oPaginate: {
-                //         sNext:
-                //           '<i class="fa fa-caret-right" aria-hidden="true"></i>',
-                //         sPrevious:
-                //           '<i class="fa fa-caret-left" aria-hidden="true"></i>',
-                //       },
-                //     },
-                //   });
-                //   $("#tablePagas_length").hide();
-                // });
-              }
-            });
-
-
-        }
-      };
-
-      $scope.LimpiaTabla = function () {
-        var fechaActual = new Date();
-        $scope.lstGastos = [];
+      if (
+        isNaN($scope.selectedMes) === false &&
+        isNaN($scope.selectedAnio.anio) === false
+      ) {
         $scope.verDetalle = false;
-
-        if (
-          $scope.fechaPagaSelected.fechasPaga <
-          fechaActual.toISOString().slice(0, 10).replace(/-/g, "")
-        ) {
-          $scope.btnGeneraPoliza = false;
-        } else {
-          $scope.btnGeneraPoliza = false;
-        }
-      };
-
-      $scope.GetAsientoContable = function () {
-        $scope.totalDebe = 0;
-        $scope.totalHaber = 0;
-        $scope.lstGastos = [];
-        console.log($scope.fechaPagaSelected)
-        $scope.verDetalle = false;
-        $("#mdlLoading").modal("show");
         consultaPolizaNominaRepository
-          .ObtieneAsientoContablePaga(
-            $scope.empresa,
-            $scope.fechaPagaSelected.fechasPaga,
-            $scope.fechaPagaSelected.tipo,
-            $scope.fechaPagaSelected.frecuencia
-          )
+          .FechasPagas($scope.selectedMes, $scope.selectedAnio.anio)
           .then((resp) => {
-            if (resp.data.length > 2) {
-              $scope.lstGastos = [];
-              $scope.lstGastos = resp.data[1];
+            if (resp.data.length > 0) {
+              $scope.lstQuincenas = resp.data;
+             // console.log($scope.lstQuincenas)
+              $("#tablePagas").DataTable().clear();
+              $("#tablePagas").DataTable().destroy();
 
-              $scope.lstGastos.forEach((el) => {
-                $scope.totalDebe += el.debe;
-                $scope.totalHaber += el.haber;
-              });
-
-              $scope.verDetalle = true;
-
-              $("#tableGastos").DataTable().clear();
-              $("#tableGastos").DataTable().destroy();
-
-              setTimeout(() => {
-                $("#tableGastos").DataTable({
-                  scrollY: "450px",
-                  scrollX: true,
-                  scrollCollapse: true,
-                  columnDefs: [{ width: 150, targets: 1 }],
-                  fixedColumns: true,
-                  destroy: true,
-                  responsive: true,
-                  searching: true,
-                  paging: false,
-                  autoFill: false,
-                  fixedColumns: false,
-                  pageLength: 15,
-                  dom: "Bfrtip",
-                  buttons: ["csv", "excel"],
-                  order: [[0, "asc"]],
-                  language: {
-                    search: '<i class="fa fa-search" aria-hidden="true"></i>',
-                    searchPlaceholder: "Search",
-                    oPaginate: {
-                      sNext:
-                        '<i class="fa fa-caret-right" aria-hidden="true"></i>',
-                      sPrevious:
-                        '<i class="fa fa-caret-left" aria-hidden="true"></i>',
-                    },
-                  },
-                });
-                $("#tableGastos_length").hide();
-              });
-              $("#mdlLoading").modal("hide");
-            } else {
-              $("#mdlLoading").modal("hide");
+              // setTimeout(() => {
+              //   $("#tablePagas").DataTable({
+              //     scrollY: "450px",
+              //     scrollX: true,
+              //     scrollCollapse: true,
+              //     columnDefs: [{ width: 150, targets: 1 }],
+              //     fixedColumns: true,
+              //     destroy: true,
+              //     responsive: true,
+              //     searching: true,
+              //     paging: false,
+              //     autoFill: false,
+              //     fixedColumns: false,
+              //     pageLength: 15,
+              //     dom: "Bfrtip",
+              //     buttons: ["csv", "excel"],
+              //     order: [[0, "asc"]],
+              //     language: {
+              //       search: '<i class="fa fa-search" aria-hidden="true"></i>',
+              //       searchPlaceholder: "Search",
+              //       oPaginate: {
+              //         sNext:
+              //           '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+              //         sPrevious:
+              //           '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+              //       },
+              //     },
+              //   });
+              //   $("#tablePagas_length").hide();
+              // });
             }
           });
-      };
+      }
+    };
 
-      $scope.GeneraPolizaIndividual = function () {
-        console.log("empresa ", $scope.empresa);
-        console.log("año ", $scope.selectedAnio);
-        console.log("mes ", $scope.selectedMes);
-        console.log("Fecha selected ", $scope.fechaPagaSelected);
+    $scope.LimpiaTabla = function () {
+      var fechaActual = new Date();
+      $scope.lstGastos = [];
+      $scope.verDetalle = false;
 
-        swal({        
-              title: "Aviso",
-              type: "warning",
-              width:'700px',
-              text: "Esta por solicitar la generación de la póliza de la paga seleccionada, ¿Deseas continuar?",
-              showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
-              confirmButtonText: "Aceptar",
-              cancelButtonText: "Cancelar",
-              showCancelButton: true,
-              showConfirmButton: true,
-              allowOutsideClick:false
-        }).then((result) => {
-          if (result.value) {
-            $("#mdlLoading").modal("show");
+      if (
+        $scope.fechaPagaSelected.fechasPaga <
+        fechaActual.toISOString().slice(0, 10).replace(/-/g, "")
+      ) {
+        $scope.btnGeneraPoliza = false;
+      } else {
+        $scope.btnGeneraPoliza = false;
+      }
+    };
+
+    $scope.GetAsientoContable = function () {
+      $scope.totalDebe = 0;
+      $scope.totalHaber = 0;
+      $scope.lstGastos = [];
+      console.log($scope.fechaPagaSelected);
+      $scope.verDetalle = false;
+      $("#mdlLoading").modal("show");
+      consultaPolizaNominaRepository
+        .ObtieneAsientoContablePaga(
+          $scope.empresa,
+          $scope.fechaPagaSelected.fechasPaga,
+          $scope.fechaPagaSelected.tipo,
+          $scope.fechaPagaSelected.frecuencia
+        )
+        .then((resp) => {
+          if (resp.data.length > 2) {
+            $scope.lstGastos = [];
+            $scope.lstGastos = resp.data[1];
+
+            $scope.lstGastos.forEach((el) => {
+              $scope.totalDebe += el.debe;
+              $scope.totalHaber += el.haber;
+            });
+
+            $scope.verDetalle = true;
+
+            $("#tableGastos").DataTable().clear();
+            $("#tableGastos").DataTable().destroy();
+
+            setTimeout(() => {
+              $("#tableGastos").DataTable({
+                scrollY: "450px",
+                scrollX: true,
+                scrollCollapse: true,
+                columnDefs: [{ width: 150, targets: 1 }],
+                fixedColumns: true,
+                destroy: true,
+                responsive: true,
+                searching: true,
+                paging: false,
+                autoFill: false,
+                fixedColumns: false,
+                pageLength: 15,
+                dom: "Bfrtip",
+                buttons: ["csv", "excel"],
+                order: [[0, "asc"]],
+                language: {
+                  search: '<i class="fa fa-search" aria-hidden="true"></i>',
+                  searchPlaceholder: "Search",
+                  oPaginate: {
+                    sNext:
+                      '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                    sPrevious:
+                      '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+                  },
+                },
+              });
+              $("#tableGastos_length").hide();
+            });
+            $("#mdlLoading").modal("hide");
+          } else {
+            $("#mdlLoading").modal("hide");
+          }
+        });
+    };
+
+    $scope.GeneraPolizaIndividual = function () {
+      console.log("empresa ", $scope.empresa);
+      console.log("año ", $scope.selectedAnio);
+      console.log("mes ", $scope.selectedMes);
+      console.log("Fecha selected ", $scope.fechaPagaSelected);
+
+      swal({
+        title: "Aviso",
+        type: "warning",
+        width: "700px",
+        text: "Esta por solicitar la generación de la póliza de la paga seleccionada, ¿Deseas continuar?",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+        showCancelButton: true,
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.value) {
+          $("#mdlLoading").modal("show");
 
           consultaPolizaNominaRepository
             .GeneraPoiizaIndividual(
@@ -280,36 +273,164 @@ registrationModule.controller(
                   "Se han dejado los datos en BPRO para la generación de la póliza solicitada",
                   "success"
                 );
-              }else{
+              } else {
                 $("#mdlLoading").modal("hide");
 
-                setTimeout(()=>{swal('Atención',resp.data[0][0].msg, 'error')},500)
-                  
+                setTimeout(() => {
+                  swal("Atención", resp.data[0][0].msg, "error");
+                }, 500);
               }
             });
         } else {
-            $("#mdlLoading").modal("hide");
+          $("#mdlLoading").modal("hide");
           swal("Atencion", "Se cancelo la generación de la póliza", "info");
-
         }
+      });
+    };
+
+    $scope.ConsultaBitacoraPolizas = function () {
+      // $("#mdlLoading").modal("show");
+      $scope.lstBitacora = [];
+      consultaPolizaNominaRepository
+        .ConsultaBitacoraPolizas($scope.selectedMes, $scope.selectedAnio.anio)
+        .then((resp) => {
+          if (resp.data.length > 0) {
+            $scope.lstBitacora = resp.data;
+
+            $("#tableBitacora").DataTable().clear();
+            $("#tableBitacora").DataTable().destroy();
+
+            setTimeout(() => {
+              $("#tableBitacora").DataTable({
+                scrollY: "450px",
+                scrollX: true,
+                scrollCollapse: true,
+                columnDefs: [{ width: 150, targets: 1 }],
+                fixedColumns: true,
+                destroy: true,
+                responsive: true,
+                searching: true,
+                paging: false,
+                autoFill: false,
+                fixedColumns: false,
+                pageLength: 15,
+                dom: "Bfrtip",
+                buttons: ["csv", "excel"],
+                order: [[0, "asc"]],
+                language: {
+                  search: '<i class="fa fa-search" aria-hidden="true"></i>',
+                  searchPlaceholder: "Search",
+                  oPaginate: {
+                    sNext:
+                      '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                    sPrevious:
+                      '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+                  },
+                },
+              });
+              $("#tableBitacora_length").hide();
+            }, 1500);
+          }
         });
-      };
+    };
 
-      $scope.ConsultaBitacoraPolizas = function(){
+    $scope.GeneraOrdenesMasivas = function (fechaNomina, tipoNomina, frecuencia) {
+      swal({
+        title: "Aviso",
+        type: "warning",
+        width: "700px",
+        text: "Esta por generar el calculo de la información para las pólizas de nomina , ¿Deseas continuar?",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+        showCancelButton: true,
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.value) {
+          $("#mdlLoading").modal("show");
 
-       // $("#mdlLoading").modal("show");
-       $scope.lstBitacora = [];
-        consultaPolizaNominaRepository.ConsultaBitacoraPolizas($scope.selectedMes,$scope.selectedAnio.anio).then(resp =>{
-            if(resp.data.length > 0){
- 
-              $scope.lstBitacora = resp.data;
+          // GENERAMOS EL CALCULO DE LAS SUCURSALES QUE NO SEAN CORPORATIVO
+          consultaPolizaNominaRepository
+            .GeneraOrdenesMasivas(
+              $scope.selectedMes,
+              $scope.selectedAnio.anio,
+              fechaNomina,
+              tipoNomina
+            )
+            .then((resp) => {
 
+              // GENERAMOS EL CALCULO DE CORPORATIVO
+              consultaPolizaNominaRepository
+              .GeneraOrdenesMasivasCorpo(
+                $scope.selectedMes,
+                $scope.selectedAnio.anio,
+                fechaNomina,
+                tipoNomina
+              ).then(respCorpo =>{
 
-              $("#tableBitacora").DataTable().clear();
-              $("#tableBitacora").DataTable().destroy();
+                //SOLICITAMOS CONFIRMACION DE GENERACION DE POLIZAS MASIVAS
+                swal({
+                  title: "Aviso",
+                  type: "warning",
+                  width: "700px",
+                  text: "¿Deseas generar las polizas de todas las sucursale?, ¿Deseas continuar?",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Aceptar",
+                  cancelButtonText: "Cancelar",
+                  showCancelButton: true,
+                  showConfirmButton: true,
+                  allowOutsideClick: false,
+                }).then((result) =>{
+
+                  if (result.value){
+                    swal('aviso', 'entro en generacion de polizas', 'warning');
+                    // consultaPolizaNominaRepository.GeneraPolizaMasiva(
+                    //   fechaNomina,
+                    //   tipoNomina,
+                    //   frecuencia
+                    // ).then(respPol => {
+                    //   $("#mdlLoading").modal("hide");
+                    // })
+                  }
+                  else{
+                    $("#mdlLoading").modal("hide");
+                  }
+                  
+                });
+
+                $("#mdlLoading").modal("hide");
+              });
+            });
+        } else {
+          $("#mdlLoading").modal("hide");
+          swal("Atencion", "Se cancelo la petición de generación de las pólizas", "info");
+        }
+      });
+    };
+
+    $scope.ObtieneFechasPagasBitacora = function () {
+      if (
+        isNaN($scope.selectedMes) === false &&
+        isNaN($scope.selectedAnio.anio) === false
+      ) {
+        $scope.verDetalle = false;
+        $scope.lstQuincenas = [];
+        consultaPolizaNominaRepository
+          .FechasPagasBitacora($scope.selectedMes, $scope.selectedAnio.anio)
+          .then((resp) => {
+            if (resp.data.length > 0) {
+              $scope.lstQuincenas = resp.data;
+
+              $("#tablePagas").DataTable().clear();
+              $("#tablePagas").DataTable().destroy();
 
               setTimeout(() => {
-                $("#tableBitacora").DataTable({
+                $("#tablePagas").DataTable({
                   scrollY: "450px",
                   scrollX: true,
                   scrollCollapse: true,
@@ -323,7 +444,7 @@ registrationModule.controller(
                   fixedColumns: false,
                   pageLength: 15,
                   dom: "Bfrtip",
-                  buttons: ["csv", "excel"],
+                  buttons: [],
                   order: [[0, "asc"]],
                   language: {
                     search: '<i class="fa fa-search" aria-hidden="true"></i>',
@@ -336,94 +457,32 @@ registrationModule.controller(
                     },
                   },
                 });
-                $("#tableBitacora_length").hide();
-              },1500);
+                $("#tablePagas_length").hide();
+              }, 1500);
 
-
+              $scope.ConsultaBitacoraPolizas();
             }
-        });
+          });
       }
+    };
 
-      $scope.GeneraOrdenesMasivas = function(fechaNomina, tipoNomina){
-        $("#mdlLoading").modal("show")
-        consultaPolizaNominaRepository.GeneraOrdenesMasivas($scope.selectedMes,$scope.selectedAnio.anio, fechaNomina, tipoNomina).then(resp =>{
-            $("#mdlLoading").modal("hide");
-        });
-      }
+    $scope.ConsultaPoliza = function (idLugarTrabajo, cabecero, sucursal) {
+      var datosPoliza = {};
+      var sinProcesar = "Pendiente de procesar";
+      var procesado = "Póliza generada";
+      var estatus;
 
-      $scope.ObtieneFechasPagasBitacora = function () {
-        if (
-          isNaN($scope.selectedMes) === false &&
-          isNaN($scope.selectedAnio.anio) === false
-        ) {
-          $scope.verDetalle = false;
-          $scope.lstQuincenas = [];
-          consultaPolizaNominaRepository
-            .FechasPagasBitacora($scope.selectedMes, $scope.selectedAnio.anio)
-            .then((resp) => {
-              if (resp.data.length > 0) {
-                $scope.lstQuincenas = resp.data;
-
-                $("#tablePagas").DataTable().clear();
-                $("#tablePagas").DataTable().destroy();
-  
-                setTimeout(() => {
-                  $("#tablePagas").DataTable({
-                    scrollY: "450px",
-                    scrollX: true,
-                    scrollCollapse: true,
-                    columnDefs: [{ width: 150, targets: 1 }],
-                    fixedColumns: true,
-                    destroy: true,
-                    responsive: true,
-                    searching: true,
-                    paging: false,
-                    autoFill: false,
-                    fixedColumns: false,
-                    pageLength: 15,
-                    dom: "Bfrtip",
-                    buttons: [],
-                    order: [[0, "asc"]],
-                    language: {
-                      search: '<i class="fa fa-search" aria-hidden="true"></i>',
-                      searchPlaceholder: "Search",
-                      oPaginate: {
-                        sNext:
-                          '<i class="fa fa-caret-right" aria-hidden="true"></i>',
-                        sPrevious:
-                          '<i class="fa fa-caret-left" aria-hidden="true"></i>',
-                      },
-                    },
-                  });
-                  $("#tablePagas_length").hide();
-                },1500);
-
-                $scope.ConsultaBitacoraPolizas();
-              }
-            });
-
-
-        }
-      };
-
-
-      $scope.ConsultaPoliza = function (idLugarTrabajo, cabecero ,sucursal){
-
-        var datosPoliza = {};
-        var sinProcesar = 'Pendiente de procesar';
-        var procesado='Póliza generada';
-        var estatus;
-
-        consultaPolizaNominaRepository.ConsultaPoliza(idLugarTrabajo,cabecero).then(resp=>{
-
+      consultaPolizaNominaRepository
+        .ConsultaPoliza(idLugarTrabajo, cabecero)
+        .then((resp) => {
           datosPoliza = resp.data[0];
 
-          estatus = datosPoliza.ConsPol === 0?sinProcesar:procesado;
+          estatus = datosPoliza.ConsPol === 0 ? sinProcesar : procesado;
 
           swal({
             title: `Póliza generada en BPRO`,
-            type: 'info',
-            width:'700px',
+            type: "info",
+            width: "700px",
             html: `<strong> Sucursal:</strong> ${sucursal} <br> <strong>estado de la póliza: </strong>${estatus} <br>
             <table
             id="tablePoliza"
@@ -450,16 +509,14 @@ registrationModule.controller(
           </table>
             `,
             showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Aceptar',
-            cancelButtonText: 'Cancelar',
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar",
             allowOutsideClick: false,
             showCloseButton: true,
           });
-
         });
-      } 
-
+    };
   }
 );

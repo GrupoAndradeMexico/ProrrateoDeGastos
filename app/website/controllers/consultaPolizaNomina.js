@@ -136,7 +136,7 @@ consultaPolizaNomina.prototype.get_GeneraOrdenesMasivas = function(req, res, nex
         { name: 'tipoNomina', value: tipoNomina, type: self.model.types.STRING }
     ];
 
-    this.model.query('CALCULO_DE_INFORME_V7', params, function(error, result) {
+    this.model.queryAllRecordSet('CALCULO_DE_INFORME_V7', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
@@ -173,6 +173,54 @@ consultaPolizaNomina.prototype.get_ConsultaPoliza = function(req, res, next) {
     ]
 
     this.model.query('SEL_DATOS_POLIZA_SUCURSAL_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+consultaPolizaNomina.prototype.get_GeneraOrdenesMasivasCorpo = function(req, res, next) {
+    var self = this;
+    var mes = req.query.mes;
+    var anio = req.query.anio;
+    var fechaNomina = req.query.fechaNomina;
+    var tipoNomina = req.query.tipoNomina;;
+    
+    var params = [
+        { name: 'mes', value: mes, type: self.model.types.INT },
+        { name: 'anio', value: anio, type: self.model.types.INT },
+        { name: 'fechaNomina', value: fechaNomina, type: self.model.types.STRING },
+        { name: 'tipoNomina', value: tipoNomina, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('CALCULO_DE_INFORME_V4', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+consultaPolizaNomina.prototype.get_GeneraPolizaMasiva = function(req, res, next) {
+    var self = this;
+	
+    var poliza   = 4;
+	var insertaPoliza  = 1; 
+	//var workLocat = req.query.lugarTrabajo;
+	var fechaPagaSelected  = req.query.fechaPagaSelected;
+	var tipoSelected  = req.query.tipoSelected;
+    var frecuenciaSelected  = req.query.frecuenciaSelected;
+    
+    var params = [
+        { name: 'poliza', value: poliza, type: self.model.types.INT },
+        { name: 'insertaPoliza', value: insertaPoliza, type: self.model.types.INT },
+        { name: 'fechaPagaNomina', value: fechaPagaSelected, type: self.model.types.INT },
+        { name: 'tipoSelected', value: tipoSelected, type: self.model.types.STRING },
+        { name: 'frecuenciaSelected', value: frecuenciaSelected, type: self.model.types.STRING }
+    ];
+
+    this.model.queryAllRecordSet('POLIZA_NOSCA_NOTRA_V8', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result
