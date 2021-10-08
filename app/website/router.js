@@ -11,4 +11,5 @@ module.exports = {
      consultaPolizaNomina: require('./controllers/consultaPolizaNomina'),
      //task: require('./controllers/task'),
      porcentajeSucursal: require('./controllers/porcentajeSucursal'),
+     acceso: require('./controllers/acceso'),
   }

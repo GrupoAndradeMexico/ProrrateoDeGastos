@@ -26,6 +26,8 @@ registrationModule.controller(
     $scope.empresa;
     $scope.btnGeneraPoliza = true;
     $scope.lstBitacora = [];
+    $scope.bloqueaBoton = false;
+    $scope.mesActual;
 
     $scope.seguridad = function () {
       polizaNominaRepository.seguridad($scope.idUsuario).then(
@@ -57,7 +59,7 @@ registrationModule.controller(
     $scope.getAnios = function () {
       let fechaActual = new Date();
       let anioActual = fechaActual.getFullYear();
-      let mesActual = fechaActual.getMonth() + 1;
+      $scope.mesActual = fechaActual.getMonth() + 1;
 
       polizaNominaRepository.getAnios().then(function (result) {
         if (result.data.length > 0) {
@@ -93,8 +95,12 @@ registrationModule.controller(
            * SELECCIONAMOS EL MES ACTUAL
            */
           $scope.lstMeses.forEach((el) => {
-            if (el.id === mesActual) {
-              $scope.selectedMes = el.id;
+            if (el.id === $scope.mesActual) {
+              $scope.mesActual = el.id;
+              $scope.selectedMes = $scope.mesActual;
+              $scope.bloqueaBoton = false;
+            } else {
+              $scope.bloqueaBoton = true;
             }
           });
 
@@ -115,7 +121,7 @@ registrationModule.controller(
           .then((resp) => {
             if (resp.data.length > 0) {
               $scope.lstQuincenas = resp.data;
-             // console.log($scope.lstQuincenas)
+              // console.log($scope.lstQuincenas)
               $("#tablePagas").DataTable().clear();
               $("#tablePagas").DataTable().destroy();
 
@@ -203,7 +209,10 @@ registrationModule.controller(
                 scrollY: "450px",
                 scrollX: true,
                 scrollCollapse: true,
-                columnDefs: [{ width: 150, targets: 1 }],
+                columnDefs: [
+                  { width: "10%", targets: 0 },
+                  { width: "35%", targets: 2 },
+                ],
                 fixedColumns: true,
                 destroy: true,
                 responsive: true,
@@ -226,6 +235,7 @@ registrationModule.controller(
                   },
                 },
               });
+
               $("#tableGastos_length").hide();
             });
             $("#mdlLoading").modal("hide");
@@ -301,11 +311,35 @@ registrationModule.controller(
             $("#tableBitacora").DataTable().destroy();
 
             setTimeout(() => {
-              $("#tableBitacora").DataTable({
+              //$scope.$watch('$viewContentLoaded', function(){
+
+              $("#tableBitacora tfoot th").each(function (i) {
+                var title = $("#tableBitacora thead th")
+                  .eq($(this).index())
+                  .text();
+                $(this).html(
+                  '<input type="text" placeholder="' +
+                    title +
+                    '" data-index="' +
+                    i +
+                    '" />'
+                );
+              });
+
+              // DataTable
+              var table = $("#tableBitacora").DataTable({
                 scrollY: "450px",
                 scrollX: true,
                 scrollCollapse: true,
-                columnDefs: [{ width: 150, targets: 1 }],
+                columnDefs: [
+                  { width: "25%", targets: 0 },
+                  { width: "30%", targets: 1 },
+                  { width: "5%", targets: 2 },
+                  { width: "5%", targets: 3 },
+                  { width: "10%", targets: 4 },
+                  { width: "5%", targets: 5 },
+                  { width: "15%", targets: 6 },
+                ],
                 fixedColumns: true,
                 destroy: true,
                 responsive: true,
@@ -328,13 +362,56 @@ registrationModule.controller(
                   },
                 },
               });
+
+              $(table.table().container()).on(
+                "keyup",
+                "tfoot input",
+                function () {
+                  table.column($(this).data("index")).search(this.value).draw();
+                }
+              );
+
+              // $("#tableBitacora").DataTable({
+              //   scrollY: "450px",
+              //   scrollX: true,
+              //   scrollCollapse: true,
+              //   columnDefs: [{ "width": "25%", "targets": 0 },{ "width": "30%", "targets": 1 },{ "width": "5%", "targets": 2 },{ "width": "5%", "targets": 3 },{ "width": "10%", "targets": 4 },{ "width": "5%", "targets": 5 },{ "width": "15%", "targets": 6 }],
+              //   fixedColumns: true,
+              //   destroy: true,
+              //   responsive: true,
+              //   searching: true,
+              //   paging: false,
+              //   autoFill: false,
+              //   fixedColumns: false,
+              //   pageLength: 15,
+              //   dom: "Bfrtip",
+              //   buttons: ["csv", "excel"],
+              //   order: [[0, "asc"]],
+              //   language: {
+              //     search: '<i class="fa fa-search" aria-hidden="true"></i>',
+              //     searchPlaceholder: "Search",
+              //     oPaginate: {
+              //       sNext:
+              //         '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+              //       sPrevious:
+              //         '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+              //     },
+              //   },
+              // });
+
+              //  })
+
               $("#tableBitacora_length").hide();
             }, 1500);
           }
         });
     };
 
-    $scope.GeneraOrdenesMasivas = function (fechaNomina, tipoNomina, frecuencia) {
+    $scope.GeneraOrdenesMasivas = function (
+      fechaNomina,
+      tipoNomina,
+      frecuencia
+    ) {
       swal({
         title: "Aviso",
         type: "warning",
@@ -361,54 +438,26 @@ registrationModule.controller(
               tipoNomina
             )
             .then((resp) => {
-
               // GENERAMOS EL CALCULO DE CORPORATIVO
               consultaPolizaNominaRepository
-              .GeneraOrdenesMasivasCorpo(
-                $scope.selectedMes,
-                $scope.selectedAnio.anio,
-                fechaNomina,
-                tipoNomina
-              ).then(respCorpo =>{
-
-                //SOLICITAMOS CONFIRMACION DE GENERACION DE POLIZAS MASIVAS
-                swal({
-                  title: "Aviso",
-                  type: "warning",
-                  width: "700px",
-                  text: "¿Deseas generar las polizas de todas las sucursale?, ¿Deseas continuar?",
-                  showCancelButton: true,
-                  confirmButtonColor: "#3085d6",
-                  cancelButtonColor: "#d33",
-                  confirmButtonText: "Aceptar",
-                  cancelButtonText: "Cancelar",
-                  showCancelButton: true,
-                  showConfirmButton: true,
-                  allowOutsideClick: false,
-                }).then((result) =>{
-
-                  if (result.value){
-                    swal('aviso', 'entro en generacion de polizas', 'warning');
-                    // consultaPolizaNominaRepository.GeneraPolizaMasiva(
-                    //   fechaNomina,
-                    //   tipoNomina,
-                    //   frecuencia
-                    // ).then(respPol => {
-                    //   $("#mdlLoading").modal("hide");
-                    // })
-                  }
-                  else{
-                    $("#mdlLoading").modal("hide");
-                  }
-                  
+                .GeneraOrdenesMasivasCorpo(
+                  $scope.selectedMes,
+                  $scope.selectedAnio.anio,
+                  fechaNomina,
+                  tipoNomina
+                )
+                .then((respCorpo) => {
+                  //SOLICITAMOS CONFIRMACION DE GENERACION DE POLIZAS MASIVA
+                  $("#mdlLoading").modal("hide");
                 });
-
-                $("#mdlLoading").modal("hide");
-              });
             });
         } else {
           $("#mdlLoading").modal("hide");
-          swal("Atencion", "Se cancelo la petición de generación de las pólizas", "info");
+          swal(
+            "Atencion",
+            "Se cancelo la petición de generación de las pólizas",
+            "info"
+          );
         }
       });
     };
@@ -418,6 +467,9 @@ registrationModule.controller(
         isNaN($scope.selectedMes) === false &&
         isNaN($scope.selectedAnio.anio) === false
       ) {
+        $scope.bloqueaBoton =
+          $scope.selectedMes === $scope.mesActual ? false : true;
+
         $scope.verDetalle = false;
         $scope.lstQuincenas = [];
         consultaPolizaNominaRepository
@@ -518,5 +570,42 @@ registrationModule.controller(
           });
         });
     };
+
+    $scope.GeneraPolizaMasivas = function(fechaNomina,
+      tipoNomina,
+      frecuencia){
+      swal({
+        title: "Aviso",
+        type: "warning",
+        width: "700px",
+        text: "¿Deseas generar las polizas de todas las sucursale?, ¿Deseas continuar?",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Aceptar",
+        cancelButtonText: "Cancelar",
+        showCancelButton: true,
+        showConfirmButton: true,
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.value) {
+          swal(
+            "aviso",
+            "entro en generacion de polizas",
+            "warning"
+          );
+          consultaPolizaNominaRepository.GeneraPolizaMasiva(
+            fechaNomina,
+            tipoNomina,
+            frecuencia
+          ).then(respPol => {
+            swal('Aviso','Se ha deja la información en BPRO para su procesamiento')
+            $("#mdlLoading").modal("hide");
+          })
+        } else {
+          $("#mdlLoading").modal("hide");
+        }
+      });
+    }
   }
 );

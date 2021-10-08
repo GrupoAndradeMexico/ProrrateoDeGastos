@@ -7,6 +7,12 @@
   .swal2-popup .swal2-title{
     font-size: x-large;
   }
+
+  #content-container{
+    padding-bottom: 40px;
+    padding-right: 50px;
+  }
+
 </style>
 <div style="background-color: white; padding: 15px; overflow: hidden" ng-init="init()" >
   <div class="col-sm-12" style="text-align: center">
@@ -17,7 +23,7 @@
   </div>
 
   <div class="tab">
-    <button class="tablinks" onclick="openCity(event, 'todas')">
+    <button class="tablinks" onclick="openCity(event, 'todas')" ng-click="ObtieneFechasPagasBitacora()">
       Genera pólizas masivas
     </button>
     <button class="tablinks" onclick="openCity(event, 'individual')">
@@ -56,7 +62,7 @@
       </div>
       <div class="col-md-2">
         <label class="form-label"></label>
-        <div style="background-color: white; padding: 5px; overflow: hidden">
+        <div style="background-color: white; padding: 5px; overflow: hidden" hidden>
           <button
             class="btn btn-primary"
             ng-click=" $('#loading').modal('show');ObtieneFechasPagasBitacora()"
@@ -69,7 +75,7 @@
 
     <!-- FILA TABLA DE PAGAS -->
     <div class="row">
-      <div class="col-md-12" style="width: 50%; height: 50%;">
+      <div class="col-md-12" style="width: 60%; height: 50%;">
         <table
           id="tablePagas"
           class="table table-bordered table-sm"
@@ -80,14 +86,16 @@
             <tr>
               <th>Periodo</th>
               <th>Fecha Paga</th>
-              <th></th>
+              <th>Cerrar Paga</th>
+              <th>Genera Póliza</th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="item in lstQuincenas">
-              <td style="font-size:x-small;">{{item.paga}}</td>
-              <td style="font-size:x-small;">{{item.fechasPaga}}</td>
-              <td><button type="button" class="btn btn-success btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.bloqueo==1" >Generar Pólizas</button></td>
+              <td style="font-size:x-small; width: fit-content;">{{item.paga}}</td>
+              <td style="font-size:x-small; width: fit-content;">{{item.fechasPaga}}</td>
+              <td style="width: fit-content;"><button type="button" class="btn btn-info btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Cerrar Paga</button></td>
+              <td style="width: fit-content;"><button type="button" class="btn btn-success btn-xs" ng-click ="$('#loading').modal('show');GeneraPolizaMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Generar Pólizas</button></td>
             </tr>
           </tbody>
         </table>
@@ -110,6 +118,7 @@
           >
             <thead>
               <tr>
+                <th></th>
                 <th>Sucursal</th>
                 <th>Pagadora</th>
                 <th>Mes</th>
@@ -117,11 +126,12 @@
                 <th>Tipo</th>
                 <th>Número</th>
                 <th>Fecha de ejecución</th>
-                <th></th>
+                
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="item in lstBitacora">
+                <td><button type="button" class="btn btn-info btn-xs" ng-click ="$('#loading').modal('show');ConsultaPoliza(item.id_work_locat,item.DSBPEncInfoEnc, item.sucursal)" >Consulta Pólizas</button></td>
                 <td>{{item.sucursal}}</td>
                 <td>{{item.pagadora}}</td>
                 <td>{{item.mes}}</td>
@@ -129,9 +139,22 @@
                 <td>{{item.tipo}}</td>
                 <td>{{item.semQuin}}</td>
                 <td>{{item.fechaProceso}}</td>
-                <td><button type="button" class="btn btn-info btn-xs" ng-click ="$('#loading').modal('show');ConsultaPoliza(item.id_work_locat,item.DSBPEncInfoEnc, item.sucursal)" >Consulta Pólizas</button></td>
+                
               </tr>
             </tbody>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Sucursal</th>
+                <th>Pagadora</th>
+                <th>Mes</th>
+                <th>Año</th>
+                <th>Tipo</th>
+                <th>Número</th>
+                <th>Fecha de ejecución</th>
+                
+              </tr>
+            </tfoot>
           </table>
         </div>
     </div>
@@ -221,12 +244,13 @@
         <div class="form-group col-sm-12">
           <table
             id="tableGastos"
-            class="table table-bordered"
+            class="table table-striped table-bordered"
             cellspacing="0"
             width="100%"
           >
             <thead>
               <tr>
+                <th>Estatus Cuenta</th>
                 <th>Cuenta Contable BPRO</th>
                 <th>Concepto META4</th>
                 <th>Debe (Cargo)</th>
@@ -236,6 +260,7 @@
             </thead>
             <tbody>
               <tr ng-repeat="item in lstGastos">
+                <td style="width: 50px;" ng-class = "{'warning': item.estatusCuenta == 'NO ACTIVA' , 'success': item.estatusCuenta == 'ACTIVA','danger': item.estatusCuenta == 'NO EXISTE' } " > <strong>{{item.estatusCuenta}}</strong> </td>
                 <td>{{item.cuetaContable}}</td>
                 <td>{{item.concepto}}</td>
                 <td style="text-align: right">{{item.debe | currency}}</td>
@@ -245,7 +270,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <td style="text-align: right" colspan="2">
+                <td style="text-align: right" colspan="3">
                   <strong>Totales</strong>
                 </td>
                 <td style="text-align: right">
