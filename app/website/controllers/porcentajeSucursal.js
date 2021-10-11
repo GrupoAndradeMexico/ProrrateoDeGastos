@@ -85,6 +85,49 @@ porcentajeSucursal.prototype.get_guardarPorcentaje = function(req, res, next) {
     });
 }
 
+porcentajeSucursal.prototype.get_InfoPorcentajesServicio = function(req, res, next) {
+    var self = this;
+    var params = [];
+
+    this.model.query('SEL_PORCENTAJES_SERVICIOS_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+porcentajeSucursal.prototype.get_actualizarPorcentajeServicio = function(req, res, next) {
+    var self = this;
+    var params = [
+        { name: 'consecutivo', value: req.query.consecutivo, type: self.model.types.INT },
+        { name: 'porcentaje', value: req.query.porcentaje, type: self.model.types.DECIMAL },
+        { name: 'idUsuario', value: req.query.idusuario, type: self.model.types.INT },
+    ];
+
+    this.model.query('UPD_SUCURSAL_PORCENTAJE_SERVICIO_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+}
+
+porcentajeSucursal.prototype.get_guardarPorcentajeServicio = function(req, res, next) {
+    var self = this;
+    var params = [
+        { name: 'porcentaje', value: req.query.porcentaje, type: self.model.types.DECIMAL },
+        { name: 'idUsuario', value: req.query.idusuario, type: self.model.types.INT },
+        { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.STRING },
+    ];
+
+    this.model.query('INS_SUCURSAL_PORCENTAJE_SERVICIO_SP', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+}
 
 
 module.exports = porcentajeSucursal;

@@ -66,6 +66,10 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         templateUrl: 'AngularJS/Templates/porcentajeSucursal.html', 
         controller: 'porcentajeSucursalController'
     });
+    $routeProvider.when('/porcentajeServicio', {
+        templateUrl: 'AngularJS/Templates/porcentajeSucursalServicio.html', 
+        controller: 'porcentajeSucursalServicioController'
+    });
     
     
     

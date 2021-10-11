@@ -217,6 +217,14 @@
                                             </span>
                                         </a>
                                     </li>
+                                    <li ng-show="datosUsuario[0].idRol == 2">
+                                        <a href="/porcentajeServicio">
+                                            <i class="glyphicon glyphicon-tasks"></i>
+                                            <span class="menu-title">
+                                                <strong>Porcentaje Sucursal Servicio</strong>
+                                            </span>
+                                        </a>
+                                    </li>
                                 </ul>
                                 <div class="main">
                                     <div></div>
@@ -359,6 +367,8 @@
   
     <script src="AngularJS/porcentajeSucursal/porcentajeSucursalController.js"></script>
     <script src="AngularJS/porcentajeSucursal/porcentajeSucursalRepository.js"></script>
+    <script src="AngularJS/porcentajeSucursalServicio/porcentajeSucursalServicioController.js"></script>
+    <script src="AngularJS/porcentajeSucursalServicio/porcentajeSucursalServicioRepository.js"></script>
     <script src="AngularJS/directiveFile/directiveCurrency.js"></script>
 </body> 
 
