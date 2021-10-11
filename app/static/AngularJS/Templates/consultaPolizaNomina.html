@@ -74,7 +74,7 @@
     </div>
 
     <!-- FILA TABLA DE PAGAS -->
-    <div class="row">
+    <div class="row" ng-show="idRol == 1 || idRol == 5 || idRol == 2">
       <div class="col-md-12" style="width: 60%; height: 50%;">
         <table
           id="tablePagas"
@@ -87,15 +87,15 @@
               <th>Periodo</th>
               <th>Fecha Paga</th>
               <th>Cerrar Paga</th>
-              <th>Genera Póliza</th>
+              <!-- <th>Genera Póliza</th> -->
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="item in lstQuincenas">
               <td style="font-size:x-small; width: fit-content;">{{item.paga}}</td>
               <td style="font-size:x-small; width: fit-content;">{{item.fechasPaga}}</td>
-              <td style="width: fit-content;"><button type="button" class="btn btn-info btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Cerrar Paga</button></td>
-              <td style="width: fit-content;"><button type="button" class="btn btn-success btn-xs" ng-click ="$('#loading').modal('show');GeneraPolizaMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Generar Pólizas</button></td>
+              <td style="width: fit-content;" ><button type="button" class="btn btn-info btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Cerrar Paga</button></td>
+              <!-- <td style="width: fit-content;"><button type="button" class="btn btn-success btn-xs" ng-click ="$('#loading').modal('show');GeneraPolizaMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Generar Pólizas</button></td> -->
             </tr>
           </tbody>
         </table>
@@ -224,7 +224,7 @@
         </div>
       </div>
 
-      <div class="col-md-2">
+      <!-- <div class="col-md-2">
         <label class="form-label"></label>
         <div style="background-color: white; padding: 5px; overflow: hidden">
           <button
@@ -235,7 +235,7 @@
             Genera Póliza
           </button>
         </div>
-      </div>
+      </div> -->
     </div>
     <!-- ROW TABLA -->
     <div class="row">
