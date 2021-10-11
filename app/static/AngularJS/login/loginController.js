@@ -83,7 +83,7 @@
                             $rootScope.polizaNominaAcceso = 0;
                             $rootScope.conciliacionAccesso = 1;
                             alertFactory.warning('Bienvenido a Tesorería: ' + result.data[0][0].nombreUsuario);
-                            location.href = '/polizaNomina';
+                            location.href = $scope.empleadoDatos[0].pathUrl;
                             localStorageService.set('userData', $scope.login);
 
                         }

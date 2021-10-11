@@ -90,7 +90,7 @@ consultaPolizaNomina.prototype.get_GeneraPolizaIndividual = function(req, res, n
     var params = [
         { name: 'poliza', value: poliza, type: self.model.types.INT },
         { name: 'insertaPoliza', value: insertaPoliza, type: self.model.types.INT },
-        { name: 'workLocat', value: workLocat, type: self.model.types.INT },
+        { name: 'workLocat', value: workLocat, type: self.model.types.STRING },
         { name: 'fechaPagaSelected', value: fechaPagaSelected, type: self.model.types.INT },
         { name: 'tipoSelected', value: tipoSelected, type: self.model.types.STRING },
         { name: 'frecuenciaSelected', value: frecuenciaSelected, type: self.model.types.STRING }

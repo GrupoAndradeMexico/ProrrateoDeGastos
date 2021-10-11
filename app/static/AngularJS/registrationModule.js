@@ -15,6 +15,10 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         templateUrl: 'AngularJS/Templates/login.html', //example 1
         controller: 'loginController'
     });
+    $routeProvider.when('/acceso', {
+        templateUrl: 'AngularJS/Templates/acceso.html', //example 1
+        controller: 'accesoController'
+    });
     $routeProvider.when('/polizaNomina', {
         templateUrl: 'AngularJS/Templates/polizaNomina.html', //FAL 19012017
         controller: 'polizaNominaController'

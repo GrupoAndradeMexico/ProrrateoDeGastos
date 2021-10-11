@@ -20,6 +20,6 @@ registrationModule.controller('mainController', function ($scope, $rootScope, $l
         localStorageService.clearAll('lgnUser');
         localStorage.removeItem('paramBusqueda');
 
-        location.href = '/';
+        location.href = '/acceso';
     }
 });
