@@ -12,4 +12,5 @@ module.exports = {
      //task: require('./controllers/task'),
      porcentajeSucursal: require('./controllers/porcentajeSucursal'),
      acceso: require('./controllers/acceso'),
+     departamentos: require('./controllers/departamentos'),
   }
