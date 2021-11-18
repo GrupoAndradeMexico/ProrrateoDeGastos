@@ -197,14 +197,6 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <!-- <li ng-show="datosUsuario[0].idRol == 2">
-                                        <a href="/gastos">
-                                            <i class="glyphicon glyphicon-credit-card"></i>
-                                            <span class="menu-title">
-                                                <strong>Gastos No Centralizados</strong>
-                                            </span>
-                                        </a>
-                                    </li> -->
                                     <li ng-show="datosUsuario[0].idRol == 2 || datosUsuario[0].idRol == 5 || datosUsuario[0].idRol == 1 || datosUsuario[0].idRol == 6 ">
                                         <a href="/consultaPolizaNomina">
                                             <i class="fa fa-balance-scale"></i>
@@ -221,7 +213,7 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li ng-show="datosUsuario[0].idRol == 2">
+                                    <li ng-show="datosUsuario[0].idRol == 2 || datosUsuario[0].idRol == 6">
                                         <a href="/porcentajeServicio">
                                             <i class="glyphicon glyphicon-th"></i>
                                             <span class="menu-title">
@@ -229,14 +221,22 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li ng-show="datosUsuario[0].idRol == 2">
+                                    <li ng-show="datosUsuario[0].idRol == 2 || datosUsuario[0].idRol == 6">
                                         <a href="/departamentos">
-                                            <i class="glyphicon glyphicon-th-list"></i>
+                                            <i class="glyphicon glyphicon glyphicon-list-alt"></i>
                                             <span class="menu-title">
                                                 <strong>Departamentos</strong>
                                             </span>
                                         </a>
                                     </li>
+                                    <li ng-show="datosUsuario[0].idRol == 2">
+                                        <a href="/gastos">
+                                            <i class="glyphicon glyphicon-credit-card"></i>
+                                            <span class="menu-title">
+                                                <strong>Recuperación de Gastos Corporativo</strong>
+                                            </span>
+                                        </a>
+                                    </li> 
                                 </ul>
                                 <div class="main">
                                     <div></div>

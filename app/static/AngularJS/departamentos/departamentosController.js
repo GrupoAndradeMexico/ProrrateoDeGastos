@@ -78,13 +78,8 @@ $scope.actualizarPorcentaje = function(detalle){
                     alertFactory.warning(result.data[0].msj);
                 }
         });
-        } else {
-        swal(
-        'Cancelado',
-        'Se cancelo la acción',
-        'error'
-            );
-        }});
+        }}
+        );
 
 }
 

@@ -59,6 +59,7 @@ registrationModule.controller('gastosNoCentraController', function ($scope, $roo
 
 $scope.getInfoGastos = function () {
     $scope.verDetalle = false;
+    $scope.empresa  = '001';
     $('#mdlLoading').modal('show');
     gastosNoCentraRepository.getInfoGastos($scope.empresa, $scope.selectedAnio.anio, $scope.selectedMes, $scope.selectedQuincena).then(function (result) {
         if (result.data.length > 0) {
@@ -103,6 +104,7 @@ $scope.getInfoGastos = function () {
         }
         else
         {
+            $scope.lstGastos = [];
             console.log('Sin resultados')
         }
 });
