@@ -80,6 +80,11 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         controller: 'departamentosController'
     });
     
+    $routeProvider.when('/comisionesFlotillas', {
+        templateUrl: 'AngularJS/Templates/comisionesFlotillas.html', 
+        controller: 'comisionesFlotillasController'
+    });
+    
     
     $routeProvider.otherwise({ redirectTo: '/' });
 

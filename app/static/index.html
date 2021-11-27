@@ -237,6 +237,14 @@
                                             </span>
                                         </a>
                                     </li> 
+                                    <li ng-show="datosUsuario[0].idRol == 2 || datosUsuario[0].idRol == 6">
+                                        <a href="/comisionesFlotillas">
+                                            <i class="glyphicon glyphicon glyphicon-dashboard"></i>
+                                            <span class="menu-title">
+                                                <strong>Comisiones Flotillas</strong>
+                                            </span>
+                                        </a>
+                                    </li> 
                                 </ul>
                                 <div class="main">
                                     <div></div>
@@ -388,6 +396,9 @@
 
     <script src="AngularJS/departamentos/departamentosController.js"></script>
     <script src="AngularJS/departamentos/departamentosRepository.js"></script>
+
+    <script src="AngularJS/comisionesFlotillas/comisionesFlotillasController.js"></script>
+    <script src="AngularJS/comisionesFlotillas/comisionesFlotillasRepository.js"></script>
     
 </body> 
 

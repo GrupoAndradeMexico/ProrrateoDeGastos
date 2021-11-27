@@ -1,0 +1,173 @@
+<div style="background-color:white; padding:15px; overflow: hidden;">
+    <div  class="col-sm-12" style="text-align: center">
+        <h2>Porcentaje Comisiones Flotillas</h2>
+        <br>
+    </div> 
+    <div class="row">
+    <div  class="form-group col-sm-12">
+        <br>
+        <div  class="form-group col-sm-12">
+        <table id="tableComisiones" class="table table-bordered" cellspacing="0"
+        width="100%">
+          <thead>
+            <tr>
+                <th>Departamento</th>
+                <th>Nivel Contable</th>
+                <th>Porcentaje</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in lstDepartamentos">
+                <td>{{item.departamento}}</td>
+                <td>{{item.nivel}}</td>
+                <td>{{item.porcentaje}}%</td>
+                <th>
+                    <button  type="button" class="btn btn-success" aria-expanded="false"  ng-click="ModalInsertaPorcentaje(item)">
+                        Inserta Porcentaje
+                    </button>
+                </th>
+                <td>
+                    <button type="button" class="btn btn-info" aria-expanded="false"  ng-click="ModalDetalles(item)">
+                        Detalles
+                    </button>
+                </td>
+            </tr>      
+          </tbody>
+        </table>
+    </div>
+
+    </div>
+</div>
+    </div>
+      
+    </div>
+</div>
+
+</div>
+
+<!--================================ Modal para Insertar Porcentaje  ================================-->
+<div class="modal fade" id="insertaPorcentaje" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header label-mint headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                    <i class="pci-cross pci-circle text-white"></i>
+                </button>
+                <h4 class="modal-title text-white" style="color: white;">Insertar Porcentaje {{flotillaIns}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Sucursal:</label>
+                        <select class="form-control" ng-model="selectedSucursal"
+                        ng-options="suc.idsucursal as suc.sucursal for suc in lstSucursales">
+                        <option value="">Seleccione Sucursal</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Porcentaje:</label>
+                        <input  class="form-control" currency-mask type="text" ng-model="Insporcentaje" >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label"></label>
+                        <div   style="background-color:white; padding:5px; overflow: hidden;">
+                            <button class="btn btn-primary" ng-click="guardarPorcentaje()">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--================================ Modal para Actualizar Detalles ================================-->
+<div class="modal fade" id="modalDetalle" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header label-mint headerModal">
+            <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                <i class="pci-cross pci-circle text-white"></i>
+            </button>
+                <h4 class="modal-title">Detalle {{detalles.departamento}}</h4>
+            </div>
+            <div class="modal-body" >
+                <div class="col-md-12">
+                    <table  class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Sucursal</th>
+                                <th>Porcentaje</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="suc in flotillaDetalles">
+                                <td style="font-family: sans-serif !important">{{suc.sucursal}}</td>
+                                <td style="font-family: sans-serif !important">{{suc.porcentaje}}%</td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" aria-expanded="false"  ng-click="EliminaSucFlotilla(suc)">
+                                        Eliminar
+                                    </button>
+                                </td>
+                                <!-- <td></td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--================================ Modal para Insertar Porcentaje  ================================-->
+<div class="modal fade" id="insertaPorcentaje" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header label-mint headerModal">
+                <button type="button" class="close" data-dismiss="modal" style="color: white;">
+                    <i class="pci-cross pci-circle text-white"></i>
+                </button>
+                <h4 class="modal-title text-white" style="color: white;">Insertar Porcentaje</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Lugar Trabajo:</label>
+                        <select class="form-control" ng-model="selectedSucursal"
+                        ng-options="suc.id as suc.nombre for suc in lstLugares">
+                        <option value="">Seleccione Lugar Trabajo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Porcentaje:</label>
+                        <input  class="form-control" currency-mask type="text" ng-model="Insporcentaje" >
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label"></label>
+                        <div   style="background-color:white; padding:5px; overflow: hidden;">
+                            <button class="btn btn-primary" ng-click="guardarPorcentaje()">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="spinner">
+            <div class="cube1"></div>
+            <div class="cube2"></div>
+        </div>
+    </div>
+</div>
