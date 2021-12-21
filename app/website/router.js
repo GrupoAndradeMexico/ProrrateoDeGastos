@@ -14,4 +14,5 @@ module.exports = {
      acceso: require('./controllers/acceso'),
      departamentos: require('./controllers/departamentos'),
      comisionesFlotillas: require('./controllers/comisionesFlotillas'),
+     reporteBalanza: require('./controllers/reporteBalanza'),
   }

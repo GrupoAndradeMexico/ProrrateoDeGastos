@@ -85,6 +85,10 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         controller: 'comisionesFlotillasController'
     });
     
+    $routeProvider.when('/reporteBalanza', {
+        templateUrl: 'AngularJS/Templates/reporteBalanza.html', 
+        controller: 'reporteBalanzaController'
+    });
     
     $routeProvider.otherwise({ redirectTo: '/' });
 

@@ -245,6 +245,14 @@
                                             </span>
                                         </a>
                                     </li> 
+                                    <li ng-show="datosUsuario[0].idRol == 2 || datosUsuario[0].idRol == 6">
+                                        <a href="/reporteBalanza">
+                                            <i class="glyphicon glyphicon-folder-open"></i>
+                                            <span class="menu-title">
+                                                <strong>Reporte Balanza</strong>
+                                            </span>
+                                        </a>
+                                    </li> 
                                 </ul>
                                 <div class="main">
                                     <div></div>
@@ -400,6 +408,8 @@
     <script src="AngularJS/comisionesFlotillas/comisionesFlotillasController.js"></script>
     <script src="AngularJS/comisionesFlotillas/comisionesFlotillasRepository.js"></script>
     
+    <script src="AngularJS/reporteBalanza/reporteBalanzaController.js"></script>
+    <script src="AngularJS/reporteBalanza/reporteBalanzaRepository.js"></script>
 </body> 
 
 </html>
