@@ -1,0 +1,313 @@
+<style>
+  .diferencia{
+    background-color: orange;
+  }
+
+  .totales{
+    background-color: darkorange;
+    font-weight: bold;
+    color: black;
+    text-align: right;
+  }
+
+  .datosMontos{
+    text-align: right;
+  }
+
+  .headTable{
+    padding: 10px;
+    text-align: center;
+  }
+
+  .tabledisplay {
+  display: block;
+  overflow: scroll; 
+  font-size: x-small;
+  height: 500px;
+}
+
+.divTabla{
+  width: 100%;
+  height: 100%;
+}
+
+</style>
+
+<div
+  style="background-color: white; padding: 15px; overflow: hidden"
+  ng-init="init()"
+>
+  <div class="col-sm-12" style="text-align: center">
+    <h2 style="margin-top: 0px !important; margin-bottom: 0px !important">
+      Reporte de Conciliación contabilidad BPRO
+    </h2>
+    <br />
+  </div>
+
+  <div class="tab">
+    <button
+      class="tablinks"
+      onclick="openCity(event, 'concilia')"
+      ng-click="ObtieneConciliacion()"
+    >
+      Conciliación
+    </button>
+    <button
+      class="tablinks"
+      onclick="openCity(event, 'empleadosRH')"
+      ng-click="ObtieneEmpleados()"
+    >
+      Empleados
+    </button>
+
+    <button
+    class="tablinks"
+    onclick="openCity(event, 'EmpleadosProrrateo')"
+    ng-click="ObtieneEmpleadosProrrateados()"
+    >
+      Empleados Prorrateados
+    </button>
+
+    <button
+    class="tablinks"
+    onclick="openCity(event, 'concentrado')"
+    ng-click="ObtieneConcentrado()"
+    >
+      Concentrado
+    </button>
+
+  </div>
+
+  <!-- HOJA CONCILIACION -->
+  <div id="concilia" class="tabcontent">
+    <h3><center>CONCILIACION</center></h3>
+    <div class="alert alert-warning" role="alert" ng-show="totalEmpleadosProrrateados > 0" style="color: black;"><strong>La sucursal cuenta con {{totalEmpleadosProrrateados}} empleados prorrateados, que pueden provocar diferencia</strong></div>
+    <div class="row">
+      <div class="col-sm-3">
+        <label class="form-label">Sucursal:</label>
+        <select
+          class="form-control"
+          ng-model="selectedEmpresa"
+          ng-options="empresa.id as empresa.nombre for empresa in lstEmpresasPagadoras"
+        >
+          <option value="">Seleccione Sucursal</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <label class="form-label">Año:</label>
+        <select
+          class="form-control"
+          ng-model="selectedAnio"
+          ng-options="anio.anio for anio in lstAnios"
+        >
+          <option value="">Seleccione Año</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <label class="form-label">Mes:</label>
+        <select
+          class="form-control"
+          ng-model="selectedMes"
+          ng-options="mes.id as mes.text for mes in lstMeses"
+        >
+          <option value="">Seleccione Mes</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <button class="btn btn-primary" ng-click="GetReporteConciliacion()" style="margin-top: 25px;">Consultar</button>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-sm-6">
+        <table
+          id="TConciliacion"
+          class="table table-bordered table-sm"
+          cellspacing="0"
+          width="100%"
+        >
+          <thead>
+            <tr>
+              <th>Cuenta Contable</th>
+              <th>Descripción</th>
+              <th>Importe en nomina del mes</th>
+              <th>Importe contabilidad del mes</th>
+              <th>Diferencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in listData">
+              <td>{{item.cuenta}}</td>
+              <td>{{item.concepto}}</td>
+              <td>{{item.monto | currency}}</td>
+              <td>{{item.montoBro | currency}}</td>
+              <td ng-class="{diferencia: (item.monto - item.montoBro) != 0}">{{(item.monto - item.montoBro)| currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- TABLA2 -->
+      <div class="col-sm-6">
+        <table
+          id="TConciliacionAcumulado"
+          class="table table-bordered table-sm"
+          cellspacing="0"
+          width="100%"
+        >
+          <thead>
+            <tr>
+              <th>Cuenta Contable</th>
+              <th>Descripción</th>
+              <th>Importe en nomina acumulado al mes</th>
+              <th>Importe contabilidad acumulado al mes</th>
+              <th>Diferencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in listData">
+              <td style="width: fit-content;">{{item.cuenta}}</td>
+              <td style="width: fit-content;">{{item.concepto}}</td>
+              <td style="width: fit-content;">{{item.montoAcumulado | currency}}</td>
+              <td style="width: fit-content;">{{item.montoBroAcumulado | currency}}</td>
+              <td style="width: fit-content;" ng-class="{diferencia: (item.montoAcumulado - item.montoBroAcumulado) != 0}" >{{(item.montoAcumulado - item.montoBroAcumulado)| currency}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- HOJA EMPELADOS -->
+  <div id="empleadosRH" class="tabcontent">
+    <h3>EMPLEADOS</h3>
+    <div class="row">
+      <div class="col-sm-4">
+        <label class="form-label">Año:</label>
+        <select
+          class="form-control"
+          ng-model="selectedAnio"
+          ng-options="anio.anio for anio in lstAnios"
+        >
+          <option value="">Seleccione Año</option>
+        </select>
+      </div>
+      <div class="col-sm-4">
+        <label class="form-label">Mes:</label>
+        <select
+          class="form-control"
+          ng-model="selectedMes"
+          ng-options="mes.id as mes.text for mes in lstMeses"
+        >
+          <option value="">Seleccione Mes</option>
+        </select>
+      </div>
+      <div class="col-sm-4">
+        <button class="btn btn-primary" style="display: flex; align-items: center; justify-content: center;" ng-click="consultaEmpleados()" style="margin-top: 25px;">Consultar</button>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-sm-12">
+        <table
+        id="TEmpleados"
+        class="table table-bordered table-sm"
+        cellspacing="0"
+        width="100%"
+      >
+        <thead>
+          <tr>
+            <th>Id Meta 4</th>
+            <th>Sucursal</th>
+            <th>Total empleados</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in listDataEmpleados">
+            <td>{{item.numero}}</td>
+            <td>{{item.nombre}}</td>
+            <td>{{item.empleados}}</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOJA EMPELADOS PRORRATEADOS -->
+  <div id="EmpleadosProrrateo" class="tabcontent">
+    <h3><center>EMPLEADOS PRORRATEADOS</center></h3>
+    <table
+    id="TEmpleadosProrrateados"
+    class="table table-bordered table-sm"
+    cellspacing="0"
+    width="100%"
+  >
+    <thead>
+      <tr>
+        <th>ID RH</th>
+        <th>Nombre</th>
+        <th>Departamento</th>
+        <th>Sucursal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in listEmpleadosProrrateo">
+        <td>{{item.idRH}}</td>
+        <td>{{item.nombre}}</td>
+        <td>{{item.nombreDepto}}</td>
+        <td>{{item.sucursal}}</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- HOJA CONCENTRADO -->
+  <div id="concentrado" class="tabcontent">
+    <h3><center>CONCENTRADO</center></h3>
+
+    <div class="row">
+      <div class="col-sm-3">
+        <label class="form-label">Año:</label>
+        <select
+          class="form-control"
+          ng-model="selectedAnio"
+          ng-options="anio.anio for anio in lstAnios"
+        >
+          <option value="">Seleccione Año</option>
+        </select>
+      </div>
+      <div class="col-sm-3">
+        <label class="form-label">Mes:</label>
+        <select
+          class="form-control"
+          ng-model="selectedMes"
+          ng-options="mes.id as mes.text for mes in lstMeses"
+        >
+          <option value="">Seleccione Mes</option>
+        </select>
+      </div>
+
+      <div class="col-sm-3">
+        <button class="btn btn-primary" ng-click="GetReporteConcentrado()" style="margin-top: 25px;">Consultar</button>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="myDynamicTable"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- SPINNER -->
+<div id="mdlLoading" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="spinner">
+      <div class="cube1"></div>
+      <div class="cube2"></div>
+    </div>
+  </div>
+</div>

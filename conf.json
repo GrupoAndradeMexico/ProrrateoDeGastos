@@ -4,7 +4,7 @@
     "SQL_password": "S0p0rt3",
     "SQL_server": "192.168.20.59",
     "SQL_database": "polizasnomina",
-    "SQL_connectionTimeout": 60000,
+    "SQL_connectionTimeout": 1800000000,
     "urlCORS": "http://localhost:5600/",
     "procesaGastos": "14 16 10 * *",
     "procesaUtilidadFSR": "14 16 10 * *",

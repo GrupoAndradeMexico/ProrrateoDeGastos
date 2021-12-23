@@ -1,4 +1,5 @@
 <script src="https://unpkg.com/sweetalert2@7.19.3/dist/sweetalert2.all.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <style>
   .swal2-popup #swal2-content {
     font-size: large;
@@ -13,7 +14,17 @@
     padding-right: 50px;
   }
 
+  uib-progressbar{
+    width: 50%;
+  }
+
+  .hidenProgress{
+    display: none;
+  }
+
 </style>
+
+
 <div style="background-color: white; padding: 15px; overflow: hidden" ng-init="init()" >
   <div class="col-sm-12" style="text-align: center">
     <h2 style="margin-top: 0px !important; margin-bottom: 0px !important">
@@ -75,7 +86,7 @@
 
     <!-- FILA TABLA DE PAGAS -->
     <div class="row" ng-show="idRol == 1 || idRol == 5 || idRol == 2">
-      <div class="col-md-12" style="width: 60%; height: 50%;">
+      <div class="col-md-6" style="width: 50%; height: 50%;">
         <table
           id="tablePagas"
           class="table table-bordered table-sm"
@@ -94,11 +105,27 @@
             <tr ng-repeat="item in lstQuincenas">
               <td style="font-size:x-small; width: fit-content;">{{item.paga}}</td>
               <td style="font-size:x-small; width: fit-content;">{{item.fechasPaga}}</td>
-              <td style="width: fit-content;" ><button type="button" class="btn btn-info btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Cerrar Paga</button></td>
+              <!-- <td style="width: fit-content;" ><button type="button" class="btn btn-info btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Cerrar Paga</button></td> -->
               <!-- <td style="width: fit-content;"><button type="button" class="btn btn-success btn-xs" ng-click ="$('#loading').modal('show');GeneraPolizaMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Generar Pólizas</button></td> -->
+              <td style="width: fit-content;" ><button type="button" class="btn btn-info btn-xs" ng-click ="$('#loading').modal('show');GeneraOrdenesMasivas(item.fechasPaga,item.tipo,item.frecuencia)" ng-disabled="item.apagado==1" >Cerrar Paga</button></td>
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="col-md-6" ng-show="generandoPolizas">
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4 style="margin: 0%; text-align: center; padding-top: 20px;">  <strong>Generando póliza de </strong> {{nombreEmpresaPoliza}} </h4> </div>
+          <div class="panel-body">
+            <uib-progressbar value="polizaProcesada" max="100"><span style="color:white; white-space:nowrap;">{{polizaProcesada}} %</span></uib-progressbar>
+           
+            <!-- <div id="catalogoProgressBar" class="progress">
+              <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+            </div> -->
+          </div>
+          <div class="panel-footer"></div>
+        </div>
+        
       </div>
     </div>
 
@@ -251,6 +278,7 @@
             <thead>
               <tr>
                 <th>Estatus Cuenta</th>
+                <th>Estatus Cartera</th>
                 <th>Cuenta Contable BPRO</th>
                 <th>Concepto META4</th>
                 <th>Debe (Cargo)</th>
@@ -261,6 +289,7 @@
             <tbody>
               <tr ng-repeat="item in lstGastos">
                 <td style="width: 50px;" ng-class = "{'warning': item.estatusCuenta == 'NO ACTIVA' , 'success': item.estatusCuenta == 'ACTIVA','danger': item.estatusCuenta == 'NO EXISTE' } " > <strong>{{item.estatusCuenta}}</strong> </td>
+                <td style="width: 50px;" ng-class = "{'warning': item.estatusCartera == 'NO ACTIVA' , 'success': item.estatusCartera == 'ACTIVA','danger': item.estatusCartera == 'NO ES DE CARTERA' } " > <strong>{{item.estatusCartera}}</strong> </td>
                 <td>{{item.cuetaContable}}</td>
                 <td>{{item.concepto}}</td>
                 <td style="text-align: right">{{item.debe | currency}}</td>
@@ -288,6 +317,8 @@
     </div>
   </div>
 </div>
+
+
 
 <div id="mdlLoading" class="modal fade" tabindex="-1">
   <div class="modal-dialog modal-lg">

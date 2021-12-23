@@ -1,4 +1,4 @@
-registrationModule.controller("consultaPolizaNominaController", function ($scope, $rootScope, $location, localStorageService, alertFactory, $http, $log, $timeout, uiGridConstants, $sce, polizasRepository, polizaNominaRepository, gastosNoCentraRepository, consultaPolizaNominaRepository) {
+registrationModule.controller("consultaPolizaNominaController", function ($scope, $rootScope, $location, localStorageService, alertFactory, $http, $log, $timeout, uiGridConstants, $sce, polizasRepository, polizaNominaRepository, consultaPolizaNominaRepository) {
     $rootScope.userData = localStorageService.get("userData");
     $scope.idUsuario = $rootScope.userData.idUsuario;
     $scope.selectedAnio;
@@ -12,12 +12,15 @@ registrationModule.controller("consultaPolizaNominaController", function ($scope
     $scope.bloqueaBoton = false;
     $scope.mesActual;
     $scope.idRol = 0;
+    $scope.generandoPolizas = false;
 
     $scope.init = function () {
-        console.log($rootScope.currentEmployee)
+     
         if ($rootScope.datosUsuario.length > 0) {
             $scope.idRol = $rootScope.datosUsuario[0].idRol;
         }
+
+        $scope.getAnios();
     }
 
     $scope.seguridad = function () {
@@ -98,7 +101,7 @@ registrationModule.controller("consultaPolizaNominaController", function ($scope
 
                 $scope.lstQuincenas = [];
 
-                /**
+           /**
            * SELECCIONAMOS EL AÑO ACTUAL
            */
                 $scope.lstAnios.forEach((el) => {
@@ -408,6 +411,73 @@ registrationModule.controller("consultaPolizaNominaController", function ($scope
         });
     };
 
+    // $scope.GeneraOrdenesMasivas = function (fechaNomina, tipoNomina, frecuencia) {
+    //     swal({
+    //         title: "Aviso",
+    //         type: "warning",
+    //         width: "700px",
+    //         text: "Esta por generar el calculo de la información para las pólizas de nomina , ¿Deseas continuar?",
+    //         showCancelButton: true,
+    //         confirmButtonColor: "#3085d6",
+    //         cancelButtonColor: "#d33",
+    //         confirmButtonText: "Aceptar",
+    //         cancelButtonText: "Cancelar",
+    //         showCancelButton: true,
+    //         showConfirmButton: true,
+    //         allowOutsideClick: false
+    //     }).then((result) => {
+    //         if (result.value) {
+    //             $("#mdlLoading").modal("show");
+
+    //             // GENERAMOS EL CALCULO DE LAS SUCURSALES QUE NO SEAN CORPORATIVO
+    //             consultaPolizaNominaRepository.GeneraOrdenesMasivas($scope.selectedMes, $scope.selectedAnio.anio, fechaNomina, tipoNomina).then((resp) => {
+    //                 // GENERAMOS EL CALCULO DE CORPORATIVO
+    //                 // SE ELIMINA LA EJECUCION DE ESTA SECCION YA QUE CORPORATIVO DE OBTENERSE YA EN AL SP PRINCIPAL
+    //                 // consultaPolizaNominaRepository
+    //                 // .GeneraOrdenesMasivasCorpo(
+    //                 //     $scope.selectedMes,
+    //                 //     $scope.selectedAnio.anio,
+    //                 //     fechaNomina,
+    //                 //     tipoNomina
+    //                 // )
+    //                 // .then((respCorpo) => {
+    //                 //     //SOLICITAMOS CONFIRMACION DE GENERACION DE POLIZAS MASIVA
+    //                 //     $("#mdlLoading").modal("hide");
+    //                 // });
+    //                 swal({
+    //                     title: "Aviso",
+    //                     type: "warning",
+    //                     width: "700px",
+    //                     text: "¿Deseas generar las pólizas de todas las sucursales?, ¿Deseas continuar?",
+    //                     showCancelButton: true,
+    //                     confirmButtonColor: "#3085d6",
+    //                     cancelButtonColor: "#d33",
+    //                     confirmButtonText: "Aceptar",
+    //                     cancelButtonText: "Cancelar",
+    //                     showCancelButton: true,
+    //                     showConfirmButton: true,
+    //                     allowOutsideClick: false
+    //                 }).then((result) => {
+    //                     if (result.value) {
+    //                         consultaPolizaNominaRepository.GeneraPolizaMasiva(fechaNomina, tipoNomina, frecuencia).then(respPol => {
+    //                             swal('Aviso', 'Se ha deja la información en BPRO para su procesamiento')
+    //                             $("#mdlLoading").modal("hide");
+    //                         })
+    //                     } else {
+    //                         $("#mdlLoading").modal("hide");
+    //                     }
+    //                 });
+
+    //                 $("#mdlLoading").modal("hide");
+
+    //             });
+    //         } else {
+    //             $("#mdlLoading").modal("hide");
+    //             swal("Atencion", "Se cancelo la petición de generación de las pólizas", "info");
+    //         }
+    //     });
+    // };
+
     $scope.GeneraOrdenesMasivas = function (fechaNomina, tipoNomina, frecuencia) {
         swal({
             title: "Aviso",
@@ -428,19 +498,8 @@ registrationModule.controller("consultaPolizaNominaController", function ($scope
 
                 // GENERAMOS EL CALCULO DE LAS SUCURSALES QUE NO SEAN CORPORATIVO
                 consultaPolizaNominaRepository.GeneraOrdenesMasivas($scope.selectedMes, $scope.selectedAnio.anio, fechaNomina, tipoNomina).then((resp) => {
-                    // GENERAMOS EL CALCULO DE CORPORATIVO
-                    // SE ELIMINA LA EJECUCION DE ESTA SECCION YA QUE CORPORATIVO DE OBTENERSE YA EN AL SP PRINCIPAL
-                    // consultaPolizaNominaRepository
-                    // .GeneraOrdenesMasivasCorpo(
-                    //     $scope.selectedMes,
-                    //     $scope.selectedAnio.anio,
-                    //     fechaNomina,
-                    //     tipoNomina
-                    // )
-                    // .then((respCorpo) => {
-                    //     //SOLICITAMOS CONFIRMACION DE GENERACION DE POLIZAS MASIVA
-                    //     $("#mdlLoading").modal("hide");
-                    // });
+                    $("#mdlLoading").modal("hide");
+                    
                     swal({
                         title: "Aviso",
                         type: "warning",
@@ -456,10 +515,11 @@ registrationModule.controller("consultaPolizaNominaController", function ($scope
                         allowOutsideClick: false
                     }).then((result) => {
                         if (result.value) {
-                            consultaPolizaNominaRepository.GeneraPolizaMasiva(fechaNomina, tipoNomina, frecuencia).then(respPol => {
-                                swal('Aviso', 'Se ha deja la información en BPRO para su procesamiento')
-                                $("#mdlLoading").modal("hide");
-                            })
+                            // consultaPolizaNominaRepository.GeneraPolizaMasiva(fechaNomina, tipoNomina, frecuencia).then(respPol => {
+                            //     swal('Aviso', 'Se ha deja la información en BPRO para su procesamiento')
+                                
+                            // })
+                            $scope.GeneraOrdenesMasivasNuevo(fechaNomina, tipoNomina, frecuencia);
                         } else {
                             $("#mdlLoading").modal("hide");
                         }
@@ -605,15 +665,94 @@ registrationModule.controller("consultaPolizaNominaController", function ($scope
             allowOutsideClick: false
         }).then((result) => {
             if (result.value) {
-                swal("aviso", "entro en generacion de polizas", "warning");
-                consultaPolizaNominaRepository.GeneraPolizaMasiva(fechaNomina, tipoNomina, frecuencia).then(respPol => {
-                    swal('Aviso', 'Se ha deja la información en BPRO para su procesamiento')
-                    $("#mdlLoading").modal("hide");
-                })
+
+                /**EJECUTAMOS LA FUNCION DE EJECUCION DE POLIZAS */
+                $scope.GeneraOrdenesMasivasNuevo(fechaNomina, tipoNomina, frecuencia);
             } else {
                 $("#mdlLoading").modal("hide");
             }
         });
+    }
+
+
+    $scope.GeneraOrdenesMasivasNuevo=function(fechaNomina, tipoNomina, frecuencia){
+        
+        $scope.nombreEmpresaPoliza='';
+        $scope.totalEmpresas = 0
+        $scope.polizaProcesada = 0
+        $scope.generandoPolizas = false;
+        $scope.respuesta;
+
+        /**OBTENEMOS LA LISTA DE LAS EMPRESAS A LAS QUE SE LES VA A GENERAR POLIZA */
+        consultaPolizaNominaRepository.ListaEmpresasPoliza().then(async resp =>{
+            
+            $scope.generandoPolizas = true; 
+            $scope.totalEmpresas =resp.data.length;
+
+            /**RECORREMOS LA LISTA DE EMPRESAS PARA ENVIAR LA POLIZA UNA  A UNA */
+            for (let i = 0; i < resp.data.length; i++) {
+
+                $scope.respuesta =  await insertaPolizaMasivaIndividual(resp.data[i].workLocat, fechaNomina, tipoNomina, frecuencia);
+
+                if($scope.respuesta !== false){
+                    if($scope.respuesta[0][0].estatus === 1){
+
+
+                        $scope.$apply(function(){
+    
+                            /**aCTUALIZAMOS LA VARIABLE DEL NOMBRE DE LA EMPRESA PARA MOSTRARLA EN EL FRON */
+                            $scope.nombreEmpresaPoliza= resp.data[i].sucursal
+                            /**ACTUALIZAMOS EL PORCENTAJE PARA MOSTRARLOS EN EL PROGRESS BAR */
+                            $scope.polizaProcesada =  (((i+1)*100)/resp.data.length).toFixed();
+          
+    
+                            if(resp.data.length == i+1){
+                              /**cUANDO SE RECORREN TODAS LAS EMPRESAS SE OCULTA EL PROGRESS BAR Y EL LOADING */ 
+                              $scope.generandoPolizas = false;
+
+                                $("#mdlLoading").modal("hide");
+                                swal('Aviso','Se ha dejado la información de las pólizas en BPRO','success');
+                                
+                            }
+                        });
+                        
+                    } else {
+                        /**SI OCURRE UN ERROR OCULTAMOS EL LOADING Y SE MUESTRA MENSAJE */
+                        $("#mdlLoading").modal("hide");
+    
+                        setTimeout(() => {
+                            swal("Atención", $scope.respuesta[0][0].msg, "error");
+                        }, 500);
+                    }
+                }
+
+
+            }
+            $scope.ObtieneFechasPagas();
+            $scope.ObtieneFechasPagasBitacora();
+          $scope.ConsultaBitacoraPolizas();
+
+        })
+    }
+
+    async function  insertaPolizaMasivaIndividual(workLocat, fechaNomina, tipoNomina, frecuencia){
+
+        return new Promise((resolve,reject) => {
+                /**SERVICIO QUE INSERTA LAS POLIZAS EN LAS TABLAS DE PASO */
+                consultaPolizaNominaRepository.GeneraPoiizaIndividual(workLocat, fechaNomina, tipoNomina, frecuencia).then((resp) => {
+                    if (resp.data[0][0].estatus === 1) {
+
+                        resolve (resp.data)
+                        
+                    } 
+                    else{
+                        reject(false)
+                    }
+                });
+        })
+
+
+
     }
 
 });

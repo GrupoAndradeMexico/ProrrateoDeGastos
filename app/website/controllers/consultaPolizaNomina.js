@@ -91,7 +91,7 @@ consultaPolizaNomina.prototype.get_GeneraPolizaIndividual = function(req, res, n
         { name: 'poliza', value: poliza, type: self.model.types.INT },
         { name: 'insertaPoliza', value: insertaPoliza, type: self.model.types.INT },
         { name: 'workLocat', value: workLocat, type: self.model.types.STRING },
-        { name: 'fechaPagaSelected', value: fechaPagaSelected, type: self.model.types.INT },
+        { name: 'fechaPagaSelected', value: fechaPagaSelected, type: self.model.types.STRING },
         { name: 'tipoSelected', value: tipoSelected, type: self.model.types.STRING },
         { name: 'frecuenciaSelected', value: frecuenciaSelected, type: self.model.types.STRING }
     ];
@@ -221,6 +221,19 @@ consultaPolizaNomina.prototype.get_GeneraPolizaMasiva = function(req, res, next)
     ];
 
     this.model.queryAllRecordSet('POLIZA_NOSCA_NOTRA_V8', params, function(error, result) {
+        self.view.expositor(res, {
+            error: error,
+            result: result
+        });
+    });
+};
+
+consultaPolizaNomina.prototype.get_ListaEmpresasPoliza = function(req, res, next) {
+    var self = this;
+    
+    var params = [];
+
+    this.model.query('LUGAR_TRABAJO_POLIZA', params, function(error, result) {
         self.view.expositor(res, {
             error: error,
             result: result

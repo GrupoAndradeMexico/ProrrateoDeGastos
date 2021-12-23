@@ -9,10 +9,10 @@
     <meta name="author" content="name" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
- 
+
     <!--Librerias necesarias para la función leer archivos xlsx-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.1/xlsx.full.min.js"></script>
-    
+
     <!--Hojas de estilos-->
     <link href="css/bootstrap.css" rel="stylesheet" />
     <link href="css/toastr.css" rel="stylesheet" />
@@ -32,6 +32,12 @@
     <link href="plugins/datatables/extensions/Responsive/css/dataTables.responsive.css" rel="stylesheet">
     <link href="css/colorpicker.css" rel="stylesheet">
     <link href="css/select.css" rel="stylesheet">
+
+    <!-- RXJS -->
+<!-- <script data-require="angular.js@1.7.x" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js" data-semver="1.7.8"></script>
+<script data-require="rxjs@*" data-semver="2.5.3" src="//cdnjs.cloudflare.com/ajax/libs/rxjs/2.5.3/rx.all.js"></script>
+<script data-require="rx.angular.js@*" data-semver="0.0.14" src="https://cdn.rawgit.com/Reactive-Extensions/rx.angular.js/v0.0.14/dist/rx.angular.js"></script> -->
+
 </head>
 
 <body ng-app="registrationModule" ng-controller="mainController" ng-init="init()">
@@ -253,6 +259,14 @@
                                             </span>
                                         </a>
                                     </li> 
+                                    <li ng-show="datosUsuario[0].idRol == 2 || datosUsuario[0].idRol == 5 || datosUsuario[0].idRol == 1 || datosUsuario[0].idRol == 6 ">
+                                        <a href="/reporteNomina">
+                                            <i class="fa fa-line-chart"></i>
+                                            <span class="menu-title">
+                                                <strong>Reporte nomina</strong>
+                                                </span>
+                                        </a>
+                                    </li>
                                 </ul>
                                 <div class="main">
                                     <div></div>
@@ -316,7 +330,7 @@
             display: none;
         }
     </style>
-    
+
     <!--Interface de usuario-->
     <!-- Librerias Angular-->
     <script src="js/tab.js"></script>
@@ -350,7 +364,7 @@
     <script src="js/bootstrap-colorpicker-module.js"></script>
     <script src="js/select.js"></script>
     <script src="js/angular-sanitize.js"></script>
-    
+
 
     <!-- <script src="js/libs/navBar.js"></script>
     <script src="js/libs/jsTree/jstree.min.js"></script>
@@ -384,7 +398,7 @@
         <!-- ESQUEMA plantilla prorrateos -->
         <script src="AngularJS/plantillaProrrateo/plantillaProrrateoController.js"></script>
         <script src="AngularJS/plantillaProrrateo/plantillaProrrateoRepository.js"></script>
-  
+
     <script src="AngularJS/cargaUtilidad/cargaUtilidadController.js"></script>
     <script src="AngularJS/cargaUtilidad/cargautilidadRepository.js"></script>
     <script src="AngularJS/gastoNoCentra/gastosNoCentraController.js"></script>
@@ -392,7 +406,7 @@
 
     <script src="AngularJS/consultaPolizaNomina/consultaPolizaNominaController.js"></script>
     <script src="AngularJS/consultaPolizaNomina/consultaPolizaNominaRepository.js"></script>
-  
+
     <script src="AngularJS/porcentajeSucursal/porcentajeSucursalController.js"></script>
     <script src="AngularJS/porcentajeSucursal/porcentajeSucursalRepository.js"></script>
     <script src="AngularJS/porcentajeSucursalServicio/porcentajeSucursalServicioController.js"></script>
@@ -410,6 +424,10 @@
     
     <script src="AngularJS/reporteBalanza/reporteBalanzaController.js"></script>
     <script src="AngularJS/reporteBalanza/reporteBalanzaRepository.js"></script>
-</body> 
+
+    <script src="AngularJS/reporteNomina/reporteNominaController.js"></script>
+    <script src="AngularJS/reporteNomina/reporteNominaRepository.js"></script>
+
+</body>
 
 </html>

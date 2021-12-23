@@ -18,6 +18,8 @@ var Workers = function(config){
 
 Workers.prototype.run = function(){
 	this.server.listen(conf.port);
+	this.server.setTimeout(18000000);
+	//console.log(this.server)
 }
 
 if(module.parent){

@@ -79,6 +79,11 @@ var registrationModule = angular.module("registrationModule", ["ngRoute", "color
         templateUrl: 'AngularJS/Templates/departamentos.html', 
         controller: 'departamentosController'
     });
+
+    $routeProvider.when('/reporteNomina', {
+        templateUrl: 'AngularJS/Templates/reporteNomina.html', 
+        controller: 'reporteNominaController'
+    });
     
     $routeProvider.when('/comisionesFlotillas', {
         templateUrl: 'AngularJS/Templates/comisionesFlotillas.html', 

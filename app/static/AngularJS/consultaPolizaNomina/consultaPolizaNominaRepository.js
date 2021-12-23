@@ -140,6 +140,15 @@ registrationModule.factory('consultaPolizaNominaRepository', function($http) {
                     'Content-Type': 'application/json'
                 }
             });
+        },
+        ListaEmpresasPoliza:function(){
+            return $http({
+                url: consultaPolizaNomna + 'ListaEmpresasPoliza/',
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
         }
     };
 });
