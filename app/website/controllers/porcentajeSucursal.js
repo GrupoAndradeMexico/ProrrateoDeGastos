@@ -56,7 +56,9 @@ porcentajeSucursal.prototype.get_actualizarPorcentaje = function(req, res, next)
         { name: 'mes', value: req.query.mes, type: self.model.types.INT },
         { name: 'anio', value: req.query.anio, type: self.model.types.INT },
         { name: 'porcentaje', value: req.query.porcentaje, type: self.model.types.DECIMAL },
-        { name: 'idUsuario', value: req.query.idusuario, type: self.model.types.INT },
+        { name: 'idUsuario', value: req.query.idusuario, type: self.model.types.INT },,
+        { name: 'porcentajefijo', value: req.query.porcentajefijo, type: self.model.types.INT },
+
     ];
 
     this.model.query('UPD_SUCURSAL_PORCENTAJE_SP', params, function(error, result) {
@@ -75,6 +77,7 @@ porcentajeSucursal.prototype.get_guardarPorcentaje = function(req, res, next) {
         { name: 'porcentaje', value: req.query.porcentaje, type: self.model.types.DECIMAL },
         { name: 'idUsuario', value: req.query.idusuario, type: self.model.types.INT },
         { name: 'idSucursal', value: req.query.idSucursal, type: self.model.types.INT },
+        { name: 'porcentajefijo', value: req.query.porcentajefijo, type: self.model.types.INT },
     ];
 
     this.model.query('INS_SUCURSAL_PORCENTAJE_SP', params, function(error, result) {
