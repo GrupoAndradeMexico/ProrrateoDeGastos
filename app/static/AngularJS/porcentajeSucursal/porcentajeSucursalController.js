@@ -93,13 +93,14 @@ $scope.ModalActualizaPorcentaje = function (detalle)
         $scope.detSucursal = detalle.sucursal;
         $scope.detsMesAnio = detalle.mes + ' - ' + detalle.anio;
         $scope.detporcentaje = detalle.porcentaje;
+        $scope.detporcentajeFijo = detalle.porcentajeFijo == 1 ? true : false;
         $('#actualizaPorcentaje').modal('show');
 }
 
 
 $scope.actualizarPorcentaje = function(){
     $('#mdlLoading').modal('show');
-    porcentajeSucursalRepository.actualizarPorcentaje($scope.consecutivo,$scope.selectedAnio.anio, $scope.selectedMes, $scope.detporcentaje,  $scope.idUsuario).then(function (result) {
+    porcentajeSucursalRepository.actualizarPorcentaje($scope.consecutivo,$scope.selectedAnio.anio, $scope.selectedMes, $scope.detporcentaje,  $scope.idUsuario, $scope.detporcentajeFijo == true ? 1 : 0).then(function (result) {
         if (result.data[0].estatus == 1 ) {  
             $scope.getInfoPorcentajes();
             alertFactory.info(result.data[0].msj);
@@ -122,6 +123,7 @@ $scope.ModalInsertaPorcentaje = function ()
         $scope.InsMesAnio = $scope.selectedMes+ ' - ' + $scope.selectedAnio.anio;
         $scope.Insporcentaje = 0;
         $scope.selectedSucursal= null
+        $scope.porcentajeFijo = 0;
         $('#insertaPorcentaje').modal('show');
 }
 
@@ -141,7 +143,8 @@ $scope.guardarPorcentaje = function(){
     }
     else{
     $('#mdlLoading').modal('show');
-    porcentajeSucursalRepository.guardarPorcentaje($scope.selectedAnio.anio, $scope.selectedMes, $scope.Insporcentaje,  $scope.idUsuario, $scope.selectedSucursal ).then(function (result) {
+    
+    porcentajeSucursalRepository.guardarPorcentaje($scope.selectedAnio.anio, $scope.selectedMes, $scope.Insporcentaje,  $scope.idUsuario, $scope.selectedSucursal, $scope.porcentajeFijo == true ? 1 : 0 ).then(function (result) {
         if (result.data[0].estatus == 1 ) {  
             $scope.getInfoPorcentajes();
             alertFactory.info(result.data[0].msj);

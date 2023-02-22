@@ -25,7 +25,7 @@ registrationModule.factory('porcentajeSucursalRepository', function($http) {
                 }
             });
         },
-        actualizarPorcentaje: function(consecutivo,anio, mes,  porcentaje, idusuario) {
+        actualizarPorcentaje: function(consecutivo,anio, mes,  porcentaje, idusuario, porcentajefijo) {
             return $http({
                 url: porcentajesURL + 'actualizarPorcentaje/',
                 method: "GET",
@@ -34,14 +34,15 @@ registrationModule.factory('porcentajeSucursalRepository', function($http) {
                     anio: anio, 
                     mes: mes,
                     porcentaje: porcentaje,
-                    idusuario: idusuario
+                    idusuario: idusuario,
+                    porcentajefijo: porcentajefijo
                 },
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
         },
-        guardarPorcentaje: function(anio, mes, porcentaje, idusuario, idSucursal) {
+        guardarPorcentaje: function(anio, mes, porcentaje, idusuario, idSucursal, porcentajefijo) {
             return $http({
                 url: porcentajesURL + 'guardarPorcentaje/',
                 method: "GET",
@@ -50,7 +51,8 @@ registrationModule.factory('porcentajeSucursalRepository', function($http) {
                     mes: mes,
                     porcentaje: porcentaje,
                     idusuario: idusuario,
-                    idSucursal: idSucursal
+                    idSucursal: idSucursal,
+                    porcentajefijo: porcentajefijo
                 },
                 headers: {
                     'Content-Type': 'application/json'
